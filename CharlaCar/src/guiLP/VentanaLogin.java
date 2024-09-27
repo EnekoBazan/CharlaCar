@@ -34,7 +34,6 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		
 		//no funciona la imagen
 		ImageIcon icon = new ImageIcon("images/FotoPerfil.jpg"); // imagen sacada de chatgpt
-	    
 		///////////////////////////////////////////
 		
 		textField = new JTextField();
