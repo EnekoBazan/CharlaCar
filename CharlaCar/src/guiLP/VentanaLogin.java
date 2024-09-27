@@ -1,8 +1,10 @@
 package guiLP;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -28,9 +30,15 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setSize(300,200);
+		setTitle("CharlaCar");
+		
+		//no funciona la imagen
+		ImageIcon icon = new ImageIcon("images/FotoPerfil.jpg"); // imagen sacada de chatgpt
+	    
+		///////////////////////////////////////////
 		
 		textField = new JTextField();
-		textField.setBounds(110, 11, 85, 20);
+		textField.setBounds(110, 10, 85, 20);
 		getContentPane().add(textField);
 		textField.setColumns(10);
 		
@@ -59,8 +67,8 @@ public class VentanaLogin extends JDialog implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equalsIgnoreCase("acceder")) 
 		{
-			System.out.println("has pulsda acceder pero no puedes, sry");
-			System.exit(0);
+			System.out.println("ventana login en invisible");
+			setVisible(false);
 			
 		}//else if() {}
 			

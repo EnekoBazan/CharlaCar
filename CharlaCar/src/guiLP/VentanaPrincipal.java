@@ -15,8 +15,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	public VentanaPrincipal()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(200, 200, 450, 300);
 		
+		setTitle("CharlaCar");
 		setVisible(true);
 		setLocationRelativeTo(null);
 		
