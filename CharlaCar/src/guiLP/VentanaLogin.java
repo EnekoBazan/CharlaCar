@@ -3,6 +3,8 @@ package guiLP;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,6 +21,8 @@ public class VentanaLogin extends JDialog implements ActionListener{
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private JButton btnAcceder;
+	private JLabel lblUsuario;
+	private JLabel lblClave;
 	
 	public VentanaLogin(JFrame esclavo ) {
 		
@@ -34,6 +38,7 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		
 		//no funciona la imagen
 		ImageIcon icon = new ImageIcon("images/FotoPerfil.jpg"); // imagen sacada de chatgpt
+		esclavo.setIconImage(icon.getImage());
 		///////////////////////////////////////////
 		
 		textField = new JTextField();
@@ -45,11 +50,11 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		passwordField.setBounds(110, 55, 85, 20);
 		getContentPane().add(passwordField);
 		
-		JLabel lblUsuario = new JLabel("Usuario:");
+		lblUsuario = new JLabel("Usuario:");
 		lblUsuario.setBounds(10, 15, 90, 15);
 		getContentPane().add(lblUsuario);
 		
-		JLabel lblClave = new JLabel("Clave:");
+		lblClave = new JLabel("Clave:");
 		lblClave.setBounds(10, 60, 90, 15);
 		getContentPane().add(lblClave);
 		
@@ -70,9 +75,6 @@ public class VentanaLogin extends JDialog implements ActionListener{
 			setVisible(false);
 			
 		}//else if() {}
-			
-		
-		
-		
+				
 	}
 }
