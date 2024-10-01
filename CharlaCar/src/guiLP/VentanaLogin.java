@@ -1,16 +1,14 @@
 package guiLP;
 
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -32,14 +30,16 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		
 		getContentPane().setLayout(null);
 		
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		//setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                JOptionPane.showMessageDialog(null, "No puedes cerrar esta ventana");
+			}
+		});	
+		
 		setSize(300,200);
 		setTitle("CharlaCar");
-		
-		//no funciona la imagen
-		ImageIcon icon = new ImageIcon("images/FotoPerfil.jpg"); // imagen sacada de chatgpt
-		esclavo.setIconImage(icon.getImage());
-		///////////////////////////////////////////
 		
 		textField = new JTextField();
 		textField.setBounds(110, 10, 85, 20);
@@ -69,12 +69,12 @@ public class VentanaLogin extends JDialog implements ActionListener{
 	//TODA LA FUNCIONALIDAD DE ACTIONLISTENERS METIDO AQUI ENTRE IF
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equalsIgnoreCase("acceder")) 
-		{
-			System.out.println("ventana login en invisible");
-			setVisible(false);
+		if(e.getActionCommand().equalsIgnoreCase("acceder")) {
+//			String user = textField.getText();
+//			String pass = passwordField.getText();
+			dispose();
 			
-		}//else if() {}
+		}//else if(e.getActionCommand()) {}
 				
 	}
 }
