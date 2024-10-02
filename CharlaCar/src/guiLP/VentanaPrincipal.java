@@ -1,17 +1,23 @@
 package guiLP;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class VentanaPrincipal extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 
 	private JDialog ventanaLogin;
+	private JButton btnCrearViaje;
+	private JButton btnBuscarViaje;
+	private JPanel PanelPrincipal;
 	
 	public VentanaPrincipal()
 	{
@@ -27,6 +33,20 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		
 		ventanaLogin = new VentanaLogin( this );
 		ventanaLogin.setVisible( true );
+		
+		PanelPrincipal = new JPanel();
+		PanelPrincipal.setLayout(new GridLayout(2, 2, 10, 10));
+		
+		btnCrearViaje = new JButton("Crear Viaje");
+		PanelPrincipal.add(btnCrearViaje);
+		
+		btnBuscarViaje = new JButton("Buscar Viaje");
+		PanelPrincipal.add(btnBuscarViaje);
+		
+		this.add(PanelPrincipal);
+		
+		this.validate();
+		
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
