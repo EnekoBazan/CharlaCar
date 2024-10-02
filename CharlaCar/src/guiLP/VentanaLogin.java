@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import domainLN.GestorLN;
+
 public class VentanaLogin extends JDialog implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -20,6 +22,7 @@ public class VentanaLogin extends JDialog implements ActionListener{
 	private JButton btnAcceder;
 	private JLabel lblUsuario;
 	private JLabel lblClave;
+	private GestorLN gestorLN;
 	
 	public VentanaLogin(JFrame esclavo ) {
 		
@@ -27,6 +30,7 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		super( esclavo );
 		setModal(true);		
 		
+		gestorLN = new GestorLN();
 		getContentPane().setLayout(null);
 		
 		//setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -71,6 +75,8 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		if(e.getActionCommand().equalsIgnoreCase("acceder")) {
 //			String user = textField.getText();
 //			String pass = passwordField.getText();
+			System.out.println("Acceder");
+			gestorLN.mostrarDatos();
 			dispose();
 			
 		}//else if(e.getActionCommand()) {}

@@ -11,6 +11,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import domainLN.GestorLN;
+
 public class VentanaPrincipal extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -43,8 +45,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		PanelPrincipal.add(blanc);
 		
 		btnCrearViaje = new JButton("Crear Viaje");
+		//btnCrearViaje.setIcon(icon); //icono del boton
 		PanelPrincipal.add(btnCrearViaje);
-		
 		
 		JPanel blanc1 = new JPanel();
 		PanelPrincipal.add(blanc1);
@@ -59,7 +61,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		if (e.getActionCommand().equalsIgnoreCase("Crear Viaje")) {
+			System.out.println("Crear Viaje");
+		}else if (e.getActionCommand().equalsIgnoreCase("Buscar Viaje")){
+			System.out.println("Buscar Viaje");
+		}
 		
 	}
 
