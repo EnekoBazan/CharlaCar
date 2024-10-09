@@ -3,6 +3,8 @@ package guiLP;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -73,6 +75,14 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		getContentPane().add(lblRegistro);
 		
 		setLocationRelativeTo(null);
+		
+		lblRegistro.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("Registro");
+//				VentanaRegistro vr = new VentanaRegistro();
+//				vr.setVisible(true);
+			}
+		});
 	}
 	
 
