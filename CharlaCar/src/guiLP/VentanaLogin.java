@@ -44,7 +44,7 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		});	
 		
 		setSize(300,200);
-		setTitle("CharlaCar");
+		setTitle("CharlaCar (LogIn)");
 		
 		txtUser = new JTextField();
 		txtUser.setBounds(110, 10, 85, 20);
@@ -70,7 +70,7 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		
 		lblRegistro = new JLabel("No estas Registrado?");
 		lblRegistro.setForeground(Color.BLUE);
-		lblRegistro.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblRegistro.setFont(new Font("Poppins", Font.BOLD, 10));
 		lblRegistro.setBounds(140, 110, 300, 20);
 		getContentPane().add(lblRegistro);
 		
@@ -78,20 +78,18 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		
 		lblRegistro.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("Registro");
-//				VentanaRegistro vr = new VentanaRegistro();
-//				vr.setVisible(true);
+				VentanaRegistro vRegistro = new VentanaRegistro();
+				vRegistro.setVisible(true);
 			}
 		});
+		
 	}
 	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equalsIgnoreCase("acceder")) {
-//			String user = textField.getText();
-//			String pass = passwordField.getText();
-			System.out.println("Acceder");
+			System.out.println("Presionado Acceder");
 			gestorLN.mostrarDatos();
 			dispose();
 			
