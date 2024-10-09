@@ -11,8 +11,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import domainLN.GestorLN;
-
 public class VentanaPrincipal extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -34,9 +32,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		ImageIcon icon = new ImageIcon(VentanaPrincipal.class.getResource("/images/FotoPerfil.png"));//imagen generada con IA
 		setIconImage(icon.getImage());
 		
-		ventanaLogin = new VentanaLogin( this );
-		ventanaLogin.setVisible( true );
-		
 		PanelPrincipal = new JPanel();
 		PanelPrincipal.setLayout(new GridLayout(2, 2, 10, 10));
 		PanelPrincipal.setBorder(BorderFactory.createTitledBorder("CharlaCar"));
@@ -56,7 +51,10 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		
 		this.add(PanelPrincipal);
 		
-		this.validate();
+		ventanaLogin = new VentanaLogin();
+		ventanaLogin.setVisible( true );
+		
+	//	this.validate();//repaint pantalla
 		
 	}
 	@Override
