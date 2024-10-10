@@ -64,14 +64,14 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		getContentPane().add(lblClave);
 		
 		btnAcceder = new JButton("Acceder");
-		btnAcceder.setBounds(40, 110, 90, 20);
+		btnAcceder.setBounds(90, 110, 90, 20);
 		getContentPane().add(btnAcceder);
 		btnAcceder.addActionListener(this);
 		
 		lblRegistro = new JLabel("No estas Registrado?");
 		lblRegistro.setForeground(Color.BLUE);
 		lblRegistro.setFont(new Font("Poppins", Font.BOLD, 10));
-		lblRegistro.setBounds(140, 110, 300, 20);
+		lblRegistro.setBounds(90, 130, 300, 20);
 		getContentPane().add(lblRegistro);
 		
 		setLocationRelativeTo(null);
@@ -80,6 +80,14 @@ public class VentanaLogin extends JDialog implements ActionListener{
 			public void mouseClicked(MouseEvent e) {
 				VentanaRegistro vRegistro = new VentanaRegistro();
 				vRegistro.setVisible(true);
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				lblRegistro.setText("<html><u>No estas Registrado?</u></html>"); //ayuda de copilot
+			}
+
+			public void mouseExited(MouseEvent e) {
+				lblRegistro.setText("No estas Registrado?");
 			}
 		});
 		
