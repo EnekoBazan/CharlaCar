@@ -1,5 +1,8 @@
 package guiLP;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,12 +21,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	private JDialog ventanaLogin;
 	private JButton btnCrearViaje;
 	private JButton btnBuscarViaje;
-	private JPanel PanelPrincipal;
+	private JButton btnLogIn;
+	private JButton btnRegistro;
+	private JPanel panelCentral;
+	private JPanel panelPrincipal;
+	private JPanel panelTop;
 	
 	public VentanaPrincipal()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(200, 200, 450, 300);
+		setBounds(700, 700, 750, 500);
 		
 		setTitle("CharlaCar");
 		setVisible(true);
@@ -32,37 +39,56 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		ImageIcon icon = new ImageIcon(VentanaPrincipal.class.getResource("/images/FotoPerfil.png"));//imagen generada con IA
 		setIconImage(icon.getImage());
 		
-		PanelPrincipal = new JPanel();
-		PanelPrincipal.setLayout(new GridLayout(2, 2, 10, 10));
-		PanelPrincipal.setBorder(BorderFactory.createTitledBorder("CharlaCar"));
+		panelCentral = new JPanel(new GridLayout(2, 2, 10, 10));
+		panelCentral.setBorder(BorderFactory.createTitledBorder("CharlaCar"));
 		
-		JPanel blanc = new JPanel();
-		PanelPrincipal.add(blanc);
+		panelPrincipal = new JPanel(new BorderLayout());
+		
+		panelTop = new JPanel(new FlowLayout());
+		panelTop.setBackground(Color.BLUE);
+		
+		JPanel espacio = new JPanel();
+		panelCentral.add(espacio);
 		
 		btnCrearViaje = new JButton("Crear Viaje");
 		//btnCrearViaje.setIcon(icon); //icono del boton
-		PanelPrincipal.add(btnCrearViaje);
+		panelCentral.add(btnCrearViaje);
 		
-		JPanel blanc1 = new JPanel();
-		PanelPrincipal.add(blanc1);
+		JPanel espacio2 = new JPanel();
+		panelCentral.add(espacio2);
 		
 		btnBuscarViaje = new JButton("Buscar Viaje");
-		PanelPrincipal.add(btnBuscarViaje);
+		panelCentral.add(btnBuscarViaje);
+		panelPrincipal.add(panelCentral, BorderLayout.CENTER);
 		
-		this.add(PanelPrincipal);
+		btnLogIn = new JButton("LogIn");
+		panelTop.add(btnLogIn);
+		
+		btnRegistro = new JButton("Registrarse");
+		panelTop.add(btnRegistro);
+		panelPrincipal.add(panelTop, BorderLayout.NORTH);
+		
+		btnLogIn.addActionListener(this);
+		btnRegistro.addActionListener(this);
+		
+		this.add(panelPrincipal);
 		
 		ventanaLogin = new VentanaLogin();
 		ventanaLogin.setVisible( true );
 		
 	//	this.validate();//repaint pantalla
 		
+		
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equalsIgnoreCase("Crear Viaje")) {
-			System.out.println("Crear Viaje");
-		}else if (e.getActionCommand().equalsIgnoreCase("Buscar Viaje")){
-			System.out.println("Buscar Viaje");
+		if (e.getActionCommand().equalsIgnoreCase("logIn")) {
+			VentanaLogin vLogin = new VentanaLogin();
+			vLogin.setVisible(true);
+		}else if (e.getActionCommand().equalsIgnoreCase("registrarse")){
+			VentanaRegistro vRegistro = new VentanaRegistro();
+			vRegistro.setVisible(true);
 		}
 		
 	}

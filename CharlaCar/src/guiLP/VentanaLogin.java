@@ -71,7 +71,7 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		lblRegistro = new JLabel("No estas Registrado?");
 		lblRegistro.setForeground(Color.BLUE);
 		lblRegistro.setFont(new Font("Poppins", Font.BOLD, 10));
-		lblRegistro.setBounds(90, 130, 300, 20);
+		lblRegistro.setBounds(85, 130, 300, 20);
 		getContentPane().add(lblRegistro);
 		
 		setLocationRelativeTo(null);
