@@ -35,43 +35,44 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		gestorLN = new GestorLN();
 		getContentPane().setLayout(null);
 		
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter() {
-			@Override
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                JOptionPane.showMessageDialog(null, "No puedes cerrar esta ventana");
-			}
-		});	
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+//		addWindowListener(new WindowAdapter() {
+//			@Override
+//            public void windowClosing(java.awt.event.WindowEvent e) {
+//                JOptionPane.showMessageDialog(null, "No puedes cerrar esta ventana");
+//			}
+//		});	
 		
 		setSize(300,200);
 		setTitle("CharlaCar (LogIn)");
+		setResizable(false);
 		
 		txtUser = new JTextField();
-		txtUser.setBounds(110, 10, 85, 20);
+		txtUser.setBounds(105, 25, 90, 20);
 		getContentPane().add(txtUser);
 		txtUser.setColumns(10);
 		
 		passwordField = new JPasswordField();
-		passwordField.setBounds(110, 55, 85, 20);
+		passwordField.setBounds(105, 70, 90, 20);
 		getContentPane().add(passwordField);
 		
 		lblUsuario = new JLabel("Usuario:");
-		lblUsuario.setBounds(10, 15, 90, 15);
+		lblUsuario.setBounds(30, 25, 90, 15);
 		getContentPane().add(lblUsuario);
 		
 		lblClave = new JLabel("Clave:");
-		lblClave.setBounds(10, 60, 90, 15);
+		lblClave.setBounds(30, 70, 90, 15);
 		getContentPane().add(lblClave);
 		
 		btnAcceder = new JButton("Acceder");
-		btnAcceder.setBounds(90, 110, 90, 20);
+		btnAcceder.setBounds(105, 110, 90, 20);
 		getContentPane().add(btnAcceder);
 		btnAcceder.addActionListener(this);
 		
 		lblRegistro = new JLabel("No estas Registrado?");
 		lblRegistro.setForeground(Color.BLUE);
 		lblRegistro.setFont(new Font("Poppins", Font.BOLD, 10));
-		lblRegistro.setBounds(85, 130, 300, 20);
+		lblRegistro.setBounds(100, 130, 110, 20);
 		getContentPane().add(lblRegistro);
 		
 		setLocationRelativeTo(null);
