@@ -6,13 +6,20 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.border.EmptyBorder;
 
 public class VentanaPrincipal extends JFrame implements ActionListener{
 
@@ -22,11 +29,18 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	private JButton btnBuscarViaje;
 	private JButton btnLogIn;
 	private JButton btnRegistro;
-	private JButton btnPerfil;;
+	private JButton btnUsuario;
 	private JPanel panelCentral;
 	private JPanel panelPrincipal;
 	private JPanel panelTop;
 	private Logger logger;
+	
+	//Barra de menus
+	private JMenuBar menuBar = new JMenuBar();
+	private JMenu menuUsuario = new JMenu("Usuario");
+	//Elementos JMenuJuegos
+	private JMenuItem menuItemPerfil = new JMenuItem("Perfil");
+	private JMenuItem menuItemCerrarSesion = new JMenuItem("Cerrar sesión");
 	
 	public VentanaPrincipal()
 	{
@@ -42,47 +56,75 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		
 		logger = Logger.getLogger(VentanaPrincipal.class.getName());
 		
-		panelCentral = new JPanel(new GridLayout(2, 2, 10, 10));
-		panelCentral.setBorder(BorderFactory.createTitledBorder("CharlaCar"));
+		panelCentral = new JPanel(new GridLayout(2,2));
 		
 		panelPrincipal = new JPanel(new BorderLayout());
 		
-		panelTop = new JPanel(new FlowLayout());
+		panelTop = new JPanel(new BorderLayout());
 		panelTop.setBackground(Color.LIGHT_GRAY);
-		
-		JPanel espacio = new JPanel();
-		panelCentral.add(espacio);
+		JPanel panelTop1 = new JPanel(new BorderLayout());
+		JPanel panelTop2 = new JPanel(new BorderLayout());
+
+		panelTop.add(panelTop1, BorderLayout.EAST);
+		panelTop.add(panelTop2, BorderLayout.CENTER);
+
+		btnUsuario = new JButton("Usuario");
 		
 		btnCrearViaje = new JButton("Crear Viaje");
 		//btnCrearViaje.setIcon(icon); //icono del boton
 		panelCentral.add(btnCrearViaje);
-		
-		JPanel espacio2 = new JPanel();
-		panelCentral.add(espacio2);
-		
+				
 		btnBuscarViaje = new JButton("Buscar Viaje");
 		panelCentral.add(btnBuscarViaje);
 		panelPrincipal.add(panelCentral, BorderLayout.CENTER);
 		
 		btnLogIn = new JButton("LogIn");
-		panelTop.add(btnLogIn);
+		panelTop2.add(btnLogIn);
 		
 		btnRegistro = new JButton("Registrarse");
-		panelTop.add(btnRegistro);
+		panelTop2.add(btnRegistro);
 		panelPrincipal.add(panelTop, BorderLayout.NORTH);
 		
-		btnPerfil = new JButton("Perfil");
-		panelTop.add(btnPerfil);
-		panelPrincipal.add(panelTop, BorderLayout.NORTH);
+		// Configuración JMenuUsuario
+		menuBar.setVisible(false); // Oculta la barra de menu, se abre con botones Juegos/Usuarios
+		menuBar.add(menuUsuario);
+		menuUsuario.setMnemonic(KeyEvent.VK_F);
+		// Items del menu "Usuario"
+		menuUsuario.add(menuItemPerfil);
+		menuItemPerfil.setMnemonic(KeyEvent.VK_S);
+		menuUsuario.addSeparator();
+		menuUsuario.add(menuItemCerrarSesion);
+		menuItemCerrarSesion.setMnemonic(KeyEvent.VK_S);
+//		btnPerfil = new JButton("Perfil");
 		
+		panelTop1.add(btnUsuario, BorderLayout.EAST);
+		panelTop1.setBorder(new EmptyBorder(10,10,10,10));
+		panelTop1.setBackground(Color.LIGHT_GRAY);
+		panelTop2.add(btnLogIn, BorderLayout.EAST);
+		panelTop2.add(btnRegistro, BorderLayout.WEST);
+		panelTop2.setBorder(new EmptyBorder(10,10,10,10));
+		panelTop2.setBackground(Color.LIGHT_GRAY);
+
+
+
 		btnLogIn.addActionListener(this);
 		btnRegistro.addActionListener(this);
-		btnPerfil.addActionListener(this);
+//		btnPerfil.addActionListener(this);
 		
 		this.add(panelPrincipal);
 		
 	//	this.validate();//repaint pantalla
 		
+//		btnUsuario.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				JComponent source = (JComponent) e.getSource();
+//				JPopupMenu popupMenu = menuUsuario.getPopupMenu();
+//				popupMenu.show(source,0, source.getHeight());
+//				logger.info("Has abierto el menu 'Usuario'");
+//			}
+//		});
 	}
 	
 	@Override
@@ -105,6 +147,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 			vBuscarViaje.setVisible(true);
 		}else if(e.getActionCommand().equalsIgnoreCase("Crear viaje")) {
 			logger.info("Boton crear viaje");
+		}else if(e.getActionCommand().equalsIgnoreCase("Usuario")) {
+			JComponent source = (JComponent) e.getSource();
+			JPopupMenu popupMenu = menuUsuario.getPopupMenu();
+			popupMenu.show(source,0, source.getHeight());
+			logger.info("Has abierto el menu 'Usuario'");		
 		}
 	}
 
