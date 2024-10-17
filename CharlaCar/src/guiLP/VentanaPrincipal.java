@@ -99,8 +99,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 			logger.info("Boton Perfil pulsado");
 			VentanaPerfil vPerfil = new VentanaPerfil();
 			vPerfil.setVisible(true);
+		}else if(e.getActionCommand().equalsIgnoreCase("Buscar viaje")) {
+			logger.info("Boton buscar viaje");
+			VentanaBuscarViaje vBuscarViaje = new VentanaBuscarViaje();
+			vBuscarViaje.setVisible(true);
+		}else if(e.getActionCommand().equalsIgnoreCase("Crear viaje")) {
+			logger.info("Boton crear viaje");
 		}
-		
 	}
 
 }
