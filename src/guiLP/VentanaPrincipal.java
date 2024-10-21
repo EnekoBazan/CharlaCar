@@ -2,14 +2,11 @@ package guiLP;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.logging.Logger;
-
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -106,10 +103,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		panelTop2.setBackground(Color.LIGHT_GRAY);
 
 
-
+		//ACTIVAR EL LISTENER DE CADA OBJETO
 		btnLogIn.addActionListener(this);
 		btnRegistro.addActionListener(this);
-//		btnPerfil.addActionListener(this);
+	    btnUsuario.addActionListener(this);
+	    btnBuscarViaje.addActionListener(this);
+	    btnCrearViaje.addActionListener(this);
 		
 		this.add(panelPrincipal);
 		
@@ -127,6 +126,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 //		});
 	}
 	
+	
+	//ARRIBA PARA LLAMAM A LA LLAMADA CON EL OBJETO
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equalsIgnoreCase("logIn")) {
@@ -154,5 +155,4 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 			logger.info("Has abierto el menu 'Usuario'");		
 		}
 	}
-
 }

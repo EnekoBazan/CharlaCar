@@ -2,8 +2,6 @@ package guiLP;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -83,16 +81,4 @@ public class VentanaBuscarViaje extends JFrame {
 		this.tablaBusqueda.setDefaultRenderer(Object.class, cellRenderer);
 		
 	}
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					new VentanaBuscarViaje();
-//					
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 }
