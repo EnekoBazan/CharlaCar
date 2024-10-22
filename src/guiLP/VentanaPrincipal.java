@@ -148,6 +148,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 			vBuscarViaje.setVisible(true);
 		}else if(e.getActionCommand().equalsIgnoreCase("Crear viaje")) {
 			logger.info("Boton crear viaje");
+			VentanaCrearViaje vCrearViaje = new VentanaCrearViaje();
+			vCrearViaje.setVisible(true);
 		}else if(e.getActionCommand().equalsIgnoreCase("Usuario")) {
 			JComponent source = (JComponent) e.getSource();
 			JPopupMenu popupMenu = menuUsuario.getPopupMenu();
