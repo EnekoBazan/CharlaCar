@@ -9,6 +9,7 @@ public class Viaje {
 	private String destino;
 	private int espaciosDisponibles;
 	private int espaciosOcupados;
+	private Vehiculo vehiculo;
 	private List<Usuario> listaPasajeros;
 	private String info;
 	

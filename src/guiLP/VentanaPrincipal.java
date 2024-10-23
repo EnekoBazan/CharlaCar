@@ -179,6 +179,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		menuUsuario.add(menuItemCerrarSesion);
 		menuItemCerrarSesion.setMnemonic(KeyEvent.VK_S);
 //		btnPerfil = new JButton("Perfil");
+
 		
 		panelTop1.add(btnRegistro, BorderLayout.EAST);
 		panelTop1.setBorder(new EmptyBorder(10,10,10,35));
@@ -224,10 +225,10 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 			logger.info("Boton Registro pulsado");
 			VentanaRegistro vRegistro = new VentanaRegistro();
 			vRegistro.setVisible(true);
-		}else if (e.getActionCommand().equalsIgnoreCase("perfil")) {
-			logger.info("Boton Perfil pulsado");
-			VentanaPerfil vPerfil = new VentanaPerfil();
-			vPerfil.setVisible(true);
+//		}else if (e.getActionCommand().equalsIgnoreCase("Perfil")) {
+//			logger.info("Boton Perfil pulsado");
+//			VentanaPerfil vPerfil = new VentanaPerfil();
+//			vPerfil.setVisible(true);
 		}else if(e.getActionCommand().equalsIgnoreCase("Buscar viaje")) {
 			logger.info("Boton buscar viaje");
 			VentanaBuscarViaje vBuscarViaje = new VentanaBuscarViaje();
@@ -242,5 +243,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 			popupMenu.show(source,0, source.getHeight());
 			logger.info("Has abierto el menu 'Usuario'");		
 		}
+		menuItemPerfil.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				VentanaPerfil vPerfil = new VentanaPerfil();
+				vPerfil.setVisible(true);
+				
+			}
+		});
 	}
+	
+	
 }

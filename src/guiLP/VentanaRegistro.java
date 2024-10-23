@@ -10,9 +10,7 @@ public class VentanaRegistro extends JDialog {
 		setModal(true);
 		setSize(300,200);
 		setTitle("CharlaCar (Registro)");
-		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		
 		setLocationRelativeTo(null);
 	}
 
