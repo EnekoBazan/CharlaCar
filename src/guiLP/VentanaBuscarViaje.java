@@ -3,6 +3,7 @@ package guiLP;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,9 +13,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
+import javax.swing.RowFilter;
 
 public class VentanaBuscarViaje extends JFrame {
 
@@ -32,6 +37,10 @@ public class VentanaBuscarViaje extends JFrame {
 	private JPanel panelNorth;
 	private JLabel lblFiltro;
 	private JTextField txtFiltro;
+
+	private DefaultTableModel tableModel;
+	private TableRowSorter<DefaultTableModel> rowSorter; //
+	 
 	//private JButton btnFiltrar;
 	
 	public VentanaBuscarViaje() {
@@ -39,7 +48,6 @@ public class VentanaBuscarViaje extends JFrame {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(750, 450);
 		setTitle("CharlaCar");
-		setVisible(true);
 		setLocationRelativeTo(null);
 		
 		setIconImage(new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png")).getImage());
@@ -78,8 +86,9 @@ public class VentanaBuscarViaje extends JFrame {
             {"BMW Serie 1", "1234 ABC", "Madrid", "Segovia", "5", "4"}
 
 		};
+		tableModel = new DefaultTableModel(datosEjemplo, cabecera);
+		tablaBusqueda = new JTable(tableModel);
 		
-		tablaBusqueda = new JTable(datosEjemplo, cabecera );
 		scrollPane = new JScrollPane(tablaBusqueda);
 		btnUnirse = new JButton("Unirse");
 		
@@ -87,30 +96,31 @@ public class VentanaBuscarViaje extends JFrame {
 		panelSouthDerecha = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		panelNorth = new JPanel(new FlowLayout());
 		
-		lblFiltro = new JLabel("Filtro: ");
+		lblFiltro = new JLabel("Filtrar viajes: ");
+		lblFiltro.setFont(new Font("Arial", Font.PLAIN, 14));
 		//btnFiltrar = new JButton("Filtrar");
 		txtFiltro = new JTextField(20);
 		
 		this.txtFiltro.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
             public void insertUpdate(DocumentEvent e) {
-                filtrar();
+                filtrar(txtFiltro.getText());
             }
             @Override
             public void removeUpdate(DocumentEvent e) {
-                filtrar();
+                filtrar(txtFiltro.getText());
             }
             @Override
             public void changedUpdate(DocumentEvent e) {
-                filtrar();
+                filtrar(txtFiltro.getText());
             }
         });
 		
 		this.add(scrollPane, BorderLayout.CENTER);
 		
 		panelSouthDerecha.add(btnUnirse);
-		
-		panelSouth.add(new JLabel(" Selecciona el viaje al que te quieres unirte"));
+
+		panelSouth.add(new JLabel(" Selecciona el viaje al que te quieres unir"), BorderLayout.WEST);
 		panelSouth.add(panelSouthDerecha, BorderLayout.EAST);
 		this.add(panelSouth, BorderLayout.SOUTH);
 		
@@ -118,8 +128,10 @@ public class VentanaBuscarViaje extends JFrame {
 		panelNorth.add(txtFiltro);
 		//panelNorth.add(btnFiltrar);
 		this.add(panelNorth, BorderLayout.NORTH);
-		
+		this.tablaBusqueda.setBorder(new EmptyBorder(10,10,10,10));
 		this.tablaBusqueda.setDefaultRenderer(Object.class, cellRenderer);
+		
+		setVisible(true);
 		
 	}
 		////RENDERER
@@ -127,12 +139,12 @@ public class VentanaBuscarViaje extends JFrame {
 			JLabel result = new JLabel(value.toString());
 			
 			//con rgb negro claro
-			result.setForeground(new Color(75,75,75));
+			result.setForeground(new Color(60,60,60));
 			result.setBackground(Color.white);
 			
 			if (isSelected) {
-				result.setBackground(Color.CYAN);
-				result.setForeground(table.getSelectionForeground());			
+				result.setBackground(new Color(173, 216, 230));
+				result.setForeground(Color.black);			
 			}
 			else if (value instanceof Number) {
 				result.setHorizontalAlignment(JLabel.CENTER);
@@ -150,9 +162,12 @@ public class VentanaBuscarViaje extends JFrame {
 		};
 	
 	
-	private void filtrar() {
-		String text = txtFiltro.getText();
-		//TODO crear los viajes de la tabla como clase Viaje
+	private void filtrar(String filtro) {
+		
+		//no chuta
+//		  if (filtro.toLowerCase().length() == 0) {
+//	            rowSorter.setRowFilter(null); // Sin filtro si el campo está vacío
+//	        }
 		
 	}
 }

@@ -77,6 +77,7 @@ public class VentanaLogin extends JDialog implements ActionListener{
 		
 		lblRegistro.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
+				dispose();
 				VentanaRegistro vRegistro = new VentanaRegistro();
 				vRegistro.setVisible(true);
 			}
