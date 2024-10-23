@@ -2,6 +2,7 @@ package guiLP;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -38,6 +39,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	private JPanel panelTop;
 	private JPanel panelBottom;
 	
+	private JPanel panelBotonBuscar;
+	private JPanel panelBotonCrear;
+	
+	private JLabel lblBotonBuscar;
+	private JLabel lblBotonCrear;
 	private JLabel lblTexto1;
 	private JLabel lblTexto2;
 	
@@ -64,11 +70,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		
 		logger = Logger.getLogger(VentanaPrincipal.class.getName());
 		
-		panelCentral = new JPanel(new GridLayout(2,2, 0, 5));
-		panelCentral.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
-		
 		panelPrincipal = new JPanel(new BorderLayout());
-		
+		panelPrincipal.setBackground(new Color(237, 242, 255));
 		
 		////////Panel inferior
 		panelBottom = new JPanel(new GridLayout(2,1, 10, 5));
@@ -85,6 +88,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		
 		panelBottom.add(lblTexto1);
 		panelBottom.add(lblTexto2);
+		panelBottom.setBackground(new Color(193, 229, 244 ));
 		panelPrincipal.add(panelBottom, BorderLayout.SOUTH);
 		////////
 		
@@ -98,13 +102,45 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 
 		btnUsuario = new JButton("Usuario");
 		
+		///////////BUSCRA Y CREAR VIAJES
+		panelCentral = new JPanel(new GridLayout(1,2, 20, 0));
+		panelCentral.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+		panelCentral.setBackground(new Color(193, 229, 244));
+		
+		panelBotonCrear = new JPanel(new BorderLayout(0,10));
+		panelBotonCrear.setBackground(Color.WHITE);
+		panelBotonCrear.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		
+		JPanel buscarContenido = new JPanel(new BorderLayout(0, 10));
+		buscarContenido.setBackground(Color.WHITE);
+		
+		lblBotonCrear = new JLabel("aldknskdjnfjnjjsndfjnsdjn");
+		
 		btnCrearViaje = new JButton("Crear Viaje");
-		//btnCrearViaje.setIcon(icon); //icono del boton
-		panelCentral.add(btnCrearViaje);
-				
+		btnCrearViaje.setBackground(new Color(33, 150, 243));
+		btnCrearViaje.setForeground(Color.WHITE);
+		btnCrearViaje.setFont(new Font("Arial", Font.BOLD, 14));
+		btnCrearViaje.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+		panelBotonCrear.add(btnCrearViaje);
+		
+		panelBotonBuscar = new JPanel(new FlowLayout());
+		panelBotonBuscar.setBackground(Color.WHITE);
+		panelBotonCrear.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		
+		lblBotonBuscar = new JLabel("aldknskdjnfjnjjsndfjnsdjn");
+		
 		btnBuscarViaje = new JButton("Buscar Viaje");
-		panelCentral.add(btnBuscarViaje);
+		btnBuscarViaje.setBackground(new Color(33, 150, 243));
+		btnBuscarViaje.setForeground(Color.WHITE);
+		btnBuscarViaje.setFont(new Font("Arial", Font.BOLD, 14));
+		btnBuscarViaje.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+		panelBotonBuscar.add(btnBuscarViaje);
+		
+		panelCentral.add(panelBotonBuscar);
+		panelCentral.add(panelBotonCrear);
+		
 		panelPrincipal.add(panelCentral, BorderLayout.CENTER);
+		/////////////////
 		
 		btnLogIn = new JButton("LogIn");
 		panelTop2.add(btnLogIn);
@@ -112,6 +148,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		btnRegistro = new JButton("Registrarse");
 		panelTop2.add(btnRegistro);
 		panelPrincipal.add(panelTop, BorderLayout.NORTH);
+		panelPrincipal.setBackground(new Color(193, 229, 244 ));
 		
 		// Configuración JMenuUsuario
 		menuBar.setVisible(false); // Oculta la barra de menu, se abre con botones Juegos/Usuarios
@@ -127,11 +164,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		
 		panelTop1.add(btnUsuario, BorderLayout.EAST);
 		panelTop1.setBorder(new EmptyBorder(10,10,10,10));
-		panelTop1.setBackground(Color.LIGHT_GRAY);
+		panelTop1.setBackground(new Color(193, 229, 244 ));
 		panelTop2.add(btnLogIn, BorderLayout.EAST);
 		panelTop2.add(btnRegistro, BorderLayout.WEST);
 		panelTop2.setBorder(new EmptyBorder(10,10,10,10));
-		panelTop2.setBackground(Color.LIGHT_GRAY);
+		panelTop2.setBackground(new Color(193, 229, 244 ));
 
 
 		//ACTIVAR EL LISTENER DE CADA OBJETO
