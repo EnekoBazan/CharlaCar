@@ -25,6 +25,8 @@ public class VentanaBuscarViaje extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
+	private JPanel panelPrincipal;
+	
 	private JTable tablaBusqueda;
 	private String[] cabecera;
 	private String[][] datosEjemplo;
@@ -86,11 +88,16 @@ public class VentanaBuscarViaje extends JFrame {
             {"BMW Serie 1", "1234 ABC", "Madrid", "Segovia", "5", "4"}
 
 		};
+		panelPrincipal = new JPanel(new BorderLayout());
+		panelPrincipal.setBorder(new EmptyBorder(5, 10, 5, 0));
+		
 		tableModel = new DefaultTableModel(datosEjemplo, cabecera);
 		tablaBusqueda = new JTable(tableModel);
 		
 		scrollPane = new JScrollPane(tablaBusqueda);
 		btnUnirse = new JButton("Unirse");
+		btnUnirse.setForeground(new Color(33, 150, 243 ));
+		btnUnirse.setBackground(Color.white);
 		
 		panelSouth = new JPanel(new BorderLayout());
 		panelSouthDerecha = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -116,20 +123,26 @@ public class VentanaBuscarViaje extends JFrame {
             }
         });
 		
-		this.add(scrollPane, BorderLayout.CENTER);
+		panelPrincipal.add(scrollPane, BorderLayout.CENTER);
+		panelPrincipal.setBackground(new Color(217, 239, 248));
 		
 		panelSouthDerecha.add(btnUnirse);
+		panelSouthDerecha.setBackground(new Color(217, 239, 248));
 
 		panelSouth.add(new JLabel(" Selecciona el viaje al que te quieres unir"), BorderLayout.WEST);
 		panelSouth.add(panelSouthDerecha, BorderLayout.EAST);
-		this.add(panelSouth, BorderLayout.SOUTH);
+		panelSouth.setBackground(new Color(217, 239,248));
+		panelPrincipal.add(panelSouth, BorderLayout.SOUTH);
 		
 		panelNorth.add(lblFiltro);
 		panelNorth.add(txtFiltro);
+		panelNorth.setBackground(new Color(217, 239, 248));
+		
 		//panelNorth.add(btnFiltrar);
-		this.add(panelNorth, BorderLayout.NORTH);
+		panelPrincipal.add(panelNorth, BorderLayout.NORTH);
 		this.tablaBusqueda.setBorder(new EmptyBorder(10,10,10,10));
 		this.tablaBusqueda.setDefaultRenderer(Object.class, cellRenderer);
+		this.add(panelPrincipal);
 		
 		setVisible(true);
 		

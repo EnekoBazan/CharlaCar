@@ -185,7 +185,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		panelTop1.setBackground(new Color(217, 239, 248 ));
 		panelTop2.add(btnLogIn, BorderLayout.EAST);
 		panelTop2.add(btnUsuario, BorderLayout.WEST);
-		panelTop2.setBorder(new EmptyBorder(10,35,10,10));
+		panelTop2.setBorder(new EmptyBorder(10,35,10,0));
 		panelTop2.setBackground(new Color(217, 239, 248 ));
 
 
