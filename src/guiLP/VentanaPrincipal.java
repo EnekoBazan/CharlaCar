@@ -2,20 +2,25 @@ package guiLP;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.logging.Logger;
+
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 public class VentanaPrincipal extends JFrame implements ActionListener{
@@ -27,9 +32,15 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	private JButton btnLogIn;
 	private JButton btnRegistro;
 	private JButton btnUsuario;
+	
 	private JPanel panelCentral;
 	private JPanel panelPrincipal;
 	private JPanel panelTop;
+	private JPanel panelBottom;
+	
+	private JLabel lblTexto1;
+	private JLabel lblTexto2;
+	
 	private Logger logger;
 	
 	//Barra de menus
@@ -53,9 +64,29 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		
 		logger = Logger.getLogger(VentanaPrincipal.class.getName());
 		
-		panelCentral = new JPanel(new GridLayout(2,2));
+		panelCentral = new JPanel(new GridLayout(2,2, 0, 5));
+		panelCentral.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 		
 		panelPrincipal = new JPanel(new BorderLayout());
+		
+		
+		////////Panel inferior
+		panelBottom = new JPanel(new GridLayout(2,1, 10, 5));
+		
+		lblTexto1 = new JLabel("👥 +50,000 usuarios | 🚗 +1,000 viajes diarios | 💰 -40% en costes | 🌍 Viajes en toda España ");
+		lblTexto1.setHorizontalAlignment(SwingConstants.CENTER);//centra el texto
+		lblTexto1.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10)); 
+		//lblTexto1.setFont(new Font("Arial", Font.BOLD, 11)); //no se ven los iconos
+		
+		lblTexto2 = new JLabel("🔒 Viajes seguros y verificados | ⭐ 4.8/5 valoración media");
+		lblTexto2.setHorizontalAlignment(SwingConstants.CENTER);//centra el texto
+		lblTexto2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		//lblTexto2.setFont(new Font("Arial", Font.BOLD, 11)); //no se ven los iconos
+		
+		panelBottom.add(lblTexto1);
+		panelBottom.add(lblTexto2);
+		panelPrincipal.add(panelBottom, BorderLayout.SOUTH);
+		////////
 		
 		panelTop = new JPanel(new BorderLayout());
 		panelTop.setBackground(Color.LIGHT_GRAY);
