@@ -2,6 +2,7 @@ package guiLP;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -157,12 +158,15 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		btnLogIn.setForeground(new Color(33, 150, 243 ));
 		btnLogIn.setBackground(Color.white);
 //		btnLogIn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-//		btnLogIn.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
+		btnLogIn.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
+		btnLogIn.setPreferredSize(new Dimension(60, 25));
 		panelTop1.add(btnLogIn);
 		
 		btnRegistro = new JButton("Registrarse");
 		btnRegistro.setForeground(new Color(33, 150, 243 ));
 		btnRegistro.setBackground(Color.white);
+		btnRegistro.setPreferredSize(new Dimension(95, 25));
+		btnRegistro.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
 		//btnRegistro.setBorder(new LineBorder(Color.black));
 		panelTop1.add(btnRegistro);
 		panelPrincipal.add(panelTop, BorderLayout.NORTH);
@@ -170,6 +174,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		btnUsuario = new JButton("Usuario");
 		btnUsuario.setForeground(new Color(33, 150, 243 ));
 		btnUsuario.setBackground(Color.white);
+		btnUsuario.setPreferredSize(new Dimension(70, 25));
+		btnUsuario.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
 		
 		// Configuración JMenuUsuario
 		menuBar.setVisible(false); // Oculta la barra de menu, se abre con botones Juegos/Usuarios
