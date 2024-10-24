@@ -98,7 +98,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		JPanel panelTop1 = new JPanel(new BorderLayout());
 		JPanel panelTop2 = new JPanel(new BorderLayout());
 
-		panelTop.add(panelTop1, BorderLayout.EAST);
+		panelTop.add(panelTop1, BorderLayout.WEST);
 		panelTop.add(panelTop2, BorderLayout.CENTER);
 		
 		
@@ -158,13 +158,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		btnLogIn.setBackground(Color.white);
 //		btnLogIn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 //		btnLogIn.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
-		panelTop2.add(btnLogIn);
+		panelTop1.add(btnLogIn);
 		
 		btnRegistro = new JButton("Registrarse");
 		btnRegistro.setForeground(new Color(33, 150, 243 ));
 		btnRegistro.setBackground(Color.white);
 		//btnRegistro.setBorder(new LineBorder(Color.black));
-		panelTop2.add(btnRegistro);
+		panelTop1.add(btnRegistro);
 		panelPrincipal.add(panelTop, BorderLayout.NORTH);
 		
 		btnUsuario = new JButton("Usuario");
@@ -184,12 +184,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 //		btnPerfil = new JButton("Perfil");
 
 		
-		panelTop1.add(btnRegistro, BorderLayout.EAST);
-		panelTop1.setBorder(new EmptyBorder(10,10,10,35));
+		panelTop2.add(btnRegistro, BorderLayout.WEST);
+		panelTop1.setBorder(new EmptyBorder(10,35,10,10));
 		panelTop1.setBackground(new Color(217, 239, 248 ));
-		panelTop2.add(btnLogIn, BorderLayout.EAST);
-		panelTop2.add(btnUsuario, BorderLayout.WEST);
-		panelTop2.setBorder(new EmptyBorder(10,35,10,0));
+		panelTop1.add(btnLogIn, BorderLayout.WEST);
+		panelTop2.add(btnUsuario, BorderLayout.EAST);
+		panelTop2.setBorder(new EmptyBorder(10,0,10,35));
 		panelTop2.setBackground(new Color(217, 239, 248 ));
 
 
