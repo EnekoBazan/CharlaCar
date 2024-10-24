@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class VentanaPrincipal extends JFrame implements ActionListener{
 
@@ -100,6 +101,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		panelTop.add(panelTop1, BorderLayout.EAST);
 		panelTop.add(panelTop2, BorderLayout.CENTER);
 		
+		
 		///////////BUSCRA Y CREAR VIAJES
 		panelCentral = new JPanel(new GridLayout(1,2, 20, 0));
 		panelCentral.setBorder(BorderFactory.createEmptyBorder(10, 35, 0, 35));
@@ -154,13 +156,14 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		btnLogIn = new JButton("LogIn");
 		btnLogIn.setForeground(new Color(33, 150, 243 ));
 		btnLogIn.setBackground(Color.white);
-		//btnLogIn.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
+//		btnLogIn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+//		btnLogIn.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
 		panelTop2.add(btnLogIn);
 		
 		btnRegistro = new JButton("Registrarse");
 		btnRegistro.setForeground(new Color(33, 150, 243 ));
 		btnRegistro.setBackground(Color.white);
-		//btnRegistro.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
+		//btnRegistro.setBorder(new LineBorder(Color.black));
 		panelTop2.add(btnRegistro);
 		panelPrincipal.add(panelTop, BorderLayout.NORTH);
 		
@@ -196,6 +199,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	    btnUsuario.addActionListener(this);
 	    btnBuscar.addActionListener(this);
 	    btnCrear.addActionListener(this);
+	    menuItemPerfil.addActionListener(this);
 		
 		this.add(panelPrincipal);
 		
@@ -225,10 +229,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 			logger.info("Boton Registro pulsado");
 			VentanaRegistro vRegistro = new VentanaRegistro();
 			vRegistro.setVisible(true);
-//		}else if (e.getActionCommand().equalsIgnoreCase("Perfil")) {
-//			logger.info("Boton Perfil pulsado");
-//			VentanaPerfil vPerfil = new VentanaPerfil();
-//			vPerfil.setVisible(true);
 		}else if(e.getActionCommand().equalsIgnoreCase("Buscar viaje")) {
 			logger.info("Boton buscar viaje");
 			VentanaBuscarViaje vBuscarViaje = new VentanaBuscarViaje();
@@ -237,11 +237,18 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 			logger.info("Boton crear viaje");
 			VentanaCrearViaje vCrearViaje = new VentanaCrearViaje();
 			vCrearViaje.setVisible(true);
-		}else if(e.getActionCommand().equalsIgnoreCase("Usuario")) {
-			JComponent source = (JComponent) e.getSource();
-			JPopupMenu popupMenu = menuUsuario.getPopupMenu();
-			popupMenu.show(source,0, source.getHeight());
-			logger.info("Has abierto el menu 'Usuario'");		
+//		}else if(e.getActionCommand().equalsIgnoreCase("Usuario")) {
+//			JComponent source = (JComponent) e.getSource();
+//			JPopupMenu popupMenu = menuUsuario.getPopupMenu();
+//			popupMenu.show(source,0, source.getHeight());
+//			logger.info("Has abierto el menu 'Usuario'");
+			
+//			if(e.getActionCommand().equalsIgnoreCase("Perfil")) {
+//                VentanaPerfil vPerfil = new VentanaPerfil();
+//                vPerfil.setVisible(true);
+//			} else if (e.getActionCommand().equalsIgnoreCase("Cerrar sesión")) {
+//				// Cerrar sesion
+//			}
 		}
 		menuItemPerfil.addActionListener(new ActionListener() {
 			
@@ -250,6 +257,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 				VentanaPerfil vPerfil = new VentanaPerfil();
 				vPerfil.setVisible(true);
 				
+			}
+		});
+		btnUsuario.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComponent source = (JComponent) e.getSource();
+				JPopupMenu popupMenu = menuUsuario.getPopupMenu();
+				popupMenu.show(source,0, source.getHeight());
+				logger.info("Has abierto el menu 'Usuario'");				
 			}
 		});
 	}
