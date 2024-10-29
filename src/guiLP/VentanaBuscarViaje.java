@@ -20,10 +20,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
+import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 import domainLN.Viaje;
-import service.TravelServiceImpl;
-import service.UserServiceImpl;
 
 import javax.swing.RowFilter;
 
@@ -49,8 +48,7 @@ public class VentanaBuscarViaje extends JFrame {
 	private DefaultTableModel tableModel;
 	private TableRowSorter<DefaultTableModel> rowSorter; //
 	
-	private UserServiceImpl userService = new UserServiceImpl();
-	private TravelServiceImpl travelService = new TravelServiceImpl(userService);
+
 	 
 	//private JButton btnFiltrar;
 	
@@ -67,8 +65,9 @@ public class VentanaBuscarViaje extends JFrame {
 		cabecera = new String[] {"Matricula", "Propietario", "Origen", "Destino", "Asientos Totales", "Asientos Disponibles"};
 		/////DATOS DE EJEMPLO
 
+		
 		// Lógica para preparar los datos de ejemplo
-		datosEjemplo = travelService.getViajes().stream()
+		datosEjemplo = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
 		    .map(viaje -> new String[] {
 		        viaje.getVehiculo().getMatricula(),
 		        viaje.getVehiculo().getPropietario().getNombre(),

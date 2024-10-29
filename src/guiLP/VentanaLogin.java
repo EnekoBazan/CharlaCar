@@ -13,10 +13,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.awt.Font;
 
-import domainLN.GestorLN;
+import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
-import service.TravelServiceImpl;
-import service.UserServiceImpl;
 
 public class VentanaLogin extends JDialog {
 
@@ -29,7 +27,7 @@ public class VentanaLogin extends JDialog {
 	private JLabel lblClave;
 	private JLabel lblRegistro;
 
-	private UserServiceImpl userService = new UserServiceImpl();
+
 
 	public VentanaLogin() {
 
@@ -78,8 +76,7 @@ public class VentanaLogin extends JDialog {
 
 		setLocationRelativeTo(null);
 		
-		// Inicializa primero los usuarios
-		userService.inicializarUsers();
+
 		
 		lblRegistro.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -101,7 +98,8 @@ public class VentanaLogin extends JDialog {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        boolean usuarioEncontrado = false;
-		        for (Usuario user : userService.getListUsers()) {
+		        
+		        for (Usuario user : CharlaCarImpl.getCharlaCarImpl().getListUsers()) {
 		        	System.out.println(user.toString());
 		            if (user.getNombre().equals(txtUser.getText())&& user.getContraseña().equals(passwordField.getText())) {
 		                usuarioEncontrado = true;
