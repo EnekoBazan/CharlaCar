@@ -81,6 +81,11 @@ public class Usuario {
 				&& Objects.equals(nombre, other.nombre)
 				&& Float.floatToIntBits(rating) == Float.floatToIntBits(other.rating);
 	}
+	@Override
+	public String toString() {
+		return "Usuario [nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + ", contraseña=" + contraseña
+				+ ", carnet=" + carnet + ", rating=" + rating + "]";
+	}
 	
 	
 }

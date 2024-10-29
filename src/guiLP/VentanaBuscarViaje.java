@@ -19,6 +19,12 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
+
+import domainLN.Usuario;
+import domainLN.Viaje;
+import service.TravelServiceImpl;
+import service.UserServiceImpl;
+
 import javax.swing.RowFilter;
 
 public class VentanaBuscarViaje extends JFrame {
@@ -42,6 +48,9 @@ public class VentanaBuscarViaje extends JFrame {
 
 	private DefaultTableModel tableModel;
 	private TableRowSorter<DefaultTableModel> rowSorter; //
+	
+	private UserServiceImpl userService = new UserServiceImpl();
+	private TravelServiceImpl travelService = new TravelServiceImpl(userService);
 	 
 	//private JButton btnFiltrar;
 	
@@ -55,39 +64,34 @@ public class VentanaBuscarViaje extends JFrame {
 		setIconImage(new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png")).getImage());
 
 		//CABECERA DE TABLA
-		cabecera = new String[] {"Model Coche", "Matricula", "Origen", "Destino", "Asientos Totales", "Asientos Ocupados"};
+		cabecera = new String[] {"Matricula", "Propietario", "Origen", "Destino", "Asientos Totales", "Asientos Disponibles"};
 		/////DATOS DE EJEMPLO
-		datosEjemplo = new String[][]
-		{
-			{"Renault Clio", "5643 GHT", "Madrid", "Barcelona", "7", "2"},
-			{"Volkswagen Golf", "8832 FDB", "Sevilla", "Valencia", "6", "3"},
-			{"Peugeot 308", "3456 JKL", "Bilbao", "Santander", "5", "0"},
-			{"Citroen C4", "7765 YUR", "Madrid", "Valladolid", "7", "1"},
-			{"Hyundai i30", "2345 OUI", "Zaragoza", "Pamplona", "6", "4"},
-			{"Toyota Yaris", "7788 HJK", "Alicante", "Murcia", "5", "1"},
-			{"Honda Civic", "6754 FGE", "Granada", "Sevilla", "6", "0"},
-			{"Nissan Qashqai", "4556 RDF", "Malaga", "Cordoba", "7", "3"},
-			{"Kia Rio", "5678 WER", "Vigo", "Ourense", "5", "2"},
-			{"BMW Serie 1", "1234 ABC", "Madrid", "Toledo", "5", "4"},
-            {"Audi A3", "4567 DEF", "Barcelona", "Girona", "5", "1"},
-            {"Mercedes Clase A", "7890 GHI", "Valencia", "Alicante", "5", "2"},
-            {"Ford Raptor", "5933 HYS", "Bilbao", "Vitoria", "5", "0"},
-            {"Ford Fiesta", "0983 ADE", "Madrid", "Sevilla", "4", "2"},
-            {"Seat Toledo", "2123 ING", "Barcelona", "Girona", "3", "1"},
-            {"Seat Ibiza", "1456 FGP", "Valencia", "Alicante", "2", "3"},
-            {"Seat Panda", "9873 BMN", "Zaragoza", "Logroño", "5", "4"},
-            {"Renault Clio", "5643 GHT", "Granada", "Málaga", "6", "1"},
-            {"Volkswagen Golf", "8832 FDB", "Sevilla", "Córdoba", "7", "0"},
-            {"Peugeot 308", "3456 JKL", "Bilbao", "Santander", "4", "3"},
-            {"Citroen C4", "7765 YUR", "Madrid", "Toledo", "5", "2"},
-            {"Hyundai i30", "2345 OUI", "Zaragoza", "Pamplona", "6", "4"},
-            {"Toyota Yaris", "7788 HJK", "Alicante", "Murcia", "3", "2"},
-            {"Honda Civic", "6754 FGE", "Vigo", "Ourense", "5", "0"},
-            {"Nissan Qashqai", "4556 RDF", "León", "Oviedo", "6", "3"},
-            {"Kia Rio", "5678 WER", "Burgos", "Valladolid", "4", "1"},
-            {"BMW Serie 1", "1234 ABC", "Madrid", "Segovia", "5", "4"}
+		// Inicializa primero los usuarios
+		userService.inicializarUsers();
+		for (Usuario user : userService.getListUsers()) {
+            System.out.println(user.toString());
+			
+		}
+		// Luego inicializa los viajes
+		travelService.inicializarViajes();
+		for (Viaje viaje : travelService.getViajes()) {
+			System.out.println(viaje.toString());
 
-		};
+		}
+
+		// Lógica para preparar los datos de ejemplo
+		datosEjemplo = travelService.getViajes().stream()
+		    .map(viaje -> new String[] {
+		        viaje.getVehiculo().getMatricula(),
+		        viaje.getVehiculo().getPropietario().getNombre(),
+		        viaje.getOrigen(),
+		        viaje.getDestino(),
+		        String.valueOf(viaje.getVehiculo().getPlazas()),
+		        String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles())
+		    })
+		    .toArray(String[][]::new);
+		
+		//PANEL PRINCIPAL
 		panelPrincipal = new JPanel(new BorderLayout());
 		panelPrincipal.setBorder(new EmptyBorder(5, 10, 5, 0));
 		

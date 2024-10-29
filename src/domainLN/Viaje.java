@@ -28,6 +28,15 @@ public class Viaje {
 		super();
 	}
 
+	///GETTERS Y SETTERS
+	public Vehiculo getVehiculo() {
+		return vehiculo;
+	}
+
+	public void setVehiculo(Vehiculo vehiculo) {
+		this.vehiculo = vehiculo;
+	}
+
 	public String getOrigen() {
 		return origen;
 	}
@@ -94,5 +103,13 @@ public class Viaje {
 				&& espaciosOcupados == other.espaciosOcupados && Objects.equals(info, other.info)
 				&& Objects.equals(listaPasajeros, other.listaPasajeros) && Objects.equals(origen, other.origen);
 	}
+
+	@Override
+	public String toString() {
+		return "Viaje [origen=" + origen + ", destino=" + destino + ", espaciosDisponibles=" + espaciosDisponibles
+				+ ", espaciosOcupados=" + espaciosOcupados + ", vehiculo=" + vehiculo + ", listaPasajeros="
+				+ listaPasajeros + ", info=" + info + "]";
+	}
+	
 }
 	
