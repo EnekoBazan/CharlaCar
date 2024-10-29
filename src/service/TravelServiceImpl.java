@@ -36,7 +36,6 @@ public class TravelServiceImpl implements TravelService {
         listaViajes.get(4).setVehiculo(vehiculo);
         listaViajes.add(new Viaje("Madrid", "Malaga", 3, 0, userService.getListUsers(), "Viaje de trabajo"));
         listaViajes.get(5).setVehiculo(vehiculo);
-        System.out.println("Viajes inicializados");
     }
 
 	@Override

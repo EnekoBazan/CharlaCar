@@ -68,16 +68,8 @@ public class VentanaBuscarViaje extends JFrame {
 		/////DATOS DE EJEMPLO
 		// Inicializa primero los usuarios
 		userService.inicializarUsers();
-		for (Usuario user : userService.getListUsers()) {
-            System.out.println(user.toString());
-			
-		}
 		// Luego inicializa los viajes
 		travelService.inicializarViajes();
-		for (Viaje viaje : travelService.getViajes()) {
-			System.out.println(viaje.toString());
-
-		}
 
 		// Lógica para preparar los datos de ejemplo
 		datosEjemplo = travelService.getViajes().stream()
