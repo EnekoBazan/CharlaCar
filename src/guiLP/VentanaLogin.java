@@ -8,31 +8,35 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.awt.Font;
 
 import domainLN.GestorLN;
+import domainLN.Usuario;
+import service.TravelServiceImpl;
+import service.UserServiceImpl;
 
-public class VentanaLogin extends JDialog implements ActionListener{
+public class VentanaLogin extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private JTextField txtUser;
 	private JPasswordField passwordField;
 	private JButton btnAcceder;
 	private JLabel lblUsuario;
 	private JLabel lblClave;
 	private JLabel lblRegistro;
-	private GestorLN gestorLN;
-	
+
+	private UserServiceImpl userService = new UserServiceImpl();
+
 	public VentanaLogin() {
-		
-		setModal(true);		
-		
-		gestorLN = new GestorLN();
+
+		setModal(true);
+
 		getContentPane().setLayout(null);
-		
+
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 //		addWindowListener(new WindowAdapter() {
 //			@Override
@@ -40,40 +44,42 @@ public class VentanaLogin extends JDialog implements ActionListener{
 //                JOptionPane.showMessageDialog(null, "No puedes cerrar esta ventana");
 //			}
 //		});	
-		
-		setSize(300,200);
+
+		setSize(300, 200);
 		setTitle("CharlaCar (LogIn)");
 		setResizable(false);
-		
+
 		txtUser = new JTextField();
 		txtUser.setBounds(105, 25, 90, 20);
 		getContentPane().add(txtUser);
 		txtUser.setColumns(10);
-		
+
 		passwordField = new JPasswordField();
 		passwordField.setBounds(105, 70, 90, 20);
 		getContentPane().add(passwordField);
-		
+
 		lblUsuario = new JLabel("Usuario:");
 		lblUsuario.setBounds(30, 25, 90, 15);
 		getContentPane().add(lblUsuario);
-		
+
 		lblClave = new JLabel("Clave:");
 		lblClave.setBounds(30, 70, 90, 15);
 		getContentPane().add(lblClave);
-		
+
 		btnAcceder = new JButton("Acceder");
 		btnAcceder.setBounds(105, 110, 90, 20);
 		getContentPane().add(btnAcceder);
-		btnAcceder.addActionListener(this);
-		
+
 		lblRegistro = new JLabel("No estas Registrado?");
 		lblRegistro.setForeground(Color.BLUE);
 		lblRegistro.setFont(new Font("Poppins", Font.BOLD, 10));
 		lblRegistro.setBounds(100, 130, 110, 20);
 		getContentPane().add(lblRegistro);
-		
+
 		setLocationRelativeTo(null);
+		
+		// Inicializa primero los usuarios
+		userService.inicializarUsers();
 		
 		lblRegistro.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -83,25 +89,54 @@ public class VentanaLogin extends JDialog implements ActionListener{
 			}
 
 			public void mouseEntered(MouseEvent e) {
-				lblRegistro.setText("<html><u>No estas Registrado?</u></html>"); //ayuda de copilot
+				lblRegistro.setText("<html><u>No estas Registrado?</u></html>"); // ayuda de copilot
 			}
 
 			public void mouseExited(MouseEvent e) {
 				lblRegistro.setText("No estas Registrado?");
 			}
 		});
-		
-	}
-	
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equalsIgnoreCase("acceder")) {
-			System.out.println("Presionado Acceder");
-			gestorLN.mostrarDatos();
-			dispose();
-			
-		}//else if(e.getActionCommand()) {}
-				
+		btnAcceder.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        boolean usuarioEncontrado = false;
+		        for (Usuario user : userService.getListUsers()) {
+		        	System.out.println(user.toString());
+		            if (user.getNombre().equals(txtUser.getText())&& user.getContraseña().equals(passwordField.getText())) {
+		                usuarioEncontrado = true;
+		                JOptionPane.showMessageDialog(null, "Bienvenido " + user.getNombre());
+		                dispose();
+		                VentanaPrincipal vPrincipal = new VentanaPrincipal();
+		                vPrincipal.setVisible(true);
+		                break;
+		            }
+		        }
+		        
+		        if (!usuarioEncontrado) {
+		            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+		        }
+		    }
+		});
+
+//	
+//	@Override
+//	public void actionPerformed(ActionEvent e) {
+//		if (e.getActionCommand().equalsIgnoreCase("acceder")) {
+//			for (Usuario user : userService.getListUsers()) {
+//				if (user.getNombre().equalsIgnoreCase(txtUser.getText())
+//						&& user.getContraseña().equalsIgnoreCase(passwordField.getText())) {
+//					JOptionPane.showMessageDialog(null, "Bienvenido " + user.getNombre());
+//					dispose();
+//					VentanaPrincipal vPrincipal = new VentanaPrincipal();
+//					vPrincipal.setVisible(true);
+//					break;
+//				} else {
+//					JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+//				}
+//			}
+//		} // else if(e.getActionCommand()) {}
+//
+//	}
 	}
 }

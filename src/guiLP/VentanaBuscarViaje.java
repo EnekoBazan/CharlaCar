@@ -66,10 +66,6 @@ public class VentanaBuscarViaje extends JFrame {
 		//CABECERA DE TABLA
 		cabecera = new String[] {"Matricula", "Propietario", "Origen", "Destino", "Asientos Totales", "Asientos Disponibles"};
 		/////DATOS DE EJEMPLO
-		// Inicializa primero los usuarios
-		userService.inicializarUsers();
-		// Luego inicializa los viajes
-		travelService.inicializarViajes();
 
 		// Lógica para preparar los datos de ejemplo
 		datosEjemplo = travelService.getViajes().stream()

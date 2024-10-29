@@ -26,6 +26,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import service.TravelServiceImpl;
+import service.UserServiceImpl;
+
 public class VentanaPrincipal extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -57,6 +60,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	//Elementos JMenuJuegos
 	private JMenuItem menuItemPerfil = new JMenuItem("Perfil");
 	private JMenuItem menuItemCerrarSesion = new JMenuItem("Cerrar sesión");
+	
+	private UserServiceImpl userService = new UserServiceImpl();
+	private TravelServiceImpl travelService = new TravelServiceImpl(userService);
 	
 	public VentanaPrincipal()
 	{
@@ -208,6 +214,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	    menuItemPerfil.addActionListener(this);
 		
 		this.add(panelPrincipal);
+		
+		// Inicializa primero los usuarios
+		userService.inicializarUsers();
+		// Luego inicializa los viajes
+		travelService.inicializarViajes();
 		
 	//	this.validate();//repaint pantalla
 		
