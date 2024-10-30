@@ -79,6 +79,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		setTitle("CharlaCar");
 		setVisible(true);
 		setLocationRelativeTo(null);
+		setResizable(false);
 		
 		ImageIcon icon = new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png"));//imagen generada con IA
 		setIconImage(icon.getImage());
@@ -123,7 +124,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		
 		panelBotonCrear = new JPanel(new BorderLayout(0,10));
 		panelBotonCrear.setBackground(Color.WHITE);
-		panelBotonCrear.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		panelBotonCrear.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 20));
 		
 		//Ceancion de labels para el panel de crear
 		lblTituloCrear = new JLabel("¿Eres conductor?");
@@ -168,7 +169,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		
 		panelBotonBuscar = new JPanel(new BorderLayout(0,10));
 		panelBotonBuscar.setBackground(Color.WHITE);
-		panelBotonBuscar.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		panelBotonBuscar.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 15));
 		
 		//crearcion de labels para el panel buscar
 		lblTituloBuscar = new JLabel("¿Buscas un viaje?");
@@ -266,8 +267,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	    menuItemPerfil.addActionListener(this);
 		
 		this.add(panelPrincipal);
-		
-
 		
 	//	this.validate();//repaint pantalla
 		
