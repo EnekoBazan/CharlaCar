@@ -132,19 +132,19 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		lblTituloCrear.setFont(new Font("Arial", Font.BOLD, 18));
 		
 		lblTextoCrear = new JLabel("• Crea tu viaje y comparte gastos");
-		lblTextoCrear.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTextoCrear.setForeground(Color.black);
-		lblTextoCrear.setFont(new Font("Arial", Font.PLAIN, 12));
+		lblTextoCrear.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTextoCrear.setForeground(Color.darkGray);
+		lblTextoCrear.setFont(new Font("Arial", Font.BOLD, 12));
 		
-		lblTextoCrear1 = new JLabel("• Publica tu viaje y ahorra en gastos de transporte");
-		lblTextoCrear1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTextoCrear1.setForeground(Color.black);
-		lblTextoCrear1.setFont(new Font("Arial", Font.PLAIN, 12));
+		lblTextoCrear1 = new JLabel("• Publica tu viaje y no viajes solo");
+		lblTextoCrear1.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTextoCrear1.setForeground(Color.darkGray);
+		lblTextoCrear1.setFont(new Font("Arial", Font.BOLD, 12));
 		
 		lblTextoCrear2 = new JLabel("• Elige tus preferencias y horarios");
-		lblTextoCrear2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTextoCrear2.setForeground(Color.black);
-		lblTextoCrear2.setFont(new Font("Arial", Font.PLAIN, 12));
+		lblTextoCrear2.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTextoCrear2.setForeground(Color.darkGray);
+		lblTextoCrear2.setFont(new Font("Arial", Font.BOLD, 12));
 		
 		btnCrear = new JButton("Crear Viaje");
 		btnCrear.setBackground(new Color(33, 150, 243));
@@ -155,6 +155,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		panelBotonCrear.add(lblTituloCrear, BorderLayout.NORTH);
 		panelBotonCrear.add(lblTextoCrear, BorderLayout.CENTER);
 		panelTextosCrear = new JPanel(new GridLayout(3, 1, 5, 5));
+		panelTextosCrear.setBorder(BorderFactory.createEmptyBorder(0, 35, 0, 35));
 		panelTextosCrear.setBackground(Color.WHITE);
 		panelTextosCrear.add(lblTextoCrear);
 		panelTextosCrear.add(lblTextoCrear1);
@@ -176,19 +177,19 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		lblTituloBuscar.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		lblTextoBuscar = new JLabel("• Encuentra el viaje perfecto para ti");
-		lblTextoBuscar.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTextoBuscar.setForeground(Color.black);
-		lblTextoBuscar.setFont(new Font("Arial", Font.PLAIN, 12));
+		lblTextoBuscar.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTextoBuscar.setForeground(Color.darkGray);
+		lblTextoBuscar.setFont(new Font("Arial", Font.BOLD, 12));
 
 		lblTextoBuscar1 = new JLabel("• Viaja de forma económica y sostenible");
-		lblTextoBuscar1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTextoBuscar1.setForeground(Color.black);
-		lblTextoBuscar1.setFont(new Font("Arial", Font.PLAIN, 12));
+		lblTextoBuscar1.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTextoBuscar1.setForeground(Color.darkGray);
+		lblTextoBuscar1.setFont(new Font("Arial", Font.BOLD, 12));
 
 		lblTextoBuscar2 = new JLabel("• Conecta con conductores verificados");
-		lblTextoBuscar2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTextoBuscar2.setForeground(Color.black);
-		lblTextoBuscar2.setFont(new Font("Arial", Font.PLAIN, 12));
+		lblTextoBuscar2.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTextoBuscar2.setForeground(Color.darkGray);
+		lblTextoBuscar2.setFont(new Font("Arial", Font.BOLD, 12));
 		
 		btnBuscar = new JButton("Buscar Viaje");
 		btnBuscar.setBackground(new Color(33, 150, 243));
@@ -198,6 +199,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		
 		panelBotonBuscar.add(lblTituloBuscar, BorderLayout.NORTH);
 		panelTextosBuscar = new JPanel(new GridLayout(3, 1, 0, 0));
+		panelTextosBuscar.setBorder(BorderFactory.createEmptyBorder(0, 35, 0, 0));
 		panelTextosBuscar.setBackground(Color.WHITE);
 		panelTextosBuscar.add(lblTextoBuscar);
 		panelTextosBuscar.add(lblTextoBuscar1);
