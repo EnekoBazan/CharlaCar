@@ -354,6 +354,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 		        }
 			}		
 		});
+		menuItemCerrarSesion.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				VentanaLogin.loged = false;
+				btnLogIn.setVisible(true);
+				btnRegistro.setVisible(true);
+				logger.info("Has cerrado sesión");
+			}
+		});
 	}
 	
 	
