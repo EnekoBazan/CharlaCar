@@ -3,12 +3,13 @@ package guiLP;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -66,6 +67,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 	//Barra de menus
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu menuUsuario = new JMenu("Usuario");
+	private boolean isVentanaPerfilOpen = false; // Controla si la ventana de perfil está abierta
+
 	//Elementos JMenuJuegos
 	private JMenuItem menuItemPerfil = new JMenuItem("Perfil");
 	private JMenuItem menuItemCerrarSesion = new JMenuItem("Cerrar sesión");
@@ -319,20 +322,32 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				VentanaPerfil vPerfil = new VentanaPerfil();
-				vPerfil.setVisible(true);
-				
-			}
+		        if (!isVentanaPerfilOpen) {  // Solo abre la ventana si no está abierta
+		            isVentanaPerfilOpen = true;  // Cambia el estado para evitar duplicación
+		            VentanaPerfil vPerfil = new VentanaPerfil();
+		            vPerfil.setVisible(true);
+		            
+		            // Añade un listener para restablecer el estado cuando la ventana se cierre
+		            vPerfil.addWindowListener(new WindowAdapter() {
+		                @Override
+		                public void windowClosing(WindowEvent windowEvent) {
+		                    isVentanaPerfilOpen = false;  // Restablece el estado al cerrar la ventana
+		                }
+		            });
+
+		            logger.info("Ventana 'Perfil' abierta");
+		        }
+		    }
 		});
 		btnUsuario.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JComponent source = (JComponent) e.getSource();
-				JPopupMenu popupMenu = menuUsuario.getPopupMenu();
-				popupMenu.show(source,0, source.getHeight());
-				logger.info("Has abierto el menu 'Usuario'");				
-			}
+		            JComponent source = (JComponent) e.getSource();
+		            JPopupMenu popupMenu = menuUsuario.getPopupMenu();
+		            popupMenu.show(source, 0, source.getHeight());
+		            logger.info("Has abierto el menú 'Usuario'");
+		        }		
 		});
 	}
 	
