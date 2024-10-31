@@ -93,7 +93,7 @@ public class VentanaRegistro extends JDialog {
                 lblRatingValue.setText(String.valueOf(sliderRating.getValue()));
             }
         });
-        
+        //cambio
         btnRegistrar = new JButton("Registrar");
         btnRegistrar.setBounds(120, 280, 100, 30);
         getContentPane().add(btnRegistrar);
