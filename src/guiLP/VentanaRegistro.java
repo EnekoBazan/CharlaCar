@@ -94,6 +94,7 @@ public class VentanaRegistro extends JDialog {
             }
         });
         //cambio
+        //comentario 2
         btnRegistrar = new JButton("Registrar");
         btnRegistrar.setBounds(120, 280, 100, 30);
         getContentPane().add(btnRegistrar);
