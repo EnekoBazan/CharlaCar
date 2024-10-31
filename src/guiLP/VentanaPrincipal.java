@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
@@ -35,8 +36,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 
 	private JButton btnCrear;
 	private JButton btnBuscar;
-	private JButton btnLogIn;
-	private JButton btnRegistro;
+	static JButton btnLogIn;
+	static JButton btnRegistro;
 	private JButton btnUsuario;
 	
 	private JPanel panelCentral;
@@ -343,11 +344,15 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+		        if(VentanaLogin.loged = true) {
 		            JComponent source = (JComponent) e.getSource();
 		            JPopupMenu popupMenu = menuUsuario.getPopupMenu();
 		            popupMenu.show(source, 0, source.getHeight());
 		            logger.info("Has abierto el menú 'Usuario'");
-		        }		
+		         } else {
+	                JOptionPane.showMessageDialog(null, "Inicie sesión para visualizar su perfil.");
+		        }
+			}		
 		});
 	}
 	

@@ -27,7 +27,7 @@ public class VentanaLogin extends JDialog {
 	private JLabel lblClave;
 	private JLabel lblRegistro;
 
-
+	static boolean loged = false;
 
 	public VentanaLogin() {
 
@@ -101,16 +101,16 @@ public class VentanaLogin extends JDialog {
 		        
 		        for (Usuario user : CharlaCarImpl.getCharlaCarImpl().getListUsers()) {
 		        	System.out.println(user.toString());
-		            if (user.getNombre().equals(txtUser.getText())&& user.getContraseña().equals(passwordField.getText())) {
+		            if (user.getNombre().equals(txtUser.getText())&& new String(passwordField.getPassword()).equals(user.getContraseña())) {
 		                usuarioEncontrado = true;
+		                loged = true;
+		                VentanaPrincipal.btnLogIn.setVisible(false);
+		                VentanaPrincipal.btnRegistro.setVisible(false);
 		                JOptionPane.showMessageDialog(null, "Bienvenido " + user.getNombre());
 		                dispose();
-		                VentanaPrincipal vPrincipal = new VentanaPrincipal();
-		                vPrincipal.setVisible(true);
 		                break;
 		            }
 		        }
-		        
 		        if (!usuarioEncontrado) {
 		            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
 		        }
