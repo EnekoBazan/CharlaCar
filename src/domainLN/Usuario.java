@@ -1,5 +1,6 @@
 package domainLN;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Usuario {
@@ -10,6 +11,7 @@ public class Usuario {
 	private String contraseña;
 	private boolean carnet;
 	private float rating;
+	private ArrayList<Viaje>ViajesPorUsuario;
 	
 	public Usuario(String nombre, String apellido, String dni, String contraseña, boolean carnet, float rating) {
 		super();
@@ -25,6 +27,14 @@ public class Usuario {
 	}
 	
 	///GETTERS Y SETTERS
+	
+	public ArrayList<Viaje> getViajesPorUsuario() {
+		return ViajesPorUsuario;
+	}
+	public void setViajesPorUsuario(ArrayList<Viaje> viajesPorUsuario) {
+		this.ViajesPorUsuario = viajesPorUsuario;
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}

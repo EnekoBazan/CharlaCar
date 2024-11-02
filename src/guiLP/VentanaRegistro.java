@@ -7,10 +7,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
-import javax.swing.JSlider;
+//import javax.swing.JSlider;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+//import javax.swing.event.ChangeEvent;
+//import javax.swing.event.ChangeListener;
 
 public class VentanaRegistro extends JDialog {
     private static final long serialVersionUID = 1L;
@@ -20,8 +20,8 @@ public class VentanaRegistro extends JDialog {
     private JTextField txtDNI;
     private JPasswordField passwordField;
     private JCheckBox checkCarnet;
-    private JSlider sliderRating;
-    private JLabel lblRatingValue;
+//    private JSlider sliderRating;
+//    private JLabel lblRatingValue;
     private JButton btnRegistrar;
     
     public VentanaRegistro() {
@@ -73,26 +73,27 @@ public class VentanaRegistro extends JDialog {
         checkCarnet.setBounds(140, 190, 150, 20);
         getContentPane().add(checkCarnet);
         
-        JLabel lblRating = new JLabel("Calificación:");
-        lblRating.setBounds(30, 230, 100, 20);
-        getContentPane().add(lblRating);
+        //no tine que poner el rating el usuario que se registra
+//        JLabel lblRating = new JLabel("Calificación:");
+//        lblRating.setBounds(30, 230, 100, 20);
+//        getContentPane().add(lblRating);
+//        
+//        sliderRating = new JSlider(0, 100, 50);
+//        sliderRating.setBounds(140, 230, 150, 20);
+//        sliderRating.setMajorTickSpacing(25);
+//        sliderRating.setPaintTicks(true);
+//        getContentPane().add(sliderRating);
         
-        sliderRating = new JSlider(0, 100, 50);
-        sliderRating.setBounds(140, 230, 150, 20);
-        sliderRating.setMajorTickSpacing(25);
-        sliderRating.setPaintTicks(true);
-        getContentPane().add(sliderRating);
-        
-        lblRatingValue = new JLabel("50");  // Muestra el valor inicial del slider
-        lblRatingValue.setBounds(300, 230, 30, 20);
-        getContentPane().add(lblRatingValue);
-        
-        sliderRating.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                lblRatingValue.setText(String.valueOf(sliderRating.getValue()));
-            }
-        });
+//        lblRatingValue = new JLabel("50");  // Muestra el valor inicial del slider
+//        lblRatingValue.setBounds(300, 230, 30, 20);
+//        getContentPane().add(lblRatingValue);
+//        
+//        sliderRating.addChangeListener(new ChangeListener() {
+//            @Override
+//            public void stateChanged(ChangeEvent e) {
+//                lblRatingValue.setText(String.valueOf(sliderRating.getValue()));
+//            }
+//        });
         //cambio
         //comentario 2
         btnRegistrar = new JButton("Registrar");
