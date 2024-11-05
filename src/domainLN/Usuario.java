@@ -11,7 +11,7 @@ public class Usuario {
 	private String contraseña;
 	private boolean carnet;
 	private float rating;
-	private ArrayList<Viaje>ViajesPorUsuario;
+	private ArrayList<Viaje> viajesPorUsuario;
 	
 	public Usuario(String nombre, String apellido, String dni, String contraseña, boolean carnet, float rating) {
 		super();
@@ -28,12 +28,6 @@ public class Usuario {
 	
 	///GETTERS Y SETTERS
 	
-	public ArrayList<Viaje> getViajesPorUsuario() {
-		return ViajesPorUsuario;
-	}
-	public void setViajesPorUsuario(ArrayList<Viaje> viajesPorUsuario) {
-		this.ViajesPorUsuario = viajesPorUsuario;
-	}
 	
 	public String getNombre() {
 		return nombre;
@@ -95,6 +89,10 @@ public class Usuario {
 	public String toString() {
 		return "Usuario [nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + ", contraseña=" + contraseña
 				+ ", carnet=" + carnet + ", rating=" + rating + "]";
+	}
+	public void addViaje(Viaje v) {
+		// TODO Auto-generated method stub
+		viajesPorUsuario.add( v );
 	}
 	
 	

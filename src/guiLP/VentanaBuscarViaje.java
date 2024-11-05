@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,6 +25,7 @@ import javax.swing.table.TableRowSorter;
 
 import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
+import domainLN.Viaje;
 
 import javax.swing.RowFilter;
 
@@ -76,8 +80,16 @@ public class VentanaBuscarViaje extends JFrame {
 		panelPrincipal.setBorder(new EmptyBorder(5, 10, 5, 0));
 
 		tableModel = new DefaultTableModel(datosEjemplo, cabecera);
-		tablaBusqueda = new JTable(tableModel);
+		tablaBusqueda = new JTable(tableModel) {
 
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+					return false;
+			}
+		};	
+		
+		
 		scrollPane = new JScrollPane(tablaBusqueda);
 		btnUnirse = new JButton("Unirse");
 		btnUnirse.setForeground(new Color(33, 150, 243));
@@ -130,6 +142,24 @@ public class VentanaBuscarViaje extends JFrame {
 		this.tablaBusqueda.setDefaultRenderer(Object.class, cellRenderer);
 		this.add(panelPrincipal);
 
+		
+		btnUnirse.addActionListener( new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				int numFila = tablaBusqueda.getSelectedRow();
+				Vector<Vector> xxxx = tableModel.getDataVector();
+				
+				Viaje v = new Viaje(getTitle(), getWarningString(), numFila, numFila, null, getName());
+				
+				CharlaCarImpl.getCharlaCarImpl().addViajeToUsuario(v );
+				
+				System.out.println( xxxx.get(0) );
+				
+			}
+		} );
 		setVisible(true);
 
 	}
@@ -190,4 +220,6 @@ public class VentanaBuscarViaje extends JFrame {
 			});
 		}
 	}
+	
+	
 }

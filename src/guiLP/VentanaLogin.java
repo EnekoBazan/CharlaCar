@@ -107,6 +107,9 @@ public class VentanaLogin extends JDialog {
 		                VentanaPrincipal.btnLogIn.setVisible(false);
 		                VentanaPrincipal.btnRegistro.setVisible(false);
 		                JOptionPane.showMessageDialog(null, "Bienvenido " + user.getNombre());
+		                
+		                CharlaCarImpl.getCharlaCarImpl().setLogeado(user);
+		                
 		                dispose();
 		                break;
 		            }

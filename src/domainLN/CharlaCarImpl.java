@@ -6,6 +6,21 @@ import java.util.List;
 //GESTORLN patron singleton
 public class CharlaCarImpl implements CharlaCarService {
 
+	
+	private Usuario logeado;
+	
+	public void setLogeado( Usuario u )
+	{
+		logeado = u;
+	}
+	
+	public Usuario getLogeado()
+	{
+		return logeado;
+	}
+	
+	
+	
 	private List<Viaje> listaViajes;
 	private List<Usuario> listaUsuarios;
 
@@ -89,6 +104,14 @@ public class CharlaCarImpl implements CharlaCarService {
 	@Override
 	public void deleteUser(Usuario user) {
 		listaUsuarios.remove(user);
+	}
+
+	public void addViajeToUsuario( Viaje v) {
+		// TODO Auto-generated method stub
+		
+		logeado.addViaje(v);
+		
+		
 	}
 
 }
