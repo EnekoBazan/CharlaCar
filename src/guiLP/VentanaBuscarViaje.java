@@ -158,6 +158,10 @@ public class VentanaBuscarViaje extends JFrame {
 				
 				System.out.println( xxxx.get(0) );
 				
+				//añadir JOptionPane
+//				if (CharlaCarImpl.getCharlaCarImpl().getLogeado()e.) {
+//					
+//				}
 			}
 		} );
 		setVisible(true);
