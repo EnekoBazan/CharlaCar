@@ -1,10 +1,13 @@
 package guiLP;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -66,6 +69,12 @@ public class VentanaLogin extends JDialog {
 
 		btnAcceder = new JButton("Acceder");
 		btnAcceder.setBounds(105, 110, 90, 20);
+		
+		btnAcceder.setForeground(new Color(33, 150, 243 ));
+		btnAcceder.setBackground(Color.white);
+		btnAcceder.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
+		btnAcceder.setPreferredSize(new Dimension(60, 25));
+
 		getContentPane().add(btnAcceder);
 
 		lblRegistro = new JLabel("No estas Registrado?");
@@ -74,6 +83,8 @@ public class VentanaLogin extends JDialog {
 		lblRegistro.setBounds(100, 130, 110, 20);
 		getContentPane().add(lblRegistro);
 
+		getContentPane().setBackground(new Color(217, 239, 248 ));
+		
 		setLocationRelativeTo(null);
 		
 
