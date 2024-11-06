@@ -1,14 +1,27 @@
 package guiLP;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 //import javax.swing.JSlider;
 import javax.swing.JTextField;
+
+import domainLN.CharlaCarImpl;
+import domainLN.Usuario;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 //import javax.swing.event.ChangeEvent;
 //import javax.swing.event.ChangeListener;
 
@@ -23,6 +36,7 @@ public class VentanaRegistro extends JDialog {
 //    private JSlider sliderRating;
 //    private JLabel lblRatingValue;
     private JButton btnRegistrar;
+    private JLabel lblLogin;
     
     public VentanaRegistro() {
         setModal(true);
@@ -32,6 +46,12 @@ public class VentanaRegistro extends JDialog {
         getContentPane().setLayout(null);
         
         setLocationRelativeTo(null);
+        
+        ImageIcon icon = new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png"));
+		setIconImage(icon.getImage());
+		
+		getContentPane().setBackground(new Color(217, 239, 248)); 
+
         
         JLabel lblNombre = new JLabel("Nombre:");
         lblNombre.setBounds(30, 30, 100, 20);
@@ -73,6 +93,28 @@ public class VentanaRegistro extends JDialog {
         checkCarnet.setBounds(140, 190, 150, 20);
         getContentPane().add(checkCarnet);
         
+        
+        lblLogin = new JLabel("Ya tienes cuenta?");
+        lblLogin.setForeground(Color.BLUE);
+        lblLogin.setFont(new Font("Poppins", Font.BOLD, 10));
+        lblLogin.setBounds(120, 280, 100, 30);
+		getContentPane().add(lblLogin);
+		
+		lblLogin.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+				VentanaLogin vLogin = new VentanaLogin();
+				vLogin.setVisible(true);
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				lblLogin.setText("<html><u>Ya tienes cuenta?</u></html>"); // ayuda de copilot
+			}
+
+			public void mouseExited(MouseEvent e) {
+				lblLogin.setText("Ya tienes cuenta?");
+			}
+		});
         //no tine que poner el rating el usuario que se registra
 //        JLabel lblRating = new JLabel("Calificación:");
 //        lblRating.setBounds(30, 230, 100, 20);
@@ -97,7 +139,50 @@ public class VentanaRegistro extends JDialog {
         //cambio
         //comentario 2
         btnRegistrar = new JButton("Registrar");
-        btnRegistrar.setBounds(120, 280, 100, 30);
+        btnRegistrar.setBounds(115, 255, 100, 30);
+        
+        btnRegistrar.setForeground(new Color(33, 150, 243 ));
+        btnRegistrar.setBackground(Color.white);
+        btnRegistrar.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
+        btnRegistrar.setPreferredSize(new Dimension(60, 25));
         getContentPane().add(btnRegistrar);
+        
+        btnRegistrar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nombreUsuario = txtNombre.getText();
+                String contraseña = new String(passwordField.getPassword());
+
+                // Verificar si el usuario ya existe
+                boolean usuarioExistente = false;
+                
+                for (Usuario user : CharlaCarImpl.getCharlaCarImpl().getListUsers()) {
+                    if (user.getNombre().equals(nombreUsuario)) {
+                        usuarioExistente = true;
+                        break;
+                    }
+                }
+
+                if (usuarioExistente) {
+                    JOptionPane.showMessageDialog(null, "El nombre de usuario ya está en uso. Intenta con otro nombre.");
+                } else if (nombreUsuario.isEmpty() || contraseña.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "El nombre de usuario y la contraseña no pueden estar vacíos.");
+                } else {
+                   
+                    Usuario nuevoUsuario = new Usuario(nombreUsuario, contraseña, nombreUsuario, contraseña, usuarioExistente, ABORT);
+                    CharlaCarImpl.getCharlaCarImpl().getListUsers().add(nuevoUsuario);  // Agregar el usuario a la lista
+                    
+                    JOptionPane.showMessageDialog(null, "Registro exitoso. Bienvenido " + nombreUsuario);
+                    
+                    
+                    dispose();
+                }
+            }
+        });
+
     }
 }
+
+
+
+

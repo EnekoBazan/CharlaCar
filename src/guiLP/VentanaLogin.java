@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -82,6 +83,9 @@ public class VentanaLogin extends JDialog {
 		lblRegistro.setFont(new Font("Poppins", Font.BOLD, 10));
 		lblRegistro.setBounds(100, 130, 110, 20);
 		getContentPane().add(lblRegistro);
+		
+		 ImageIcon icon = new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png"));
+		 setIconImage(icon.getImage());
 
 		getContentPane().setBackground(new Color(217, 239, 248 ));
 		
