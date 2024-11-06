@@ -66,11 +66,11 @@ public class CharlaCarImpl implements CharlaCarService {
 	}
 
 	private void inicializarUsers() {
-		listaUsuarios.add(new Usuario("a", "Palotes", "73627382J", "a", true, 7.0f));
-		listaUsuarios.add(new Usuario("Juan", "Perez", "73627382J", "contraseña", true, 7.0f));
-		listaUsuarios.add(new Usuario("Maria", "Lopez", "73627382J", "contraseña", true, 7.0f));
-		listaUsuarios.add(new Usuario("Ana", "Garcia", "73627382J", "contraseña", true, 7.0f));
-		listaUsuarios.add(new Usuario("Pedro", "Rodriguez", "73627382J", "contraseña", true, 7.0f));
+		listaUsuarios.add(new Usuario("a", "Palotes", "73627382J", "a", true, 2.0f));
+		listaUsuarios.add(new Usuario("Juan", "Perez", "73627382J", "contraseña", true, 4.0f));
+		listaUsuarios.add(new Usuario("Maria", "Lopez", "73627382J", "contraseña", true, 1.0f));
+		listaUsuarios.add(new Usuario("Ana", "Garcia", "73627382J", "contraseña", true, 5.0f));
+		listaUsuarios.add(new Usuario("Pedro", "Rodriguez", "73627382J", "contraseña", true, 3.0f));
 
 	}
 
