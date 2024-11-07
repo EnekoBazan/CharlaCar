@@ -5,11 +5,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -18,7 +22,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import domainLN.CharlaCarImpl;
+import domainLN.TipoVehiculo;
 import domainLN.Usuario;
+import domainLN.Vehiculo;
+import domainLN.Viaje;
 
 public class VentanaPerfil extends JDialog{
 	
@@ -29,10 +36,12 @@ public class VentanaPerfil extends JDialog{
 	private JPanel panelPrincipal = new JPanel(new BorderLayout());
 	private JPanel panelNorte = new JPanel(new GridLayout(2, 2));
 	private JPanel panelCentroGeneral = new JPanel(new BorderLayout());
-	private JPanel panelCentro = new JPanel(new BorderLayout());
+	private JPanel panelCentroN = new JPanel(new BorderLayout());
 	private JPanel panelCentroA = new JPanel(new GridLayout(1, 5));
-	private JPanel panelSur = new JPanel(new BorderLayout());
-	private JPanel panelSur2 = new JPanel(new BorderLayout());
+	private JPanel panelCentroCentro = new JPanel(new BorderLayout());
+	private JPanel panelCentroS = new JPanel(new BorderLayout());
+
+	private JPanel panelSur = new JPanel();
 
 	//Label
 	private JLabel lbNombre = new JLabel();
@@ -77,11 +86,15 @@ public class VentanaPerfil extends JDialog{
 	private ImageIcon estrellaG4 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaG4.png"));
 	private ImageIcon estrellaG5 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaG5.png"));
 
+	//Botones
+	JButton btnSalir = new JButton("Salir");
+	JButton btnEliminar = new JButton("Eliminar");
+
 	public VentanaPerfil() {
 		
 		//setModal(true); solo si queremos que no se pueda interactuar con la ventana principal mientras esta este abierta
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(420, 422);
+		setSize(420, 440);
 		setTitle("Perfil");
 		setVisible(true);
 		setLocationRelativeTo(null);
@@ -122,9 +135,9 @@ public class VentanaPerfil extends JDialog{
 		//Rating
       	Border bordeRating = BorderFactory.createLineBorder(Color.BLACK);
       	Border tituloBordeRating = BorderFactory.createTitledBorder(bordeRating,"Rating");
-      	panelCentro.setBorder(tituloBordeRating);
-    	panelCentro.setBackground(Color.WHITE);
-      	panelCentro.add(panelCentroA, BorderLayout.NORTH);
+      	panelCentroN.setBorder(tituloBordeRating);
+    	panelCentroN.setBackground(Color.WHITE);
+      	panelCentroN.add(panelCentroA, BorderLayout.NORTH);
     	panelCentroA.setBackground(Color.WHITE);
     	
     	lblestrellaA1.setIcon(estrellaA1);
@@ -147,12 +160,12 @@ public class VentanaPerfil extends JDialog{
     	//Viajes
       	Border bordeViajes = BorderFactory.createLineBorder(Color.BLACK);
       	Border tituloBordeViajes = BorderFactory.createTitledBorder(bordeViajes,"Mis Viajes");
-      	panelSur2.setBorder(tituloBordeViajes);
-      	panelSur2.setBackground(Color.WHITE);
+      	panelCentroCentro.setBorder(tituloBordeViajes);
+      	panelCentroCentro.setBackground(Color.WHITE);
      	Border bordeViajesUnidos = BorderFactory.createLineBorder(Color.BLACK);
       	Border tituloViajesUnidos = BorderFactory.createTitledBorder(bordeViajesUnidos,"Viajes Unidos");
-      	panelSur.setBorder(tituloViajesUnidos);
-      	panelSur.setBackground(Color.WHITE);
+      	panelCentroS.setBorder(tituloViajesUnidos);
+      	panelCentroS.setBackground(Color.WHITE);
     	datos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
     	        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado)) // Filtra por usuario logueado
     	        .map(viaje -> new String[] {
@@ -179,7 +192,7 @@ public class VentanaPerfil extends JDialog{
 		tablaMisViajes.setPreferredScrollableViewportSize(new Dimension(150, 60)); // Tamaño deseado para la tabla
 		tablaMisViajes.setFillsViewportHeight(true); // Rellenar el área de visualización
 		tablaMisViajes.setBorder(new EmptyBorder(5, 5, 5, 5));
-		panelSur2.add(scrollPane, BorderLayout.CENTER);
+		panelCentroCentro.add(scrollPane, BorderLayout.NORTH);
 		
     	datosViajesUnidos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
     	        .filter(viaje -> viaje.getListaPasajeros().contains(usuarioLogeado)) // Filtra por usuario logueado
@@ -206,18 +219,63 @@ public class VentanaPerfil extends JDialog{
 		tablaViajesUnidos.setPreferredScrollableViewportSize(new Dimension(150, 60)); // Tamaño deseado para la tabla
 		tablaViajesUnidos.setFillsViewportHeight(true); // Rellenar el área de visualización
 		tablaViajesUnidos.setBorder(new EmptyBorder(5, 5, 5, 5));
-		panelSur.add(scrollPane2, BorderLayout.CENTER);
+		panelCentroS.add(scrollPane2, BorderLayout.CENTER);
     	
-		panelCentroGeneral.add(panelCentro, BorderLayout.NORTH);
-		panelCentroGeneral.add(panelSur, BorderLayout.SOUTH);
+		// Botones
+//		panelSur.add(btnEliminar);
+		btnEliminar.setBackground(new Color(33, 150, 243));
+		btnEliminar.setForeground(Color.WHITE);
+		btnEliminar.setFont(new Font("Arial", Font.BOLD, 14));
+//		panelSur.add(btnSalir);
+		btnSalir.setBackground(new Color(33, 150, 243));
+		btnSalir.setForeground(Color.WHITE);
+		btnSalir.setFont(new Font("Arial", Font.BOLD, 14));
+		
+		// Paneles
+		panelCentroGeneral.add(panelCentroN, BorderLayout.NORTH);
+		panelCentroGeneral.add(panelCentroCentro, BorderLayout.CENTER);
+		panelCentroGeneral.add(panelCentroS, BorderLayout.SOUTH);
+		
     	panelPrincipal.add(panelNorte, BorderLayout.NORTH);
     	panelPrincipal.add(panelCentroGeneral, BorderLayout.CENTER);
-    	panelPrincipal.add(panelSur2, BorderLayout.SOUTH);
+    	panelPrincipal.add(panelSur, BorderLayout.SOUTH);
     	
 		panelColor.add(panelPrincipal);
 		panelColor.setBorder(new EmptyBorder(20,20,20,20));
 		panelColor.setBackground(new Color(237, 242, 255));
     	add(panelColor);
+    	
+    	btnSalir.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 int filaSeleccionada = tablaViajesUnidos.getSelectedRow();
+			     if (filaSeleccionada == -1) {
+			    	 JOptionPane.showMessageDialog( null,
+			    			 "Por favor, seleccione una fila de la tabla para 'Mis Viajes'.",
+			    			 "Fila no seleccionada",
+			    			 javax.swing.JOptionPane.WARNING_MESSAGE
+			    			 );
+			    	 return;
+			     }
+			}
+		});
+    	
+    	btnEliminar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 int filaSeleccionada = tablaViajesUnidos.getSelectedRow();
+			        if (filaSeleccionada == -1) {
+			        	JOptionPane.showMessageDialog(null,
+			                "Por favor, seleccione una fila de la tabla para 'Viajes Unidos'.",
+			                "Fila no seleccionada",
+			                javax.swing.JOptionPane.WARNING_MESSAGE
+			            );
+			            return;
+			        }
+			}
+		});
 		
 	}
 	TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {

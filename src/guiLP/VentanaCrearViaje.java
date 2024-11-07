@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.stream.Stream;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -25,7 +24,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import domainLN.CharlaCarImpl;
-import domainLN.CharlaCarService;
 import domainLN.TipoVehiculo;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
@@ -241,9 +239,8 @@ public class VentanaCrearViaje extends JFrame {
 		        //Verificar que haya una fila seleccionada en la tabla
 		        int filaSeleccionada = tablaViaje.getSelectedRow();
 		        if (filaSeleccionada == -1) {
-		            javax.swing.JOptionPane.showMessageDialog(
-		                null,
-		                "Por favor, seleccione una fila de la tabla para crear el viaje.",
+		        	JOptionPane.showMessageDialog(null,
+		        		"Por favor, seleccione una fila de la tabla para crear el viaje.",
 		                "Fila no seleccionada",
 		                javax.swing.JOptionPane.WARNING_MESSAGE
 		            );
