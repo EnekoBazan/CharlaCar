@@ -11,7 +11,7 @@ public class Usuario {
 	private String contraseña;
 	private boolean carnet;
 	private float rating;
-	private ArrayList<Viaje> viajesPorUsuario;
+	private ArrayList<Viaje> viajesPorUsuario = new ArrayList<Viaje>();
 	
 	public Usuario(String nombre, String apellido, String dni, String contraseña, boolean carnet, float rating) {
 		super();
@@ -27,7 +27,6 @@ public class Usuario {
 	}
 	
 	///GETTERS Y SETTERS
-	
 	
 	public String getNombre() {
 		return nombre;

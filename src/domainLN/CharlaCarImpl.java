@@ -49,7 +49,11 @@ public class CharlaCarImpl implements CharlaCarService {
 			inicializarUsers();
 		}
 
-		Vehiculo vehiculo = new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 5, listaUsuarios.get(0));
+		Vehiculo vehiculo = new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 6, listaUsuarios.get(0));
+		Vehiculo vehiculo1 = new Vehiculo("9372 BMN", TipoVehiculo.COCHE, 5, listaUsuarios.get(0));
+		Vehiculo vehiculo2= new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 5, listaUsuarios.get(0));
+		Vehiculo vehiculo3 = new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 5, listaUsuarios.get(0));
+		Vehiculo vehiculo4 = new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 5, listaUsuarios.get(0));
 
 		listaViajes.add(new Viaje("Madrid", "Barcelona", 4, 0, listaUsuarios, "Viaje de trabajo"));
 		listaViajes.get(0).setVehiculo(vehiculo);

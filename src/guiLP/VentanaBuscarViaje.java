@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -154,14 +155,15 @@ public class VentanaBuscarViaje extends JFrame {
 				
 				Viaje v = new Viaje(getTitle(), getWarningString(), numFila, numFila, null, getName());
 				
-				CharlaCarImpl.getCharlaCarImpl().addViajeToUsuario(v );
+				CharlaCarImpl.getCharlaCarImpl().addViajeToUsuario(v);
+				v = null;
 				
 				System.out.println( xxxx.get(0) );
 				
 				//añadir JOptionPane
-//				if (CharlaCarImpl.getCharlaCarImpl().getLogeado()e.) {
-//					
-//				}
+				if (CharlaCarImpl.getCharlaCarImpl().getLogeado() == null) {
+					JOptionPane.showMessageDialog(null , "No estas logeado");
+				}
 			}
 		} );
 		setVisible(true);
