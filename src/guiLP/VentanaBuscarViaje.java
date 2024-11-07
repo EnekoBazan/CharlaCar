@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,6 +25,8 @@ import javax.swing.table.TableRowSorter;
 
 import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
+import domainLN.Vehiculo;
+import domainLN.TipoVehiculo;
 import domainLN.Viaje;
 
 import javax.swing.RowFilter;
@@ -86,11 +87,10 @@ public class VentanaBuscarViaje extends JFrame {
 			private static final long serialVersionUID = 1L;
 
 			public boolean isCellEditable(int row, int column) {
-					return false;
+				return false;
 			}
-		};	
-		
-		
+		};
+
 		scrollPane = new JScrollPane(tablaBusqueda);
 		btnUnirse = new JButton("Unirse");
 		btnUnirse.setForeground(new Color(33, 150, 243));
@@ -143,31 +143,40 @@ public class VentanaBuscarViaje extends JFrame {
 		this.tablaBusqueda.setDefaultRenderer(Object.class, cellRenderer);
 		this.add(panelPrincipal);
 
-		
-		btnUnirse.addActionListener( new ActionListener() {
-			
+		btnUnirse.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
+
 				int numFila = tablaBusqueda.getSelectedRow();
-				Vector<Vector> xxxx = tableModel.getDataVector();
-				
-				Viaje v = new Viaje(getTitle(), getWarningString(), numFila, numFila, null, getName());
-				
-				CharlaCarImpl.getCharlaCarImpl().addViajeToUsuario(v);
-				v = null;
-				
-				System.out.println( xxxx.get(0) );
-				
-				//añadir JOptionPane
-				if (CharlaCarImpl.getCharlaCarImpl().isLoged() == false) {
-					JOptionPane.showMessageDialog(null , "No estas logeado");
-				}else {
-					JOptionPane.showMessageDialog(null, "Te has unido al viaje!!");
+				if (numFila != -1) {
+					String matricula = (String) tableModel.getValueAt(numFila, 0);
+					String propietario = (String) tableModel.getValueAt(numFila, 1);
+					String origen = (String) tableModel.getValueAt(numFila, 2);
+					String destino = (String) tableModel.getValueAt(numFila, 3);
+					int asientosTotal = Integer.parseInt((String) tableModel.getValueAt(numFila, 4));
+					int asientosDisponibles = Integer.parseInt((String) tableModel.getValueAt(numFila, 5));
+
+					Vehiculo vehiculo = new Vehiculo(matricula, TipoVehiculo.COCHE, asientosTotal,
+							new Usuario(propietario, "", "", "", true, 0.0f));
+					Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
+					viaje.setVehiculo(vehiculo);
+
+					CharlaCarImpl.getCharlaCarImpl().addViajeToUsuario(viaje);
+					System.out.println(viaje);
+					//System.out.println(CharlaCarImpl.getCharlaCarImpl().getLogedUser().visualizarListaViajes);
+
+					if (CharlaCarImpl.getCharlaCarImpl().isLoged() == false) {
+						JOptionPane.showMessageDialog(null, "No estas logeado");
+					} else {
+						JOptionPane.showMessageDialog(null, "Te has unido al viaje!!");
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Debes seleccionar un viaje");
 				}
 			}
-		} );
+
+		});
 		setVisible(true);
 
 	}
@@ -200,8 +209,8 @@ public class VentanaBuscarViaje extends JFrame {
 		result.setOpaque(true);
 		return result;
 	};
-	
-	//ayuda de claude ->
+
+	// ayuda de claude ->
 
 	private void filtrar(String filtro) {
 		// Inicializar el TableRowSorter si aún no existe
@@ -228,6 +237,5 @@ public class VentanaBuscarViaje extends JFrame {
 			});
 		}
 	}
-	
-	
+
 }

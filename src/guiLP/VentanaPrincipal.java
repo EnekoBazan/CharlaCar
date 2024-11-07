@@ -26,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 import domainLN.CharlaCarImpl;
 
@@ -362,10 +361,14 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				VentanaLogin.loged = false;
-				btnLogIn.setVisible(true);
-				btnRegistro.setVisible(true);
-				logger.info("Has cerrado sesión");
+				if (CharlaCarImpl.getCharlaCarImpl().isLoged() == true) {
+					CharlaCarImpl.getCharlaCarImpl().setLoged(false);
+					btnLogIn.setVisible(true);
+					btnRegistro.setVisible(true);
+					logger.info("Has cerrado sesión");
+				} else if(CharlaCarImpl.getCharlaCarImpl().isLoged() == false) {
+					JOptionPane.showMessageDialog(null, "Inicie sesión para visualizar su perfil.");
+				}
 			}
 		});
 	}

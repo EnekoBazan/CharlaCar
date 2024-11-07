@@ -2,10 +2,6 @@ package domainLN;
 
 import java.util.Objects;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-
 public class Vehiculo {
 
 	private String matricula;

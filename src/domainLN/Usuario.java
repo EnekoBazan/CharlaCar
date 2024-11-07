@@ -26,7 +26,6 @@ public class Usuario {
 		super();
 	}
 	
-	///GETTERS Y SETTERS
 	
 	public String getNombre() {
 		return nombre;
@@ -90,9 +89,10 @@ public class Usuario {
 				+ ", carnet=" + carnet + ", rating=" + rating + "]";
 	}
 	public void addViaje(Viaje v) {
-		// TODO Auto-generated method stub
 		viajesPorUsuario.add( v );
 	}
-	
+	public String visualizarListaViajes() {
+		return "Viajes del usuario" + viajesPorUsuario;
+	}
 	
 }

@@ -106,9 +106,8 @@ public class Viaje {
 
 	@Override
 	public String toString() {
-		return "Viaje [origen=" + origen + ", destino=" + destino + ", espaciosDisponibles=" + espaciosDisponibles
-				+ ", espaciosOcupados=" + espaciosOcupados + ", vehiculo=" + vehiculo + ", listaPasajeros="
-				+ listaPasajeros + ", info=" + info + "]";
+		return "Viaje [Origen: " + origen + ", Destino: " + destino + ", espaciosDisponibles: " + espaciosDisponibles
+				+ ", espaciosOcupados: " + espaciosOcupados;
 	}
 	
 }
