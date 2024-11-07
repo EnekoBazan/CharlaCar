@@ -31,10 +31,8 @@ public class VentanaPerfil extends JDialog{
 	private JPanel panelCentroGeneral = new JPanel(new BorderLayout());
 	private JPanel panelCentro = new JPanel(new BorderLayout());
 	private JPanel panelCentroA = new JPanel(new GridLayout(1, 5));
-//	private JPanel panelCentroB = new JPanel(new BorderLayout());
 	private JPanel panelSur = new JPanel(new BorderLayout());
-//	private JPanel panelUsuario = new JPanel(new BorderLayout());
-	
+	private JPanel panelSur2 = new JPanel(new BorderLayout());
 
 	//Label
 	private JLabel lbNombre = new JLabel();
@@ -53,11 +51,17 @@ public class VentanaPerfil extends JDialog{
 	private JLabel lblestrellaG5 = new JLabel();
 	
 	//Tabla
-	private JTable tablaViajes;
+	private JTable tablaMisViajes;
 	private String[] cabecera = { "Matricula", "Propietario", "Origen", "Destino", "Asientos Totales", "Asientos Disponibles" };
 	private String[][] datos;
 	private JScrollPane scrollPane;
 	private DefaultTableModel tableModel;
+	
+	private JTable tablaViajesUnidos;
+	private String[] cabecera2 = { "Matricula", "Propietario", "Origen", "Destino", "Asientos Totales", "Asientos Disponibles" };
+	private String[][] datosViajesUnidos;
+	private JScrollPane scrollPane2;
+	private DefaultTableModel tableModel2;
 	
 	String[][] datosEjemplo;
 		
@@ -77,7 +81,7 @@ public class VentanaPerfil extends JDialog{
 		
 		//setModal(true); solo si queremos que no se pueda interactuar con la ventana principal mientras esta este abierta
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(400, 370);
+		setSize(420, 422);
 		setTitle("Perfil");
 		setVisible(true);
 		setLocationRelativeTo(null);
@@ -142,10 +146,13 @@ public class VentanaPerfil extends JDialog{
     	
     	//Viajes
       	Border bordeViajes = BorderFactory.createLineBorder(Color.BLACK);
-      	Border tituloBordeViajes = BorderFactory.createTitledBorder(bordeViajes,"Viajes");
-      	panelSur.setBorder(tituloBordeViajes);
+      	Border tituloBordeViajes = BorderFactory.createTitledBorder(bordeViajes,"Mis Viajes");
+      	panelSur2.setBorder(tituloBordeViajes);
+      	panelSur2.setBackground(Color.WHITE);
+     	Border bordeViajesUnidos = BorderFactory.createLineBorder(Color.BLACK);
+      	Border tituloViajesUnidos = BorderFactory.createTitledBorder(bordeViajesUnidos,"Viajes Unidos");
+      	panelSur.setBorder(tituloViajesUnidos);
       	panelSur.setBackground(Color.WHITE);
-
     	datos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
     	        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado)) // Filtra por usuario logueado
     	        .map(viaje -> new String[] {
@@ -159,7 +166,7 @@ public class VentanaPerfil extends JDialog{
     	        .toArray(String[][]::new);
     	
 		tableModel = new DefaultTableModel(datos, cabecera);
-		tablaViajes = new JTable(tableModel) {
+		tablaMisViajes = new JTable(tableModel) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -167,18 +174,45 @@ public class VentanaPerfil extends JDialog{
 					return false;
 			}
 		};	
-		scrollPane = new JScrollPane(tablaViajes);
-		tablaViajes.setDefaultRenderer(Object.class, cellRenderer);
-		tablaViajes.setPreferredScrollableViewportSize(new Dimension(150, 60)); // Tamaño deseado para la tabla
-		tablaViajes.setFillsViewportHeight(true); // Rellenar el área de visualización
-		tablaViajes.setBorder(new EmptyBorder(5, 5, 5, 5));
-		panelSur.add(scrollPane, BorderLayout.CENTER);
+		scrollPane = new JScrollPane(tablaMisViajes);
+		tablaMisViajes.setDefaultRenderer(Object.class, cellRenderer);
+		tablaMisViajes.setPreferredScrollableViewportSize(new Dimension(150, 60)); // Tamaño deseado para la tabla
+		tablaMisViajes.setFillsViewportHeight(true); // Rellenar el área de visualización
+		tablaMisViajes.setBorder(new EmptyBorder(5, 5, 5, 5));
+		panelSur2.add(scrollPane, BorderLayout.CENTER);
 		
+    	datosViajesUnidos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
+    	        .filter(viaje -> viaje.getListaPasajeros().contains(usuarioLogeado)) // Filtra por usuario logueado
+    	        .map(viaje -> new String[] {
+    	                viaje.getVehiculo().getMatricula(),
+    	                viaje.getVehiculo().getPropietario().getNombre(),
+    	                viaje.getOrigen(),
+    	                viaje.getDestino(),
+    	                String.valueOf(viaje.getVehiculo().getPlazas()),
+    	                String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles())
+    	        })
+    	        .toArray(String[][]::new);
+		tableModel2 = new DefaultTableModel(datosViajesUnidos, cabecera2);
+		tablaViajesUnidos = new JTable(tableModel2) {
+
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+					return false;
+			}
+		};	
+		scrollPane2 = new JScrollPane(tablaViajesUnidos);
+		tablaViajesUnidos.setDefaultRenderer(Object.class, cellRenderer);
+		tablaViajesUnidos.setPreferredScrollableViewportSize(new Dimension(150, 60)); // Tamaño deseado para la tabla
+		tablaViajesUnidos.setFillsViewportHeight(true); // Rellenar el área de visualización
+		tablaViajesUnidos.setBorder(new EmptyBorder(5, 5, 5, 5));
+		panelSur.add(scrollPane2, BorderLayout.CENTER);
+    	
 		panelCentroGeneral.add(panelCentro, BorderLayout.NORTH);
-		panelCentroGeneral.add(panelSur, BorderLayout.CENTER);
+		panelCentroGeneral.add(panelSur, BorderLayout.SOUTH);
     	panelPrincipal.add(panelNorte, BorderLayout.NORTH);
     	panelPrincipal.add(panelCentroGeneral, BorderLayout.CENTER);
-//    	panelPrincipal.add(panelSur, BorderLayout.SOUTH);
+    	panelPrincipal.add(panelSur2, BorderLayout.SOUTH);
     	
 		panelColor.add(panelPrincipal);
 		panelColor.setBorder(new EmptyBorder(20,20,20,20));
