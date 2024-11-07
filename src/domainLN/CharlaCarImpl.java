@@ -60,23 +60,59 @@ public class CharlaCarImpl implements CharlaCarService {
 
 		Vehiculo vehiculo = new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 6, listaUsuarios.get(0));
 		Vehiculo vehiculo1 = new Vehiculo("9372 BMN", TipoVehiculo.COCHE, 5, listaUsuarios.get(1));
-		Vehiculo vehiculo2= new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 5, listaUsuarios.get(2));
-		Vehiculo vehiculo3 = new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 5, listaUsuarios.get(3));
-		Vehiculo vehiculo4 = new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 5, listaUsuarios.get(4));
+		Vehiculo vehiculo2= new Vehiculo("8754 KLO", TipoVehiculo.COCHE, 5, listaUsuarios.get(2));
+		Vehiculo vehiculo3 = new Vehiculo("1730 HGR", TipoVehiculo.COCHE, 5, listaUsuarios.get(3));
+		Vehiculo vehiculo4 = new Vehiculo("0034 GTR", TipoVehiculo.COCHE, 5, listaUsuarios.get(4));
+		Vehiculo vehiculo5 = new Vehiculo("7890 ABC", TipoVehiculo.MOTO, 2, listaUsuarios.get(5));
+		Vehiculo vehiculo6 = new Vehiculo("4567 DEF", TipoVehiculo.CAMION, 8, listaUsuarios.get(6));
+		Vehiculo vehiculo7 = new Vehiculo("9012 GHI", TipoVehiculo.CAMION, 7, listaUsuarios.get(7));
+		Vehiculo vehiculo8 = new Vehiculo("5678 JKL", TipoVehiculo.CAMION, 12, listaUsuarios.get(8));
+		Vehiculo vehiculo9 = new Vehiculo("2345 MNO", TipoVehiculo.AUTOBUS, 20, listaUsuarios.get(9));
 
-		listaViajes.add(new Viaje("Madrid", "Barcelona", 4, 2, listaUsuarios, "Viaje de trabajo"));
+
+		listaViajes.add(new Viaje("Valencia", "Barcelona", 4, 2, listaUsuarios, "Viaje de trabajo"));
 		listaViajes.get(0).setVehiculo(vehiculo);
-		listaViajes.add(new Viaje("Madrid", "Sevilla", 3, 0, listaUsuarios, "Viaje de trabajo"));
+		listaViajes.add(new Viaje("Bilbao", "Sevilla", 3, 0, listaUsuarios, "Viaje de trabajo"));
 		listaViajes.get(1).setVehiculo(vehiculo1);
-		listaViajes.add(new Viaje("Madrid", "Valencia", 2, 0, listaUsuarios, "Viaje de trabajo"));
+		listaViajes.add(new Viaje("Vitoria", "Valencia", 2, 0, listaUsuarios, "Viaje de trabajo"));
 		listaViajes.get(2).setVehiculo(vehiculo2);
 		listaViajes.add(new Viaje("Madrid", "Bilbao", 1, 0, listaUsuarios, "Viaje de trabajo"));
 		listaViajes.get(3).setVehiculo(vehiculo3);
-		listaViajes.add(new Viaje("Madrid", "Santander", 5, 0, listaUsuarios, "Viaje de trabajo"));
+		listaViajes.add(new Viaje("Malaga", "Santander", 5, 0, listaUsuarios, "Viaje de trabajo"));
 		listaViajes.get(4).setVehiculo(vehiculo4);
-		listaViajes.add(new Viaje("Madrid", "Malaga", 3, 0, listaUsuarios, "Viaje de trabajo"));
-		listaViajes.get(5).setVehiculo(vehiculo);
-
+		listaViajes.add(new Viaje("Galicia", "Malaga", 2, 0, listaUsuarios, "Viaje de trabajo"));
+		listaViajes.get(5).setVehiculo(vehiculo5);
+		listaViajes.add(new Viaje("Sevilla", "Cordoba", 4, 1, listaUsuarios, "Viaje de ocio"));
+		listaViajes.get(6).setVehiculo(vehiculo6);
+		listaViajes.add(new Viaje("Valencia", "Castellon", 3, 2, listaUsuarios, "Viaje de compras"));
+		listaViajes.get(7).setVehiculo(vehiculo7);
+		listaViajes.add(new Viaje("Bilbao", "San Sebastian", 6, 0, listaUsuarios, "Viaje de turismo"));
+		listaViajes.get(8).setVehiculo(vehiculo8);
+		listaViajes.add(new Viaje("Zaragoza", "Huesca", 2, 1, listaUsuarios, "Viaje de negocios"));
+		listaViajes.get(9).setVehiculo(vehiculo9);
+		listaViajes.add(new Viaje("Oviedo", "Gijon", 5, 3, listaUsuarios, "Viaje de visita a familia"));
+		listaViajes.get(10).setVehiculo(vehiculo1);
+		listaViajes.add(new Viaje("Madrid", "Toledo", 3, 1, listaUsuarios, "Visita cultural"));
+		listaViajes.get(11).setVehiculo(vehiculo);
+		listaViajes.add(new Viaje("Barcelona", "Tarragona", 4, 2, listaUsuarios, "Excursión a la playa"));
+		listaViajes.get(12).setVehiculo(vehiculo2);
+		listaViajes.add(new Viaje("Valencia", "Alicante", 2, 1, listaUsuarios, "Reunión de negocios"));
+		listaViajes.get(13).setVehiculo(vehiculo5);
+		listaViajes.add(new Viaje("Bilbao", "Vitoria", 2, 0, listaUsuarios, "Visita a familiares"));
+		listaViajes.get(14).setVehiculo(vehiculo4);
+		listaViajes.add(new Viaje("Sevilla", "Cadiz", 5, 1, listaUsuarios, "Viaje de fin de semana"));
+		listaViajes.get(15).setVehiculo(vehiculo3);
+		listaViajes.add(new Viaje("Malaga", "Santander", 5, 0, listaUsuarios, "Viaje de trabajo"));
+		listaViajes.get(16).setVehiculo(vehiculo8);
+		listaViajes.add(new Viaje("Malaga", "Santander", 5, 0, listaUsuarios, "Viaje de trabajo"));
+		listaViajes.get(17).setVehiculo(vehiculo9);
+		listaViajes.add(new Viaje("Malaga", "Santander", 5, 0, listaUsuarios, "Viaje de trabajo"));
+		listaViajes.get(18).setVehiculo(vehiculo6);
+		listaViajes.add(new Viaje("Malaga", "Santander", 5, 0, listaUsuarios, "Viaje de trabajo"));
+		listaViajes.get(19).setVehiculo(vehiculo4);
+		listaViajes.add(new Viaje("Malaga", "Santander", 5, 0, listaUsuarios, "Viaje de trabajo"));
+		listaViajes.get(20).setVehiculo(vehiculo2);
+		
 	}
 
 	private void inicializarUsers() {
@@ -85,6 +121,11 @@ public class CharlaCarImpl implements CharlaCarService {
 		listaUsuarios.add(new Usuario("Maria", "Lopez", "73627382J", "contraseña", true, 1.0f));
 		listaUsuarios.add(new Usuario("Ana", "Garcia", "73627382J", "contraseña", true, 5.0f));
 		listaUsuarios.add(new Usuario("Pedro", "Rodriguez", "73627382J", "contraseña", true, 3.0f));
+		listaUsuarios.add(new Usuario("Alejandro", "Gonzalez", "12345678A", "pass123", true, 4.5f));
+		listaUsuarios.add(new Usuario("Luisa", "Diaz", "87654321B", "luisa123", true, 3.8f));
+		listaUsuarios.add(new Usuario("Carlos", "Fernandez", "45678912C", "carlos456", true, 2.9f));
+		listaUsuarios.add(new Usuario("Marta", "Sanchez", "23456789D", "marta789", true, 4.2f));
+		listaUsuarios.add(new Usuario("Javier", "Torres", "98765432E", "javier321", true, 3.5f));
 
 	}
 
@@ -122,7 +163,5 @@ public class CharlaCarImpl implements CharlaCarService {
 
 	public void addViajeToUsuario( Viaje v) {
 		logedUser.addViaje(v);
-		
-		
 	}
 }
