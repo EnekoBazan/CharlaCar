@@ -18,5 +18,12 @@ public interface CharlaCarService {
 	public void addUser(Usuario user);
 	public void deleteUser(Usuario user);
 	
-	public Usuario getLogeado();
+	
+	 //**************************************
+	
+	public boolean isLoged();
+	public void setLoged(boolean isLoged);
+	public void setLogedUser( Usuario u );
+	public Usuario getLogedUser();
+	public void addViajeToUsuario( Viaje v);
 }
