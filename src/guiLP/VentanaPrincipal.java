@@ -37,7 +37,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	private JButton btnBuscar;
 	static JButton btnLogIn;
 	static JButton btnRegistro;
-	private JButton btnUsuario;
+	static JButton btnUsuario;
 
 	private JPanel panelCentral;
 	private JPanel panelPrincipal;
@@ -237,7 +237,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		btnUsuario.setBackground(Color.white);
 		btnUsuario.setPreferredSize(new Dimension(70, 25));
 		btnUsuario.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
-
+		if(!CharlaCarImpl.getCharlaCarImpl().isLoged() == true) {
+			btnUsuario.setEnabled(false);
+		}
 		// Configuración JMenuUsuario
 		menuBar.setVisible(false); // Oculta la barra de menu, se abre con botones Juegos/Usuarios
 		menuBar.add(menuUsuario);
@@ -365,10 +367,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 					CharlaCarImpl.getCharlaCarImpl().setLoged(false);
 					btnLogIn.setVisible(true);
 					btnRegistro.setVisible(true);
+					btnUsuario.setEnabled(false);
 					logger.info("Has cerrado sesión");
-				} else if(CharlaCarImpl.getCharlaCarImpl().isLoged() == false) {
-					JOptionPane.showMessageDialog(null, "Inicie sesión para visualizar su perfil.");
-				}
+				} 
 			}
 		});
 	}
