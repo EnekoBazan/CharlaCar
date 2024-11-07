@@ -3,15 +3,13 @@ package guiLP;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,8 +17,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableRowSorter;
-
 import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 
@@ -31,10 +27,13 @@ public class VentanaPerfil extends JDialog{
 	private Usuario user;
 
 	//Panel
+	private JPanel panelColor = new JPanel(new BorderLayout());
 	private JPanel panelPrincipal = new JPanel(new BorderLayout());
-	private JPanel panelNorte = new JPanel(new GridLayout(4, 1));
+	private JPanel panelNorte = new JPanel(new GridLayout(2, 2));
 	private JPanel panelCentroGeneral = new JPanel(new BorderLayout());
+	private JPanel panelCentro = new JPanel(new BorderLayout());
 	private JPanel panelCentroA = new JPanel(new GridLayout(1, 5));
+//	private JPanel panelCentroB = new JPanel(new BorderLayout());
 	private JPanel panelSur = new JPanel(new BorderLayout());
 //	private JPanel panelUsuario = new JPanel(new BorderLayout());
 	
@@ -57,11 +56,12 @@ public class VentanaPerfil extends JDialog{
 	
 	//Tabla
 	private JTable tablaViajes;
-	private String[] cabecera;
+	private String[] cabecera = { "Matricula", "Propietario", "Origen", "Destino", "Asientos Totales", "Asientos Disponibles" };
 	private String[][] datos;
 	private JScrollPane scrollPane;
 	private DefaultTableModel tableModel;
-	private TableRowSorter<DefaultTableModel> rowSorter;
+	
+	String[][] datosEjemplo;
 		
 	//Imagenes
 	private ImageIcon estrellaA1 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaA1.png"));
@@ -79,7 +79,7 @@ public class VentanaPerfil extends JDialog{
 		
 		//setModal(true); solo si queremos que no se pueda interactuar con la ventana principal mientras esta este abierta
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(450, 420);
+		setSize(400, 370);
 		setTitle("Perfil");
 		setVisible(true);
 		setLocationRelativeTo(null);
@@ -104,18 +104,27 @@ public class VentanaPerfil extends JDialog{
 		lbDNI.setText("DNI:  " + CharlaCarImpl.getCharlaCarImpl().getLogeado().getDni());
 		panelNorte.add(lbDNI, BorderLayout.SOUTH);
 		lbDNI.setBorder(new EmptyBorder(2,5,2,5));
-		lblMatricula.setText("Matrícula:  " );
+		
+		Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogeado();
+		String matricula = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
+		        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
+		        .map(viaje -> viaje.getVehiculo().getMatricula())
+		        .findFirst()
+		        .orElse("No disponible");
+		lblMatricula.setText("Matrícula:  " + matricula);
 		panelNorte.add(lblMatricula, BorderLayout.SOUTH);
 		lblMatricula.setBorder(new EmptyBorder(2,5,2,5));
+		
+		lbDNI.setFont(new Font("Arial", Font.BOLD, 12));
 
 		//Rating
       	Border bordeRating = BorderFactory.createLineBorder(Color.BLACK);
       	Border tituloBordeRating = BorderFactory.createTitledBorder(bordeRating,"Rating");
-      	panelCentroGeneral.setBorder(tituloBordeRating);
-    	panelCentroGeneral.setBackground(Color.WHITE);
-      	panelCentroGeneral.add(panelCentroA);
+      	panelCentro.setBorder(tituloBordeRating);
+    	panelCentro.setBackground(Color.WHITE);
+      	panelCentro.add(panelCentroA, BorderLayout.NORTH);
     	panelCentroA.setBackground(Color.WHITE);
-
+    	
     	lblestrellaA1.setIcon(estrellaA1);
     	lblestrellaA2.setIcon(estrellaA2);
     	lblestrellaA3.setIcon(estrellaA3);
@@ -136,12 +145,12 @@ public class VentanaPerfil extends JDialog{
     	//Viajes
       	Border bordeViajes = BorderFactory.createLineBorder(Color.BLACK);
       	Border tituloBordeViajes = BorderFactory.createTitledBorder(bordeViajes,"Viajes");
-    	panelSur.setBorder(tituloBordeViajes);
-    	panelSur.setBackground(Color.WHITE);
+      	panelSur.setBorder(tituloBordeViajes);
+      	panelSur.setBackground(Color.WHITE);
 
-    	Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogeado();
+//    	Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogeado();
 
-    	String[][] datos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
+    	datos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
     	        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado)) // Filtra por usuario logueado
     	        .map(viaje -> new String[] {
     	                viaje.getVehiculo().getMatricula(),
@@ -152,10 +161,16 @@ public class VentanaPerfil extends JDialog{
     	                String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles())
     	        })
     	        .toArray(String[][]::new);
-		
+    	
 		tableModel = new DefaultTableModel(datos, cabecera);
-//		tablaViajes.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		tablaViajes = new JTable(tableModel);
+		tablaViajes = new JTable(tableModel) {
+
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+					return false;
+			}
+		};	
 		scrollPane = new JScrollPane(tablaViajes);
 		tablaViajes.setDefaultRenderer(Object.class, cellRenderer);
 		tablaViajes.setPreferredScrollableViewportSize(new Dimension(150, 60)); // Tamaño deseado para la tabla
@@ -163,11 +178,16 @@ public class VentanaPerfil extends JDialog{
 		tablaViajes.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelSur.add(scrollPane, BorderLayout.CENTER);
 		
+		panelCentroGeneral.add(panelCentro, BorderLayout.NORTH);
+		panelCentroGeneral.add(panelSur, BorderLayout.CENTER);
     	panelPrincipal.add(panelNorte, BorderLayout.NORTH);
     	panelPrincipal.add(panelCentroGeneral, BorderLayout.CENTER);
-    	panelPrincipal.add(panelSur, BorderLayout.SOUTH);
-
-		add(panelPrincipal);
+//    	panelPrincipal.add(panelSur, BorderLayout.SOUTH);
+    	
+		panelColor.add(panelPrincipal);
+		panelColor.setBorder(new EmptyBorder(20,20,20,20));
+		panelColor.setBackground(new Color(237, 242, 255));
+    	add(panelColor);
 		
 	}
 	TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {
