@@ -24,8 +24,6 @@ public class VentanaPerfil extends JDialog{
 	
 	private static final long serialVersionUID = 1L;
 
-	private Usuario user;
-
 	//Panel
 	private JPanel panelColor = new JPanel(new BorderLayout());
 	private JPanel panelPrincipal = new JPanel(new BorderLayout());
@@ -95,17 +93,17 @@ public class VentanaPerfil extends JDialog{
     	panelNorte.setBorder(tituloBordeUsuario);
     	panelNorte.setBackground(Color.WHITE);
     		
-		lbNombre.setText("Nombre:  " + CharlaCarImpl.getCharlaCarImpl().getLogeado().getNombre());
+		lbNombre.setText("Nombre:  " + CharlaCarImpl.getCharlaCarImpl().getLogedUser().getNombre());
 		panelNorte.add(lbNombre, BorderLayout.NORTH);
 		lbNombre.setBorder(new EmptyBorder(2,5,2,5));
-		lbApellido.setText("Apellido:  " + CharlaCarImpl.getCharlaCarImpl().getLogeado().getApellido());
+		lbApellido.setText("Apellido:  " + CharlaCarImpl.getCharlaCarImpl().getLogedUser().getApellido());
 		panelNorte.add(lbApellido, BorderLayout.CENTER);
 		lbApellido.setBorder(new EmptyBorder(2,5,2,5));
-		lbDNI.setText("DNI:  " + CharlaCarImpl.getCharlaCarImpl().getLogeado().getDni());
+		lbDNI.setText("DNI:  " + CharlaCarImpl.getCharlaCarImpl().getLogedUser().getDni());
 		panelNorte.add(lbDNI, BorderLayout.SOUTH);
 		lbDNI.setBorder(new EmptyBorder(2,5,2,5));
 		
-		Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogeado();
+		Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogedUser();
 		String matricula = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
 		        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
 		        .map(viaje -> viaje.getVehiculo().getMatricula())
@@ -147,8 +145,6 @@ public class VentanaPerfil extends JDialog{
       	Border tituloBordeViajes = BorderFactory.createTitledBorder(bordeViajes,"Viajes");
       	panelSur.setBorder(tituloBordeViajes);
       	panelSur.setBackground(Color.WHITE);
-
-//    	Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogeado();
 
     	datos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
     	        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado)) // Filtra por usuario logueado
@@ -219,7 +215,7 @@ public class VentanaPerfil extends JDialog{
 	};
 	public void ratingEstrellas() {
 		float rating;
-		rating = CharlaCarImpl.getCharlaCarImpl().getLogeado().getRating(); 
+		rating = CharlaCarImpl.getCharlaCarImpl().getLogedUser().getRating(); 
 		if(rating == 0) {
 			panelCentroA.removeAll();
 			panelCentroA.add(lblestrellaG1);

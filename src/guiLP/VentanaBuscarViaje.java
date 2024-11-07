@@ -161,8 +161,10 @@ public class VentanaBuscarViaje extends JFrame {
 				System.out.println( xxxx.get(0) );
 				
 				//añadir JOptionPane
-				if (CharlaCarImpl.getCharlaCarImpl().getLogeado() == null) {
+				if (CharlaCarImpl.getCharlaCarImpl().isLoged() == false) {
 					JOptionPane.showMessageDialog(null , "No estas logeado");
+				}else {
+					JOptionPane.showMessageDialog(null, "Te has unido al viaje!!");
 				}
 			}
 		} );

@@ -119,11 +119,12 @@ public class VentanaLogin extends JDialog {
 		            if (user.getNombre().equals(txtUser.getText())&& new String(passwordField.getPassword()).equals(user.getContraseña())) {
 		                usuarioEncontrado = true;
 		                loged = true;
+		                CharlaCarImpl.getCharlaCarImpl().setLoged(true);
 		                VentanaPrincipal.btnLogIn.setVisible(false);
 		                VentanaPrincipal.btnRegistro.setVisible(false);
 		                JOptionPane.showMessageDialog(null, "Bienvenido " + user.getNombre());
 		                
-		                CharlaCarImpl.getCharlaCarImpl().setLogeado(user);
+		                CharlaCarImpl.getCharlaCarImpl().setLogedUser(user);
 		                
 		                dispose();
 		                break;

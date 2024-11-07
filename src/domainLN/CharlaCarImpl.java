@@ -7,16 +7,25 @@ import java.util.List;
 public class CharlaCarImpl implements CharlaCarService {
 
 	
-	private Usuario logeado;
+	private Usuario logedUser;
+	private boolean isLoged = false;
 	
-	public void setLogeado( Usuario u )
+	public boolean isLoged() {
+		return isLoged;
+	}
+
+	public void setLoged(boolean isLoged) {
+		this.isLoged = isLoged;
+	}
+
+	public void setLogedUser( Usuario u )
 	{
-		logeado = u;
+		logedUser = u;
 	}
 	
-	public Usuario getLogeado()
+	public Usuario getLogedUser()
 	{
-		return logeado;
+		return logedUser;
 	}
 	
 	
@@ -55,7 +64,7 @@ public class CharlaCarImpl implements CharlaCarService {
 		Vehiculo vehiculo3 = new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 5, listaUsuarios.get(3));
 		Vehiculo vehiculo4 = new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 5, listaUsuarios.get(4));
 
-		listaViajes.add(new Viaje("Madrid", "Barcelona", 4, 0, listaUsuarios, "Viaje de trabajo"));
+		listaViajes.add(new Viaje("Madrid", "Barcelona", 4, 2, listaUsuarios, "Viaje de trabajo"));
 		listaViajes.get(0).setVehiculo(vehiculo);
 		listaViajes.add(new Viaje("Madrid", "Sevilla", 3, 0, listaUsuarios, "Viaje de trabajo"));
 		listaViajes.get(1).setVehiculo(vehiculo1);
@@ -67,6 +76,7 @@ public class CharlaCarImpl implements CharlaCarService {
 		listaViajes.get(4).setVehiculo(vehiculo4);
 		listaViajes.add(new Viaje("Madrid", "Malaga", 3, 0, listaUsuarios, "Viaje de trabajo"));
 		listaViajes.get(5).setVehiculo(vehiculo);
+
 	}
 
 	private void inicializarUsers() {
@@ -111,11 +121,8 @@ public class CharlaCarImpl implements CharlaCarService {
 	}
 
 	public void addViajeToUsuario( Viaje v) {
-		// TODO Auto-generated method stub
-		
-		logeado.addViaje(v);
+		logedUser.addViaje(v);
 		
 		
 	}
-
 }

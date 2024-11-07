@@ -91,6 +91,7 @@ public class VentanaRegistro extends JDialog {
         
         checkCarnet = new JCheckBox("Posee Carnet");
         checkCarnet.setBounds(140, 190, 150, 20);
+        checkCarnet.setBackground(new Color(217, 239, 248)); 
         getContentPane().add(checkCarnet);
         
         
