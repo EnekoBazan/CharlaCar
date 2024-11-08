@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.stream.Stream;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -84,9 +83,6 @@ public class VentanaCrearViaje extends JFrame {
 	private Object[][] datos = {};
 	private JScrollPane scrollPane;
 	private DefaultTableModel tableModel;
-	
-	//Datos
-	private Stream<Viaje> datosEjemplo;
 	
 	public VentanaCrearViaje() {
 	

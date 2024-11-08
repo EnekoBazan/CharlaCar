@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,10 +21,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import domainLN.CharlaCarImpl;
-import domainLN.TipoVehiculo;
 import domainLN.Usuario;
-import domainLN.Vehiculo;
-import domainLN.Viaje;
 
 public class VentanaPerfil extends JDialog{
 	
