@@ -186,23 +186,23 @@ public class VentanaBuscarViaje extends JFrame {
 		JLabel result = new JLabel(value.toString());
 
 		// con rgb negro claro
-		result.setHorizontalAlignment(JLabel.CENTER);
+		result.setHorizontalAlignment(JLabel.RIGHT);
 		result.setForeground(new Color(60, 60, 60));
 		result.setBackground(Color.white);
+		result.setBorder(new EmptyBorder(5, 10, 5, 10));
 
 		if (isSelected) {
-			// result.setHorizontalAlignment(JLabel.CENTER);
 			result.setBackground(new Color(173, 216, 230));
 			result.setForeground(Color.black);
 
-		} else if (value instanceof Number) {
+		}
 			// result.setHorizontalAlignment(JLabel.CENTER);
-		} else {
-			// Si el valor es texto pero representa un número se renderiza centrado
+		if(!(value instanceof Number)) {
 			try {
 				Integer.parseInt(value.toString());
-				// result.setHorizontalAlignment(JLabel.CENTER);
+				result.setHorizontalAlignment(JLabel.CENTER);
 			} catch (Exception ex) {
+				result.setHorizontalAlignment(JLabel.LEFT);
 				result.setText(value.toString());
 			}
 		}
