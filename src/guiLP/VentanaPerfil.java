@@ -90,7 +90,7 @@ public class VentanaPerfil extends JDialog{
 		
 		//setModal(true); solo si queremos que no se pueda interactuar con la ventana principal mientras esta este abierta
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(420, 440);
+		setSize(470, 440);
 		setTitle("Perfil");
 		setVisible(true);
 		setLocationRelativeTo(null);
