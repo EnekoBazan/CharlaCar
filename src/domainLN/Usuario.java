@@ -1,5 +1,6 @@
 package domainLN;
 
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ public class Usuario {
 	private String contraseña;
 	private boolean carnet;
 	private float rating;
-	private ArrayList<Viaje> viajesPorUsuario = new ArrayList<Viaje>();
+	public ArrayList<Viaje> viajesPorUsuario = new ArrayList<Viaje>();
 	
 	public Usuario(String nombre, String apellido, String dni, String contraseña, boolean carnet, float rating) {
 		super();
@@ -94,5 +95,11 @@ public class Usuario {
 	public String visualizarListaViajes() {
 		return "Viajes del usuario" + viajesPorUsuario;
 	}
-	
+
+	public void deleteViaje(Viaje v) {
+		viajesPorUsuario.remove(v);
+	}
+	public ArrayList<Viaje> getViajes() {
+		return viajesPorUsuario;
+	}
 }

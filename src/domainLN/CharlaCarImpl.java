@@ -21,6 +21,7 @@ public class CharlaCarImpl implements CharlaCarService {
 	public void setLogedUser( Usuario u )
 	{
 		logedUser = u;
+	    transferirViajesAListaUsuario();  // Llamamos al método que transfiere los viajes a la lista del usuario
 	}
 	
 	public Usuario getLogedUser()
@@ -32,16 +33,17 @@ public class CharlaCarImpl implements CharlaCarService {
 	
 	private List<Viaje> listaViajes;
 	private List<Usuario> listaUsuarios;
-
+	private ArrayList<Viaje> listaViajesPorUsuarios;
 	// ** Singleton
 	private static CharlaCarImpl charlaCarImpl;
 
 	private CharlaCarImpl() {
 		listaViajes = new ArrayList<Viaje>();
 		listaUsuarios = new ArrayList<Usuario>();
-		
+		listaViajesPorUsuarios = new ArrayList<Viaje>();
 		inicializarViajes();
 		inicializarUsers();
+		inicializarViajesPorUsuario();
 	}
 
 	public static CharlaCarImpl getCharlaCarImpl() {
@@ -129,12 +131,13 @@ public class CharlaCarImpl implements CharlaCarService {
 
 	}
 
+
 	@Override
 	public List<Viaje> getViajes() {
 		return listaViajes;
 	}
 
-	@Override
+	@Override	
 	public void addViaje(Viaje viaje) {
 		listaViajes.add(viaje);
 
@@ -164,4 +167,45 @@ public class CharlaCarImpl implements CharlaCarService {
 	public void addViajeToUsuario( Viaje v) {
 		logedUser.addViaje(v);
 	}
+	public void deleteViajeToUsuario( Viaje v) {
+		logedUser.deleteViaje(v);
+	}
+
+	public void inicializarViajesPorUsuario() {
+		if (logedUser == null) {
+			System.out.println("No hay usuario logueado.");
+			return;
+		}
+
+		// Filtramos los viajes donde el usuario logueado está incluido
+		listaViajesPorUsuarios.clear(); // Limpiamos la lista antes de llenarla
+		for (Viaje viaje : listaViajes) {
+			if (viaje.getListaPasajeros().contains(logedUser)) {
+				listaViajesPorUsuarios.add(viaje);
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<Viaje> getViajesPorUsuario() {
+		return listaViajesPorUsuarios;
+	}
+	// Método que transfiere los viajes del CharlaCarImpl a la lista de viajes del usuario logueado
+	public void transferirViajesAListaUsuario() {
+	    // Verificar si el usuario logueado existe
+	    if (logedUser == null) {
+	        System.out.println("No hay usuario logueado.");
+	        return;
+	    }
+
+	    // Obtener los viajes correspondientes al usuario logueado desde CharlaCarImpl
+//	    ArrayList<Viaje> viajesDeCharlaCar = getViajesPorUsuario();
+
+	    // Agregar estos viajes a la lista de viajes del usuario
+	    for (Viaje viaje : listaViajesPorUsuarios) {
+	        logedUser.addViaje(viaje);  // Suponiendo que addViaje() agrega el viaje a la lista de viajes del usuario
+	    }
+	}
+
 }
+
