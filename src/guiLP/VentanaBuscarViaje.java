@@ -2,11 +2,13 @@ package guiLP;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,7 +21,9 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
@@ -55,6 +59,7 @@ public class VentanaBuscarViaje extends JFrame {
 
 	// private JButton btnFiltrar;
 
+	@SuppressWarnings("serial")
 	public VentanaBuscarViaje() {
 
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -90,6 +95,28 @@ public class VentanaBuscarViaje extends JFrame {
 				return false;
 			}
 		};
+
+		JTableHeader header = tablaBusqueda.getTableHeader();
+		header.setDefaultRenderer(new DefaultTableCellRenderer() {
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int column) {
+				JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
+						column);
+
+				label.setBackground(new Color(33, 150, 243));
+				label.setForeground(Color.WHITE);
+				label.setFont(new Font("Arial", Font.BOLD, 13));
+
+				label.setBorder(BorderFactory.createCompoundBorder(
+						BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(25, 118, 210)),
+						BorderFactory.createEmptyBorder(8, 10, 8, 10)));
+
+				label.setHorizontalAlignment(JLabel.CENTER);
+				label.setOpaque(true);
+
+				return label;
+			}
+		});
 
 		scrollPane = new JScrollPane(tablaBusqueda);
 		btnUnirse = new JButton("Unirse");
@@ -164,7 +191,7 @@ public class VentanaBuscarViaje extends JFrame {
 
 					CharlaCarImpl.getCharlaCarImpl().addViajeToUsuario(viaje);
 					System.out.println(viaje);
-					//System.out.println(CharlaCarImpl.getCharlaCarImpl().getLogedUser().visualizarListaViajes);
+					// System.out.println(CharlaCarImpl.getCharlaCarImpl().getLogedUser().visualizarListaViajes);
 
 					if (CharlaCarImpl.getCharlaCarImpl().isLoged() == false) {
 						JOptionPane.showMessageDialog(null, "No estas logeado");
@@ -180,6 +207,7 @@ public class VentanaBuscarViaje extends JFrame {
 		setVisible(true);
 
 	}
+	// RENDERER ENCABEZADO
 
 	//// RENDERER
 	TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {
@@ -192,18 +220,24 @@ public class VentanaBuscarViaje extends JFrame {
 		result.setBorder(new EmptyBorder(5, 10, 5, 10));
 
 		if (isSelected) {
+//			result.setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 248, 255));
 			result.setBackground(new Color(173, 216, 230));
-			result.setForeground(Color.black);
+//			result.setForeground(new Color(60, 60, 60));
+			result.setForeground(Color.BLACK);
 
+		} else {
+//			result.setBackground(new Color(173, 216, 230));
+			result.setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 248, 255));
+			result.setForeground(new Color(60, 60, 60));
+//			result.setForeground(Color.BLACK);
 		}
-			// result.setHorizontalAlignment(JLabel.CENTER);
-		if(!(value instanceof Number)) {
+		// result.setHorizontalAlignment(JLabel.CENTER);
+		if (value != null) {
 			try {
-				Integer.parseInt(value.toString());
+				Double.parseDouble(value.toString());
 				result.setHorizontalAlignment(JLabel.CENTER);
-			} catch (Exception ex) {
+			} catch (NumberFormatException e) {
 				result.setHorizontalAlignment(JLabel.LEFT);
-				result.setText(value.toString());
 			}
 		}
 		result.setOpaque(true);
