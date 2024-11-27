@@ -93,15 +93,15 @@ public class VentanaCrearViaje extends JFrame {
 		setIconImage(new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png")).getImage());
 
 		Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogedUser();
-		String matricula = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
-				.map(viaje -> viaje.getVehiculo().getMatricula()).findFirst().orElse("No disponible");
-		Vehiculo vehiculo = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
-				.map(viaje -> viaje.getVehiculo()).findFirst().orElse(new Vehiculo());
-		Integer plazas = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
-				.map(viaje -> viaje.getVehiculo().getPlazas()).findFirst().orElse(0);
+//		String matricula = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
+//				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
+//				.map(viaje -> viaje.getVehiculo().getMatricula()).findFirst().orElse("No disponible");
+//		Vehiculo vehiculo = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
+//				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
+//				.map(viaje -> viaje.getVehiculo()).findFirst().orElse(new Vehiculo());
+//		Integer plazas = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
+//				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
+//				.map(viaje -> viaje.getVehiculo().getPlazas()).findFirst().orElse(0);
 
 		panelPrincipal.setBackground(COLOR_FONDO);
 		panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -160,10 +160,10 @@ public class VentanaCrearViaje extends JFrame {
 		Border bordeInfoUsuario = BorderFactory.createLineBorder(Color.BLACK);
 		Border tituloBordeInfoUsuario = BorderFactory.createTitledBorder(bordeInfoUsuario, "Vehículo");
 		panelInfoSW.setBorder(tituloBordeInfoUsuario);
-		lbMatricula.setText("Matrícula: " + matricula);
+		lbMatricula.setText("Matrícula: "); // + matricula);
 		lbMatricula.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelInfoSW.add(lbMatricula);
-		lbPlazas.setText("Plazas: " + plazas);
+		lbPlazas.setText("Plazas: " ); //+ plazas);
 		lbPlazas.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelInfoSW.add(lbPlazas);
 
@@ -240,9 +240,9 @@ public class VentanaCrearViaje extends JFrame {
 				int asientosOcupados = Integer.parseInt((String) tableModel.getValueAt(filaSeleccionada, 3));
 				String info = (String) tableModel.getValueAt(filaSeleccionada, 4);
 				// Crear un nuevo Viaje
-				Viaje nuevoViaje = new Viaje(origen, destino, asientosDisponibles, asientosOcupados, null, info);
-				nuevoViaje.setVehiculo(vehiculo);
-				CharlaCarImpl.getCharlaCarImpl().addViaje(nuevoViaje);
+//				Viaje nuevoViaje = new Viaje(origen, destino, asientosDisponibles, asientosOcupados, null, info);
+//				nuevoViaje.setVehiculo(vehiculo);
+//				CharlaCarImpl.getCharlaCarImpl().addViaje(nuevoViaje);
 				JOptionPane.showMessageDialog(null, "Viaje creado correctamente ");
 			}
 		});

@@ -74,12 +74,12 @@ public class VentanaBuscarViaje extends JFrame {
 		///// DATOS DE EJEMPLO
 
 		// Lógica para preparar los datos de ejemplo
-		datosEjemplo = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-				.map(viaje -> new String[] { viaje.getVehiculo().getMatricula(),
-						viaje.getVehiculo().getPropietario().getNombre(), viaje.getOrigen(), viaje.getDestino(),
-						String.valueOf(viaje.getVehiculo().getPlazas()),
-						String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()) })
-				.toArray(String[][]::new);
+//		datosEjemplo = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
+//				.map(viaje -> new String[] { viaje.getVehiculo().getMatricula(),
+//						viaje.getVehiculo().getPropietario().getNombre(), viaje.getOrigen(), viaje.getDestino(),
+//						String.valueOf(viaje.getVehiculo().getPlazas()),
+//						String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()) })
+//				.toArray(String[][]::new);
 
 		// PANEL PRINCIPAL
 		panelPrincipal = new JPanel(new BorderLayout());
@@ -185,11 +185,11 @@ public class VentanaBuscarViaje extends JFrame {
 
 					Vehiculo vehiculo = new Vehiculo(matricula, asientosTotal,
 							new Usuario(propietario, "", "", "", true, 0.0f));
-					Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
-					viaje.setVehiculo(vehiculo);
+//					Viaje viaje = new Viaje(origen, destino, asientosDisponibles, propietario, "");
+//					viaje.setVehiculo(vehiculo);
 
-					CharlaCarImpl.getCharlaCarImpl().addViajeToUsuario(viaje);
-					System.out.println(viaje);
+//					CharlaCarImpl.getCharlaCarImpl().addViajeToUsuario(viaje);
+//					System.out.println(viaje);
 					// System.out.println(CharlaCarImpl.getCharlaCarImpl().getLogedUser().visualizarListaViajes);
 
 					if (CharlaCarImpl.getCharlaCarImpl().isLoged() == false) {

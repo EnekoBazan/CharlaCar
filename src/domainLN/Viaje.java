@@ -7,21 +7,17 @@ public class Viaje {
 
 	private String origen;
 	private String destino;
-	private int espaciosDisponibles;
-	private int espaciosOcupados;
-	private Vehiculo vehiculo;
+	private int plazas;
+	private Usuario conductor;
 	private List<Usuario> listaPasajeros;
-	private String info;
 	
-	public Viaje(String origen, String destino, int espaciosDisponibles, int espaciosOcupados,
-			List<Usuario> listaPasajeros, String info) {
+	public Viaje(String origen, String destino, int plazas, Usuario conductor,List<Usuario> listaPasajeros) {
 		super();
 		this.origen = origen;
 		this.destino = destino;
-		this.espaciosDisponibles = espaciosDisponibles;
-		this.espaciosOcupados = espaciosOcupados;
+		this.plazas = plazas;
+		this.conductor = conductor;
 		this.listaPasajeros = listaPasajeros;
-		this.info = info;
 	}
 
 	public Viaje() {
@@ -29,12 +25,12 @@ public class Viaje {
 	}
 
 	///GETTERS Y SETTERS
-	public Vehiculo getVehiculo() {
-		return vehiculo;
+	public Usuario getConductor() {
+		return conductor;
 	}
 
-	public void setVehiculo(Vehiculo vehiculo) {
-		this.vehiculo = vehiculo;
+	public void setConductor(Usuario conductor) {
+		this.conductor = conductor;
 	}
 
 	public String getOrigen() {
@@ -53,20 +49,12 @@ public class Viaje {
 		this.destino = destino;
 	}
 
-	public int getEspaciosDisponibles() {
-		return espaciosDisponibles;
+	public int getPlazas() {
+		return plazas;
 	}
 
-	public void setEspaciosDisponibles(int espaciosDisponibles) {
-		this.espaciosDisponibles = espaciosDisponibles;
-	}
-
-	public int getEspaciosOcupados() {
-		return espaciosOcupados;
-	}
-
-	public void setEspaciosOcupados(int espaciosOcupados) {
-		this.espaciosOcupados = espaciosOcupados;
+	public void setPlazas(int plazas) {
+		this.plazas = plazas;
 	}
 
 	public List<Usuario> getListaPasajeros() {
@@ -76,18 +64,10 @@ public class Viaje {
 	public void setListaPasajeros(List<Usuario> listaPasajeros) {
 		this.listaPasajeros = listaPasajeros;
 	}
-
-	public String getInfo() {
-		return info;
-	}
-
-	public void setInfo(String info) {
-		this.info = info;
-	}
-
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(destino, espaciosDisponibles, espaciosOcupados, info, listaPasajeros, origen);
+		return Objects.hash(conductor, destino, listaPasajeros, origen, plazas);
 	}
 
 	@Override
@@ -99,16 +79,19 @@ public class Viaje {
 		if (getClass() != obj.getClass())
 			return false;
 		Viaje other = (Viaje) obj;
-		return Objects.equals(destino, other.destino) && espaciosDisponibles == other.espaciosDisponibles
-				&& espaciosOcupados == other.espaciosOcupados && Objects.equals(info, other.info)
-				&& Objects.equals(listaPasajeros, other.listaPasajeros) && Objects.equals(origen, other.origen);
+		return Objects.equals(conductor, other.conductor) && Objects.equals(destino, other.destino)
+				&& Objects.equals(listaPasajeros, other.listaPasajeros) && Objects.equals(origen, other.origen)
+				&& plazas == other.plazas;
 	}
 
 	@Override
 	public String toString() {
-		return "Viaje [Origen: " + origen + ", Destino: " + destino + ", espaciosDisponibles: " + espaciosDisponibles
-				+ ", espaciosOcupados: " + espaciosOcupados;
+		return "Viaje [origen=" + origen + ", destino=" + destino + ", plazas=" + plazas + ", conductor=" + conductor
+				+ ", listaPasajeros=" + listaPasajeros + "]";
 	}
+	
+	
+
 	
 }
 	

@@ -1,24 +1,23 @@
 package domainLN;
 
-import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Usuario {
 	
+	private String dni;
 	private String nombre;
 	private String apellido;
-	private String dni;
 	private String contraseña;
 	private boolean carnet;
 	private float rating;
 	public ArrayList<Viaje> viajesPorUsuario = new ArrayList<Viaje>();
 	
-	public Usuario(String nombre, String apellido, String dni, String contraseña, boolean carnet, float rating) {
+	public Usuario(String dni, String nombre, String apellido, String contraseña, boolean carnet, float rating) {
 		super();
+		this.dni = dni;
 		this.nombre = nombre;
 		this.apellido = apellido;
-		this.dni = dni;
 		this.contraseña = contraseña;
 		this.carnet = carnet;
 		this.rating = rating;

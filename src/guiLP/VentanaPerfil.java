@@ -76,16 +76,16 @@ public class VentanaPerfil extends JDialog{
 	String[][] datosEjemplo;
 		
 	//Imagenes
-	private ImageIcon estrellaA1 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaA1.png"));
-	private ImageIcon estrellaA2 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaA2.png"));
-	private ImageIcon estrellaA3 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaA3.png"));
-	private ImageIcon estrellaA4 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaA4.png"));
-	private ImageIcon estrellaA5 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaA5.png"));
-	private ImageIcon estrellaG1 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaG1.png"));
-	private ImageIcon estrellaG2 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaG2.png"));
-	private ImageIcon estrellaG3 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaG3.png"));
-	private ImageIcon estrellaG4 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaG4.png"));
-	private ImageIcon estrellaG5 = new ImageIcon(VentanaPerfil.class.getResource("/images/estrellaG5.png"));
+	private ImageIcon estrellaA1 = new ImageIcon("resources/images/estrellaA1.png");
+	private ImageIcon estrellaA2 = new ImageIcon("resources/images/estrellaA2.png");
+	private ImageIcon estrellaA3 = new ImageIcon("resources/images/estrellaA3.png");
+	private ImageIcon estrellaA4 = new ImageIcon("resources/images/estrellaA4.png");
+	private ImageIcon estrellaA5 = new ImageIcon("resources/images/estrellaA5.png");
+	private ImageIcon estrellaG1 = new ImageIcon("resources/images/estrellaG1.png");
+	private ImageIcon estrellaG2 = new ImageIcon("resources/images/estrellaG2.png");
+	private ImageIcon estrellaG3 = new ImageIcon("resources/images/estrellaG3.png");
+	private ImageIcon estrellaG4 = new ImageIcon("resources/images/estrellaG4.png");
+	private ImageIcon estrellaG5 = new ImageIcon("resources/images/estrellaG5.png");
 
 	//Botones
 	JButton btnSalir = new JButton("Salir");
@@ -122,13 +122,13 @@ public class VentanaPerfil extends JDialog{
 		panelNorte.add(lbDNI, BorderLayout.SOUTH);
 		lbDNI.setBorder(new EmptyBorder(2,5,2,5));
 		
-		Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogedUser();
-		String matricula = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-		        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
-		        .map(viaje -> viaje.getVehiculo().getMatricula())
-		        .findFirst()
-		        .orElse("No disponible");
-		lblMatricula.setText("Matrícula:  " + matricula);
+//		Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogedUser();
+//		String matricula = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
+//		        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
+//		        .map(viaje -> viaje.getVehiculo().getMatricula())
+//		        .findFirst()
+//		        .orElse("No disponible");
+//		lblMatricula.setText("Matrícula:  " + matricula);
 		panelNorte.add(lblMatricula, BorderLayout.SOUTH);
 		lblMatricula.setBorder(new EmptyBorder(2,5,2,5));
 		
@@ -168,20 +168,20 @@ public class VentanaPerfil extends JDialog{
       	Border tituloViajesUnidos = BorderFactory.createTitledBorder(bordeViajesUnidos,"Viajes Unidos");
       	panelCentroS.setBorder(tituloViajesUnidos);
       	panelCentroS.setBackground(Color.WHITE);
-      	Object[][] datos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-    	        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado)) // Filtra por usuario logueado
-    	        .map(viaje -> new String[] {
-    	                viaje.getVehiculo().getMatricula(),
-    	                viaje.getVehiculo().getPropietario().getNombre(),
-    	                viaje.getOrigen(),
-    	                viaje.getDestino(),
-    	                String.valueOf(viaje.getVehiculo().getPlazas()),
-    	                String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()),
-    	                "Eliminar"
-    	        })
-    	        .toArray(String[][]::new);
+//      	Object[][] datos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
+//    	        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado)) // Filtra por usuario logueado
+//    	        .map(viaje -> new String[] {
+//    	                viaje.getVehiculo().getMatricula(),
+//    	                viaje.getVehiculo().getPropietario().getNombre(),
+//    	                viaje.getOrigen(),
+//    	                viaje.getDestino(),
+//    	                String.valueOf(viaje.getVehiculo().getPlazas()),
+//    	                String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()),
+//    	                "Eliminar"
+//    	        })
+//    	        .toArray(String[][]::new);
     	
-		tableModel = new DefaultTableModel(datos, cabecera);
+//		tableModel = new DefaultTableModel(datos, cabecera);
 		tablaMisViajes = new JTable(tableModel) {
 
 			private static final long serialVersionUID = 1L;
@@ -197,18 +197,18 @@ public class VentanaPerfil extends JDialog{
 		tablaMisViajes.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelCentroCentro.add(scrollPane, BorderLayout.NORTH);
 		
-		Object[][] datosViajesUnidos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-    	        .filter(viaje -> viaje.getListaPasajeros().contains(usuarioLogeado)) // Filtra por usuario logueado
-    	        .map(viaje -> new String[] {
-    	                viaje.getVehiculo().getMatricula(),
-    	                viaje.getVehiculo().getPropietario().getNombre(),
-    	                viaje.getOrigen(),
-    	                viaje.getDestino(),
-    	                String.valueOf(viaje.getVehiculo().getPlazas()),
-    	                String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()),
-    	                "Salir"    	        })
-    	        .toArray(String[][]::new);
-		tableModel2 = new DefaultTableModel(datosViajesUnidos, cabecera2);
+//		Object[][] datosViajesUnidos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
+//    	        .filter(viaje -> viaje.getListaPasajeros().contains(usuarioLogeado)) // Filtra por usuario logueado
+//    	        .map(viaje -> new String[] {
+//    	                viaje.getVehiculo().getMatricula(),
+//    	                viaje.getVehiculo().getPropietario().getNombre(),
+//    	                viaje.getOrigen(),
+//    	                viaje.getDestino(),
+//    	                String.valueOf(viaje.getVehiculo().getPlazas()),
+//    	                String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()),
+//    	                "Salir"    	        })
+//    	        .toArray(String[][]::new);
+//		tableModel2 = new DefaultTableModel(datosViajesUnidos, cabecera2);
 		tablaViajesUnidos = new JTable(tableModel2) {
 
 			private static final long serialVersionUID = 1L;
@@ -248,7 +248,7 @@ public class VentanaPerfil extends JDialog{
 		panelColor.setBackground(new Color(237, 242, 255));
     	add(panelColor);
     	
-    	System.out.println(usuarioLogeado.getViajes());
+//    	System.out.println(usuarioLogeado.getViajes());
     	btnSalir.addActionListener(new ActionListener() {
 
     	    @Override
@@ -270,11 +270,11 @@ public class VentanaPerfil extends JDialog{
     	            // Crear un nuevo objeto viaje que corresponde con los datos seleccionados
     	            Vehiculo vehiculo = new Vehiculo(matricula, asientosTotal, 
     	                new Usuario(propietario, "", "", "", true, 0.0f)); // Crear un vehículo
-    	            Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
-    	            viaje.setVehiculo(vehiculo);
+//    	            Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
+//    	            viaje.setVehiculo(vehiculo);
 
     	            // Eliminar el viaje del usuario logueado
-    	            CharlaCarImpl.getCharlaCarImpl().deleteViajeToUsuario(viaje);  // Método hipotético para eliminar un viaje
+//    	            CharlaCarImpl.getCharlaCarImpl().deleteViajeToUsuario(viaje);  // Método hipotético para eliminar un viaje
     	            
     	            // Eliminar la fila de la tabla
     	            tableModel2.removeRow(numFila);
@@ -313,8 +313,8 @@ public class VentanaPerfil extends JDialog{
     	            // Crear un nuevo objeto viaje que corresponde con los datos seleccionados
     	            Vehiculo vehiculo = new Vehiculo(matricula, asientosTotal, 
     	                new Usuario(propietario, "", "", "", true, 0.0f)); // Crear un vehículo
-    	            Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
-    	            viaje.setVehiculo(vehiculo);
+//    	            Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
+//    	            viaje.setVehiculo(vehiculo);
 
     	            
     	            // Eliminar el viaje del usuario logueado
