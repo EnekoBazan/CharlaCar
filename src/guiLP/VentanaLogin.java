@@ -84,7 +84,7 @@ public class VentanaLogin extends JDialog {
 		lblRegistro.setBounds(100, 130, 110, 20);
 		getContentPane().add(lblRegistro);
 		
-		 ImageIcon icon = new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png"));
+		 ImageIcon icon = new ImageIcon("resources/images/favicon.png");
 		 setIconImage(icon.getImage());
 
 		getContentPane().setBackground(new Color(217, 239, 248 ));

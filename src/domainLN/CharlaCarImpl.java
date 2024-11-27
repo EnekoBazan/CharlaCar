@@ -6,10 +6,9 @@ import java.util.List;
 //GESTORLN patron singleton
 public class CharlaCarImpl implements CharlaCarService {
 
-	
 	private Usuario logedUser;
 	private boolean isLoged = false;
-	
+
 	public boolean isLoged() {
 		return isLoged;
 	}
@@ -18,17 +17,15 @@ public class CharlaCarImpl implements CharlaCarService {
 		this.isLoged = isLoged;
 	}
 
-	public void setLogedUser( Usuario u )
-	{
+	public void setLogedUser(Usuario u) {
 		logedUser = u;
-	    transferirViajesAListaUsuario();  // Llamamos al método que transfiere los viajes a la lista del usuario
+		transferirViajesAListaUsuario(); // Llamamos al método que transfiere los viajes a la lista del usuario
 	}
-	
-	public Usuario getLogedUser()
-	{
+
+	public Usuario getLogedUser() {
 		return logedUser;
 	}
-	
+
 	private List<Viaje> listaViajes;
 	private List<Usuario> listaUsuarios;
 	private ArrayList<Viaje> listaViajesPorUsuarios;
@@ -52,15 +49,14 @@ public class CharlaCarImpl implements CharlaCarService {
 	}
 	// ** END SINGLETON
 
-	
 	private void inicializarViajes() {
 		if (listaUsuarios.isEmpty()) {
 			inicializarUsers();
 		}
 
-		Vehiculo vehiculo = new Vehiculo("1234 HYS",  6, listaUsuarios.get(0));
+		Vehiculo vehiculo = new Vehiculo("1234 HYS", 6, listaUsuarios.get(0));
 		Vehiculo vehiculo1 = new Vehiculo("9372 BMN", 5, listaUsuarios.get(1));
-		Vehiculo vehiculo2= new Vehiculo("8754 KLO", 5, listaUsuarios.get(2));
+		Vehiculo vehiculo2 = new Vehiculo("8754 KLO", 5, listaUsuarios.get(2));
 		Vehiculo vehiculo3 = new Vehiculo("1730 HGR", 5, listaUsuarios.get(3));
 		Vehiculo vehiculo4 = new Vehiculo("0034 GTR", 5, listaUsuarios.get(4));
 		Vehiculo vehiculo5 = new Vehiculo("7890 ABC", 2, listaUsuarios.get(5));
@@ -68,7 +64,6 @@ public class CharlaCarImpl implements CharlaCarService {
 		Vehiculo vehiculo7 = new Vehiculo("9012 GHI", 7, listaUsuarios.get(7));
 		Vehiculo vehiculo8 = new Vehiculo("5678 JKL", 12, listaUsuarios.get(8));
 		Vehiculo vehiculo9 = new Vehiculo("2345 MNO", 20, listaUsuarios.get(9));
-
 
 		listaViajes.add(new Viaje("Valencia", "Barcelona", 4, logedUser, listaUsuarios));
 		listaViajes.add(new Viaje("Bilbao", "Sevilla", 3, listaUsuarios.get(0), listaUsuarios));
@@ -90,30 +85,29 @@ public class CharlaCarImpl implements CharlaCarService {
 		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
 		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
 		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));		
+		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
 	}
 
 	private void inicializarUsers() {
-		listaUsuarios.add(new Usuario("a", "Palotes", "73627382J", "a", true, 2.0f));
-		listaUsuarios.add(new Usuario("Juan", "Perez", "73627382J", "contraseña", true, 4.0f));
-		listaUsuarios.add(new Usuario("Maria", "Lopez", "73627382J", "contraseña", true, 1.0f));
-		listaUsuarios.add(new Usuario("Ana", "Garcia", "73627382J", "contraseña", true, 5.0f));
-		listaUsuarios.add(new Usuario("Pedro", "Rodriguez", "73627382J", "contraseña", true, 3.0f));
-		listaUsuarios.add(new Usuario("Alejandro", "Gonzalez", "12345678A", "pass123", true, 4.5f));
-		listaUsuarios.add(new Usuario("Luisa", "Diaz", "87654321B", "luisa123", true, 3.8f));
-		listaUsuarios.add(new Usuario("Carlos", "Fernandez", "45678912C", "carlos456", true, 2.9f));
-		listaUsuarios.add(new Usuario("Marta", "Sanchez", "23456789D", "marta789", true, 4.2f));
-		listaUsuarios.add(new Usuario("Javier", "Torres", "98765432E", "javier321", true, 3.5f));
+		listaUsuarios.add(new Usuario("73627382J", "a", "Palotes", "a", true, 2.0f));
+		listaUsuarios.add(new Usuario("73627382J", "Juan", "Perez", "contraseña", true, 4.0f));
+		listaUsuarios.add(new Usuario("73627382J", "Maria", "Lopez", "contraseña", true, 1.0f));
+		listaUsuarios.add(new Usuario("73627382J", "Ana", "Garcia", "contraseña", true, 5.0f));
+		listaUsuarios.add(new Usuario("73627382J", "Pedro", "Rodriguez", "contraseña", true, 3.0f));
+		listaUsuarios.add(new Usuario("12345678A", "Alejandro", "Gonzalez", "pass123", true, 4.5f));
+		listaUsuarios.add(new Usuario("87654321B", "Luisa", "Diaz", "luisa123", true, 3.8f));
+		listaUsuarios.add(new Usuario("45678912C", "Carlos", "Fernandez", "carlos456", true, 2.9f));
+		listaUsuarios.add(new Usuario("23456789D", "Marta", "Sanchez", "marta789", true, 4.2f));
+		listaUsuarios.add(new Usuario("98765432E", "Javier", "Torres", "javier321", true, 3.5f));
 
 	}
-
 
 	@Override
 	public List<Viaje> getViajes() {
 		return listaViajes;
 	}
 
-	@Override	
+	@Override
 	public void addViaje(Viaje viaje) {
 		listaViajes.add(viaje);
 
@@ -140,10 +134,11 @@ public class CharlaCarImpl implements CharlaCarService {
 		listaUsuarios.remove(user);
 	}
 
-	public void addViajeToUsuario( Viaje v) {
+	public void addViajeToUsuario(Viaje v) {
 		logedUser.addViaje(v);
 	}
-	public void deleteViajeToUsuario( Viaje v) {
+
+	public void deleteViajeToUsuario(Viaje v) {
 		logedUser.deleteViaje(v);
 	}
 
@@ -166,22 +161,23 @@ public class CharlaCarImpl implements CharlaCarService {
 	public ArrayList<Viaje> getViajesPorUsuario() {
 		return listaViajesPorUsuarios;
 	}
-	// Método que transfiere los viajes del CharlaCarImpl a la lista de viajes del usuario logueado
-	public void transferirViajesAListaUsuario() {
-	    // Verificar si el usuario logueado existe
-	    if (logedUser == null) {
-	        System.out.println("No hay usuario logueado.");
-	        return;
-	    }
 
-	    // Obtener los viajes correspondientes al usuario logueado desde CharlaCarImpl
+	// Método que transfiere los viajes del CharlaCarImpl a la lista de viajes del
+	// usuario logueado
+	public void transferirViajesAListaUsuario() {
+		// Verificar si el usuario logueado existe
+		if (logedUser == null) {
+			System.out.println("No hay usuario logueado.");
+			return;
+		}
+
+		// Obtener los viajes correspondientes al usuario logueado desde CharlaCarImpl
 //	    ArrayList<Viaje> viajesDeCharlaCar = getViajesPorUsuario();
 
-	    // Agregar estos viajes a la lista de viajes del usuario
-	    for (Viaje viaje : listaViajesPorUsuarios) {
-	        logedUser.addViaje(viaje);  // Suponiendo que addViaje() agrega el viaje a la lista de viajes del usuario
-	    }
+		// Agregar estos viajes a la lista de viajes del usuario
+		for (Viaje viaje : listaViajesPorUsuarios) {
+			logedUser.addViaje(viaje); // Suponiendo que addViaje() agrega el viaje a la lista de viajes del usuario
+		}
 	}
 
 }
-
