@@ -1,5 +1,6 @@
 package domainLN;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface CharlaCarService {
@@ -11,7 +12,6 @@ public interface CharlaCarService {
 	
 	
 	//******************************************************
-	
 	
 	public List<Usuario> getListUsers();	
 	//public void inicializarUsers();	
@@ -26,4 +26,5 @@ public interface CharlaCarService {
 	public void setLogedUser( Usuario u );
 	public Usuario getLogedUser();
 	public void addViajeToUsuario( Viaje v);
+	public ArrayList<Viaje> getViajesPorUsuario();
 }
