@@ -8,10 +8,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.DefaultCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,12 +22,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import domainLN.ButtonEditor;
 import domainLN.CharlaCarImpl;
-import domainLN.TipoVehiculo;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
 import domainLN.Viaje;
@@ -72,13 +65,11 @@ public class VentanaPerfil extends JDialog{
 	//Tabla
 	private JTable tablaMisViajes;
 	private String[] cabecera = { "Matricula", "Propietario", "Origen", "Destino", "Asientos Totales", "Asientos Disponibles", "Acción" };
-	private String[][] datos;
 	private JScrollPane scrollPane;
 	private DefaultTableModel tableModel;
 	
 	private JTable tablaViajesUnidos;
 	private String[] cabecera2 = { "Matricula", "Propietario", "Origen", "Destino", "Asientos Totales", "Asientos Disponibles", "Acción" };
-	private String[][] datosViajesUnidos;
 	private JScrollPane scrollPane2;
 	private DefaultTableModel tableModel2;
 	
@@ -277,7 +268,7 @@ public class VentanaPerfil extends JDialog{
     	            int asientosDisponibles = Integer.parseInt((String) tableModel2.getValueAt(numFila, 5));
 
     	            // Crear un nuevo objeto viaje que corresponde con los datos seleccionados
-    	            Vehiculo vehiculo = new Vehiculo(matricula, TipoVehiculo.COCHE, asientosTotal, 
+    	            Vehiculo vehiculo = new Vehiculo(matricula, asientosTotal, 
     	                new Usuario(propietario, "", "", "", true, 0.0f)); // Crear un vehículo
     	            Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
     	            viaje.setVehiculo(vehiculo);
@@ -320,7 +311,7 @@ public class VentanaPerfil extends JDialog{
     	            int asientosDisponibles = Integer.parseInt((String) tableModel.getValueAt(numFila, 5));
 
     	            // Crear un nuevo objeto viaje que corresponde con los datos seleccionados
-    	            Vehiculo vehiculo = new Vehiculo(matricula, TipoVehiculo.COCHE, asientosTotal, 
+    	            Vehiculo vehiculo = new Vehiculo(matricula, asientosTotal, 
     	                new Usuario(propietario, "", "", "", true, 0.0f)); // Crear un vehículo
     	            Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
     	            viaje.setVehiculo(vehiculo);
