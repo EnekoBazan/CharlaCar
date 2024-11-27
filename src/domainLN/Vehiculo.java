@@ -5,14 +5,12 @@ import java.util.Objects;
 public class Vehiculo {
 
 	private String matricula;
-	private TipoVehiculo tipo;
 	private int plazas;
 	private Usuario propietario;
 	
-	public Vehiculo(String matricula, TipoVehiculo tipo, int plazas, Usuario propietario) {
+	public Vehiculo(String matricula, int plazas, Usuario propietario) {
 		super();
 		this.matricula = matricula;
-		this.tipo = tipo;
 		this.plazas = plazas;
 		this.propietario = propietario;
 	}
@@ -27,14 +25,6 @@ public class Vehiculo {
 
 	public void setMatricula(String matricula) {
 		this.matricula = matricula;
-	}
-
-	public TipoVehiculo getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(TipoVehiculo tipo) {
-		this.tipo = tipo;
 	}
 
 	public int getPlazas() {
@@ -55,7 +45,7 @@ public class Vehiculo {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(matricula, plazas, propietario, tipo);
+		return Objects.hash(matricula, plazas, propietario);
 	}
 
 	@Override
@@ -68,6 +58,6 @@ public class Vehiculo {
 			return false;
 		Vehiculo other = (Vehiculo) obj;
 		return Objects.equals(matricula, other.matricula) && plazas == other.plazas
-				&& Objects.equals(propietario, other.propietario) && tipo == other.tipo;
+				&& Objects.equals(propietario, other.propietario);
 	}
 }

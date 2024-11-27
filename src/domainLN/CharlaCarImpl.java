@@ -58,16 +58,16 @@ public class CharlaCarImpl implements CharlaCarService {
 			inicializarUsers();
 		}
 
-		Vehiculo vehiculo = new Vehiculo("1234 HYS", TipoVehiculo.COCHE, 6, listaUsuarios.get(0));
-		Vehiculo vehiculo1 = new Vehiculo("9372 BMN", TipoVehiculo.COCHE, 5, listaUsuarios.get(1));
-		Vehiculo vehiculo2= new Vehiculo("8754 KLO", TipoVehiculo.COCHE, 5, listaUsuarios.get(2));
-		Vehiculo vehiculo3 = new Vehiculo("1730 HGR", TipoVehiculo.COCHE, 5, listaUsuarios.get(3));
-		Vehiculo vehiculo4 = new Vehiculo("0034 GTR", TipoVehiculo.COCHE, 5, listaUsuarios.get(4));
-		Vehiculo vehiculo5 = new Vehiculo("7890 ABC", TipoVehiculo.MOTO, 2, listaUsuarios.get(5));
-		Vehiculo vehiculo6 = new Vehiculo("4567 DEF", TipoVehiculo.CAMION, 8, listaUsuarios.get(6));
-		Vehiculo vehiculo7 = new Vehiculo("9012 GHI", TipoVehiculo.CAMION, 7, listaUsuarios.get(7));
-		Vehiculo vehiculo8 = new Vehiculo("5678 JKL", TipoVehiculo.CAMION, 12, listaUsuarios.get(8));
-		Vehiculo vehiculo9 = new Vehiculo("2345 MNO", TipoVehiculo.AUTOBUS, 20, listaUsuarios.get(9));
+		Vehiculo vehiculo = new Vehiculo("1234 HYS",  6, listaUsuarios.get(0));
+		Vehiculo vehiculo1 = new Vehiculo("9372 BMN", 5, listaUsuarios.get(1));
+		Vehiculo vehiculo2= new Vehiculo("8754 KLO", 5, listaUsuarios.get(2));
+		Vehiculo vehiculo3 = new Vehiculo("1730 HGR", 5, listaUsuarios.get(3));
+		Vehiculo vehiculo4 = new Vehiculo("0034 GTR", 5, listaUsuarios.get(4));
+		Vehiculo vehiculo5 = new Vehiculo("7890 ABC", 2, listaUsuarios.get(5));
+		Vehiculo vehiculo6 = new Vehiculo("4567 DEF", 8, listaUsuarios.get(6));
+		Vehiculo vehiculo7 = new Vehiculo("9012 GHI", 7, listaUsuarios.get(7));
+		Vehiculo vehiculo8 = new Vehiculo("5678 JKL", 12, listaUsuarios.get(8));
+		Vehiculo vehiculo9 = new Vehiculo("2345 MNO", 20, listaUsuarios.get(9));
 
 
 		listaViajes.add(new Viaje("Valencia", "Barcelona", 4, 2, listaUsuarios, "Viaje de trabajo"));

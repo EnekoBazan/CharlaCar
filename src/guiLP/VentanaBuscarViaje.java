@@ -30,7 +30,6 @@ import javax.swing.table.TableRowSorter;
 import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
-import domainLN.TipoVehiculo;
 import domainLN.Viaje;
 
 import javax.swing.RowFilter;
@@ -113,7 +112,7 @@ public class VentanaBuscarViaje extends JFrame {
 
 				label.setHorizontalAlignment(JLabel.CENTER);
 				label.setOpaque(true);
-
+				
 				return label;
 			}
 		});
@@ -184,7 +183,7 @@ public class VentanaBuscarViaje extends JFrame {
 					int asientosTotal = Integer.parseInt((String) tableModel.getValueAt(numFila, 4));
 					int asientosDisponibles = Integer.parseInt((String) tableModel.getValueAt(numFila, 5));
 
-					Vehiculo vehiculo = new Vehiculo(matricula, TipoVehiculo.COCHE, asientosTotal,
+					Vehiculo vehiculo = new Vehiculo(matricula, asientosTotal,
 							new Usuario(propietario, "", "", "", true, 0.0f));
 					Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
 					viaje.setVehiculo(vehiculo);

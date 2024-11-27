@@ -17,14 +17,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import domainLN.CharlaCarImpl;
-import domainLN.TipoVehiculo;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
 import domainLN.Viaje;
@@ -62,20 +60,14 @@ public class VentanaCrearViaje extends JFrame {
 	// Label
 	private JLabel lbViaje = new JLabel();
 	private JLabel lbMatricula = new JLabel();
-	private JLabel lbVehiculo = new JLabel();
 	private JLabel lbPlazas = new JLabel();
 	private JLabel lbOrigen = new JLabel("Origen: ");
 	private JLabel lbDestino = new JLabel("Destino: ");
-	private JLabel lbAsientoDisp = new JLabel("Asientos disponibles: ");
-	private JLabel lbAsientoOcupados = new JLabel("Asientos totales: ");
-
-	// TextField
-	private JTextField txtInfo = new JTextField();
+	private JLabel lbAsientos = new JLabel("Asientos disponibles: ");
 
 	// ComboBox
 	private String[] numAsientos = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-	private JComboBox<String> comboAsientosDisp = new JComboBox<>(numAsientos);
-	private JComboBox<String> comboAsientosOcupados = new JComboBox<>(numAsientos);
+	private JComboBox<String> comboAsientos = new JComboBox<>(numAsientos);
 
 	private String[] ciudadesEspaña = { "Madrid", "Barcelona", "Valencia", "Sevilla", "Zaragoza", "Málaga", "Murcia",
 			"Palma", "Las Palmas", "Bilbao", "Alicante", "Córdoba", "Valladolid", "Vigo", "Gijón",
@@ -104,9 +96,6 @@ public class VentanaCrearViaje extends JFrame {
 		String matricula = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
 				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
 				.map(viaje -> viaje.getVehiculo().getMatricula()).findFirst().orElse("No disponible");
-		TipoVehiculo tipoVehiculo = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
-				.map(viaje -> viaje.getVehiculo().getTipo()).findFirst().orElse(TipoVehiculo.AUTOBUS);
 		Vehiculo vehiculo = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
 				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
 				.map(viaje -> viaje.getVehiculo()).findFirst().orElse(new Vehiculo());
@@ -148,7 +137,7 @@ public class VentanaCrearViaje extends JFrame {
 		panelSecundarioViaje.add(scrollPane, BorderLayout.CENTER);
 
 		// Botones
-		estilizarBoton(btnCrear);
+	 	estilizarBoton(btnCrear);
 		estilizarBoton(btnAplicar);
 
 		panelPrincipal.add(panelPrincipalSur, BorderLayout.SOUTH);
@@ -161,47 +150,37 @@ public class VentanaCrearViaje extends JFrame {
 
 		estilizarLabel(lbOrigen);
 		estilizarLabel(lbDestino);
-		estilizarLabel(lbAsientoDisp);
-		estilizarLabel(lbAsientoOcupados);
+		estilizarLabel(lbAsientos);
 		estilizarLabel(lbMatricula);
-		estilizarLabel(lbVehiculo);
 		estilizarLabel(lbPlazas);
 
 		Border bordeInfo = BorderFactory.createLineBorder(Color.BLACK);
 		Border tituloBordeInfo = BorderFactory.createTitledBorder(bordeInfo, "Info");
 		panelInfoSE.setBorder(tituloBordeInfo);
-		panelInfoSE.add(txtInfo, BorderLayout.CENTER);
 		Border bordeInfoUsuario = BorderFactory.createLineBorder(Color.BLACK);
 		Border tituloBordeInfoUsuario = BorderFactory.createTitledBorder(bordeInfoUsuario, "Vehículo");
 		panelInfoSW.setBorder(tituloBordeInfoUsuario);
 		lbMatricula.setText("Matrícula: " + matricula);
 		lbMatricula.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelInfoSW.add(lbMatricula);
-		lbVehiculo.setText("Vehículo: " + tipoVehiculo);
-		lbVehiculo.setBorder(new EmptyBorder(5, 5, 5, 5));
-		panelInfoSW.add(lbVehiculo);
 		lbPlazas.setText("Plazas: " + plazas);
 		lbPlazas.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelInfoSW.add(lbPlazas);
 
 		comboCiudadesOrigen.setSelectedIndex(-1);
 		comboCiudadesDestino.setSelectedIndex(-1);
-		comboAsientosDisp.setSelectedIndex(-1);
-		comboAsientosOcupados.setSelectedIndex(-1);
+		comboAsientos.setSelectedIndex(-1);
 
 		estilizarComboBox(comboCiudadesOrigen);
 		estilizarComboBox(comboCiudadesDestino);
-		estilizarComboBox(comboAsientosDisp);
-		estilizarComboBox(comboAsientosOcupados);
+		estilizarComboBox(comboAsientos);
 
 		panelInfoN1.add(lbOrigen);
 		panelInfoN1.add(comboCiudadesOrigen);
 		panelInfoN2.add(lbDestino);
 		panelInfoN2.add(comboCiudadesDestino);
-		panelInfoN3.add(lbAsientoDisp);
-		panelInfoN3.add(comboAsientosDisp);
-		panelInfoC1.add(lbAsientoOcupados);
-		panelInfoC1.add(comboAsientosOcupados);
+		panelInfoN3.add(lbAsientos);
+		panelInfoN3.add(comboAsientos);
 
 		panelInfo.add(panelInfoN, BorderLayout.NORTH);
 		panelInfoN.add(panelInfoN1, BorderLayout.NORTH);
@@ -229,23 +208,14 @@ public class VentanaCrearViaje extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String origen = (String) comboCiudadesOrigen.getSelectedItem();
 				String destino = (String) comboCiudadesDestino.getSelectedItem();
-				String asientosDisponibles = (String) comboAsientosDisp.getSelectedItem();
-				String asientosOcupados = (String) comboAsientosOcupados.getSelectedItem();
-				String info = txtInfo.getText();
+				String asientosDisponibles = (String) comboAsientos.getSelectedItem();
 
-				txtInfo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-				txtInfo.setBorder(
-						BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)),
-								BorderFactory.createEmptyBorder(5, 8, 5, 8)));
-
-				if (origen != null && destino != null && asientosDisponibles != null && asientosOcupados != null) {
-					tableModel.addRow(new Object[] { origen, destino, asientosDisponibles, asientosOcupados, info });
+				if (origen != null && destino != null && asientosDisponibles != null) {
+					tableModel.addRow(new Object[] { origen, destino, asientosDisponibles });
 
 					comboCiudadesOrigen.setSelectedIndex(-1);
 					comboCiudadesDestino.setSelectedIndex(-1);
-					comboAsientosDisp.setSelectedIndex(-1);
-					comboAsientosOcupados.setSelectedIndex(-1);
-					txtInfo.setText("");
+					comboAsientos.setSelectedIndex(-1);
 
 				}
 			}
