@@ -1,6 +1,7 @@
 package domainLN;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class Usuario {
@@ -11,7 +12,7 @@ public class Usuario {
 	private String contraseña;
 	private boolean carnet;
 	private float rating;
-	public ArrayList<Viaje> viajesPorUsuario = new ArrayList<Viaje>();
+	public HashMap<Usuario, ArrayList<Viaje>> viajesPorUsuario = new HashMap<Usuario, ArrayList<Viaje>>();
 	
 	public Usuario(String dni, String nombre, String apellido, String contraseña, boolean carnet, float rating) {
 		super();
@@ -88,9 +89,9 @@ public class Usuario {
 		return "Usuario dni: " + dni + ", nombre: " + nombre + ", apellido: " + apellido + ", contraseña: " + contraseña
 				+ ", carnet: " + carnet + ", rating: " + rating + ", viajesPorUsuario: " + viajesPorUsuario;
 	}
-	public void addViaje(Viaje v) {
-		viajesPorUsuario.add( v );
-	}
+//	public void addViaje(Viaje v) {
+//		viajesPorUsuario.add( v );
+//	}
 	public String visualizarListaViajes() {
 		return "Viajes del usuario" + viajesPorUsuario;
 	}
@@ -98,7 +99,5 @@ public class Usuario {
 	public void deleteViaje(Viaje v) {
 		viajesPorUsuario.remove(v);
 	}
-	public ArrayList<Viaje> getViajes() {
-		return viajesPorUsuario;
-	}
+
 }

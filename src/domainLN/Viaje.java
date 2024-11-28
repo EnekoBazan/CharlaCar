@@ -5,14 +5,16 @@ import java.util.Objects;
 
 public class Viaje {
 
+	private int id;
 	private String origen;
 	private String destino;
 	private int plazas;
 	private Usuario conductor;
 	private List<Usuario> listaPasajeros;
 	
-	public Viaje(String origen, String destino, int plazas, Usuario conductor,List<Usuario> listaPasajeros) {
+	public Viaje(int id, String origen, String destino, int plazas, Usuario conductor,List<Usuario> listaPasajeros) {
 		super();
+		this.id = id;
 		this.origen = origen;
 		this.destino = destino;
 		this.plazas = plazas;
@@ -25,8 +27,17 @@ public class Viaje {
 	}
 
 	///GETTERS Y SETTERS
+	
 	public Usuario getConductor() {
 		return conductor;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public void setConductor(Usuario conductor) {
@@ -64,10 +75,10 @@ public class Viaje {
 	public void setListaPasajeros(List<Usuario> listaPasajeros) {
 		this.listaPasajeros = listaPasajeros;
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(conductor, destino, listaPasajeros, origen, plazas);
+		return Objects.hash(conductor, destino, id, listaPasajeros, origen, plazas);
 	}
 
 	@Override
@@ -79,19 +90,16 @@ public class Viaje {
 		if (getClass() != obj.getClass())
 			return false;
 		Viaje other = (Viaje) obj;
-		return Objects.equals(conductor, other.conductor) && Objects.equals(destino, other.destino)
+		return Objects.equals(conductor, other.conductor) && Objects.equals(destino, other.destino) && id == other.id
 				&& Objects.equals(listaPasajeros, other.listaPasajeros) && Objects.equals(origen, other.origen)
 				&& plazas == other.plazas;
 	}
 
 	@Override
 	public String toString() {
-		return "Viaje [origen=" + origen + ", destino=" + destino + ", plazas=" + plazas + ", conductor=" + conductor
-				+ ", listaPasajeros=" + listaPasajeros + "]";
+		return "Viaje [id=" + id + ", origen=" + origen + ", destino=" + destino + ", plazas=" + plazas + ", conductor="
+				+ conductor + ", listaPasajeros=" + listaPasajeros + "]";
 	}
-	
-	
-
-	
+		
 }
 	

@@ -65,27 +65,27 @@ public class CharlaCarImpl implements CharlaCarService {
 		Vehiculo vehiculo8 = new Vehiculo("5678 JKL", 12, listaUsuarios.get(8));
 		Vehiculo vehiculo9 = new Vehiculo("2345 MNO", 20, listaUsuarios.get(9));
 
-		listaViajes.add(new Viaje("Valencia", "Barcelona", 4, logedUser, listaUsuarios));
-		listaViajes.add(new Viaje("Bilbao", "Sevilla", 3, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Vitoria", "Valencia", 2, listaUsuarios.get(1), listaUsuarios));
-		listaViajes.add(new Viaje("Madrid", "Bilbao", 1, listaUsuarios.get(4), listaUsuarios));
-		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(5), listaUsuarios));
-		listaViajes.add(new Viaje("Galicia", "Malaga", 2, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Sevilla", "Cordoba", 4, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Valencia", "Castellon", 3, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Bilbao", "San Sebastian", 6, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Zaragoza", "Huesca", 2, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Oviedo", "Gijon", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Madrid", "Toledo", 3, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Barcelona", "Tarragona", 4, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Valencia", "Alicante", 2, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Bilbao", "Vitoria", 2, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Sevilla", "Cadiz", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje("Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(1, "Valencia", "Barcelona", 4, logedUser, listaUsuarios));
+		listaViajes.add(new Viaje(2, "Bilbao", "Sevilla", 3, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(3, "Vitoria", "Valencia", 2, listaUsuarios.get(1), listaUsuarios));
+		listaViajes.add(new Viaje(4, "Madrid", "Bilbao", 1, listaUsuarios.get(4), listaUsuarios));
+		listaViajes.add(new Viaje(5, "Malaga", "Santander", 5, listaUsuarios.get(5), listaUsuarios));
+		listaViajes.add(new Viaje(6, "Galicia", "Malaga", 2, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(7, "Sevilla", "Cordoba", 4, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(8, "Valencia", "Castellon", 3, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(9, "Bilbao", "San Sebastian", 6, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(10, "Zaragoza", "Huesca", 2, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(11, "Oviedo", "Gijon", 5, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(12, "Madrid", "Toledo", 3, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(13, "Barcelona", "Tarragona", 4, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(14, "Valencia", "Alicante", 2, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(15, "Bilbao", "Vitoria", 2, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(16, "Sevilla", "Cadiz", 5, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(17, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(18, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(19, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(20, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
+		listaViajes.add(new Viaje(21, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
 	}
 
 	private void inicializarUsers() {
@@ -134,9 +134,9 @@ public class CharlaCarImpl implements CharlaCarService {
 		listaUsuarios.remove(user);
 	}
 
-	public void addViajeToUsuario(Viaje v) {
-		logedUser.addViaje(v);
-	}
+//	public void addViajeToUsuario(Viaje v) {
+//		logedUser.addViaje(v);
+//	}
 
 	public void deleteViajeToUsuario(Viaje v) {
 		logedUser.deleteViaje(v);
@@ -157,10 +157,10 @@ public class CharlaCarImpl implements CharlaCarService {
 		}
 	}
 
-	@Override
-	public ArrayList<Viaje> getViajesPorUsuario() {
-		return listaViajesPorUsuarios;
-	}
+//	@Override
+//	public ArrayList<Viaje> getViajesPorUsuario() {
+//		return listaViajesPorUsuarios;
+//	}
 
 	// Método que transfiere los viajes del CharlaCarImpl a la lista de viajes del
 	// usuario logueado
@@ -175,9 +175,9 @@ public class CharlaCarImpl implements CharlaCarService {
 //	    ArrayList<Viaje> viajesDeCharlaCar = getViajesPorUsuario();
 
 		// Agregar estos viajes a la lista de viajes del usuario
-		for (Viaje viaje : listaViajesPorUsuarios) {
-			logedUser.addViaje(viaje); // Suponiendo que addViaje() agrega el viaje a la lista de viajes del usuario
-		}
+//		for (Viaje viaje : listaViajesPorUsuarios) {
+//			logedUser.addViaje(viaje); // Suponiendo que addViaje() agrega el viaje a la lista de viajes del usuario
+//		}
 	}
 
 }
