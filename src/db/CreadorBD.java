@@ -17,5 +17,8 @@ public static void main(String[] args) throws SQLException {
 		gestorDB.crearTablaViaje();
 		gestorDB.crearTablaViajeUsuario();
 		System.out.println("Cerrando conexion...");
+		
+//		gestorDB.getViajes();
+		gestorDB.getViajePorId(2);
 	}
 }

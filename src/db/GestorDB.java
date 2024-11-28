@@ -3,8 +3,13 @@ package db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import domainLN.Usuario;
 import domainLN.Vehiculo;
 import domainLN.Viaje;
@@ -271,5 +276,82 @@ public class GestorDB {
 		}
 		
 	}
+	
+	//Gets
+	
+    public List<Viaje> getViajes() {
+        List<Viaje> viajes = new ArrayList<>();
+        
+        String sql = "SELECT id, origen, destino, plazas, dni_conductor FROM Viaje;";
+        
+        try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            System.out.println("\n- Recuperando todos los viajes...");
+
+            while (rs.next()) {
+                Viaje viaje = new Viaje();
+                viaje.setId(rs.getInt("id"));
+                viaje.setOrigen(rs.getString("origen"));
+                viaje.setDestino(rs.getString("destino"));
+                viaje.setPlazas(rs.getInt("plazas"));
+                
+                String dniConductor = rs.getString("dni_conductor");
+                if (dniConductor != null) {
+                    Usuario conductor = new Usuario();
+                    conductor.setDni(dniConductor);
+                    viaje.setConductor(conductor);
+                }
+                viajes.add(viaje);
+            }
+            System.out.println(viajes);
+        } catch (SQLException e) {
+            System.err.format("\n* Error al recuperar los viajes: %s", e.getMessage());
+        }
+        
+        return viajes;
+    }
+    public Viaje getViajePorId(int id) {
+        Viaje viaje = null;
+        
+        String sql = "SELECT id, origen, destino, plazas, dni_conductor FROM Viaje WHERE id = ?;";
+        
+        try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                viaje = new Viaje();
+                viaje.setId(rs.getInt("id"));
+                viaje.setOrigen(rs.getString("origen"));
+                viaje.setDestino(rs.getString("destino"));
+                viaje.setPlazas(rs.getInt("plazas"));
+
+                String dniConductor = rs.getString("dni_conductor");
+                if (dniConductor != null) {
+                    Usuario conductor = new Usuario();
+                    conductor.setDni(dniConductor);
+                    viaje.setConductor(conductor);
+                }
+            } else {
+                System.out.println("\n- No se encontró un viaje con el ID: " + id);
+            }
+        } catch (SQLException e) {
+            System.err.format("\n* Error al recuperar el viaje por ID: %s", e.getMessage());
+        }
+        
+        return viaje;
+    }
+    public HashMap<Usuario, List<Viaje>> getViajeUsuario() {
+    	
+    	return null;
+    }
+    public HashMap<Usuario, List<Viaje>> getViajeUsuarioId() {
+    	
+    	return null;
+    }
 
 }
