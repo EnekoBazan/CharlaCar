@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import domainLN.Usuario;
 import domainLN.Vehiculo;
+import domainLN.Viaje;
 
 public class GestorDB {
 
@@ -135,6 +136,32 @@ public class GestorDB {
 		}
 	}
 
+	public void insertarViaje(Viaje... viajes) {
+		if (getConnection() == null) {
+			System.err.println("No se puede insertar viajes: conexión no establecida.");
+			return;
+		}
+		
+		try {
+			String sql = "INSERT INTO Viaje (id, origen, destino, plazas, dni_contuctor) VALUES (?, ?, ?, ?, ?);";
+			PreparedStatement stmt = getConnection().prepareStatement(sql);
+			for (Viaje viaje : viajes) {
+				stmt.setInt(1, viaje.getId());
+				stmt.setString(2, viaje.getOrigen());
+				stmt.setString(3, viaje.getDestino());
+				stmt.setInt(4, viaje.getPlazas());
+				if (viaje.getConductor() != null) {
+					stmt.setString(5, viaje.getConductor().getDni());
+				} else {
+					stmt.setNull(5, java.sql.Types.ARRAY);
+				}
+			}
+			
+		} catch (SQLException e) {
+			System.err.format("\n* Error al insertar viaje: %s", e.getMessage());
+		}
+	}
+	
 	public void insertarVehiculo(Vehiculo... vehiculos) {
 		if (getConnection() == null) {
 			System.err.println("No se puede insertar vehículos: conexión no establecida.");
@@ -163,6 +190,36 @@ public class GestorDB {
 		} catch (SQLException e) {
 			System.err.format("\n* Error al insertar vehículo: %s", e.getMessage());
 		}
+	}
+
+	public void insertarViajeUsuario(Viaje viaje, Usuario... usuarios) {
+		if (getConnection() == null) {
+	        System.err.println("No se puede insertar viajes de usuarios: conexión no establecida.");
+			return;
+		}
+		try {
+	        String sql = "INSERT INTO ViajeUsuario (id_viaje, dni_usuario) VALUES (?, ?);";
+	        PreparedStatement stmt = getConnection().prepareStatement(sql);
+
+	        System.out.print("\n- Insertando relación Viaje-Usuario...");
+
+	        for (Usuario usuario : usuarios) {
+	            stmt.setInt(1, viaje.getId());
+	            stmt.setString(2, usuario.getDni());
+
+	            if (stmt.executeUpdate() == 1) {
+	                System.out.format("\n - Relación Viaje-Usuario insertada: Viaje ID=%d, Usuario DNI=%s", 
+	                                  viaje.getId(), usuario.getDni());
+	            } else {
+	                System.out.format("\n - No se pudo insertar la relación Viaje-Usuario: Viaje ID=%d, Usuario DNI=%s", 
+	                                  viaje.getId(), usuario.getDni());
+	            }
+	        }
+			
+		} catch (SQLException  e) {
+	        System.err.format("\n* Error al insertar relación Viaje-Usuario: %s", e.getMessage());
+		}
+		
 	}
 
 }
