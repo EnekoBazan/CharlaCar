@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import domainLN.Usuario;
+import domainLN.Vehiculo;
 
 public class GestorDB {
 
@@ -15,6 +17,9 @@ public class GestorDB {
 
 	private Connection conexionBD;
 
+	//
+	//
+	
 	public void GestorBD() {
 		try {
 			Class.forName(DRIVER_NAME);
@@ -63,10 +68,10 @@ public class GestorDB {
 				stmt.setString(2, u.getNombre());
 				stmt.setString(3, u.getApellido());
 				stmt.setString(4, u.getContraseña());
-				
+
 				int carnet = u.isCarnet() ? 1 : 0;
 				stmt.setInt(5, carnet);
-				
+
 				stmt.setDouble(6, u.getRating());
 
 				if (stmt.executeUpdate() == 1) {
@@ -78,6 +83,36 @@ public class GestorDB {
 		} catch (Exception ex) {
 			System.err.format("\n* Error al insertar datos de la BBDD: %s", ex.getMessage());
 			ex.printStackTrace();
+		}
+	}
+
+	public void insertarVehiculo(Vehiculo... vehiculos) {
+		if (getConnection() == null) {
+			System.err.println("No se puede insertar vehículos: conexión no establecida.");
+			return;
+		}
+
+		try {
+			String sql = "INSERT INTO Vehiculo (matricula, plazas, propietario) VALUES (?, ?, ?);";
+			PreparedStatement stmt = getConnection().prepareStatement(sql);
+
+			for (Vehiculo v : vehiculos) {
+				stmt.setString(1, v.getMatricula());
+				stmt.setInt(2, v.getPlazas());
+
+				if (v.getPropietario() != null) {
+					stmt.setString(3, v.getPropietario().getDni());
+				} else {
+					stmt.setNull(3, java.sql.Types.ARRAY);
+				}
+				if (stmt.executeUpdate() == 1) {
+					System.out.format("\n - Vehículo insertado: %s", v.toString());
+				} else {
+					System.out.format("\n - No se ha insertado el vehículo: %s", v.toString());
+				}
+			}
+		} catch (SQLException e) {
+			System.err.format("\n* Error al insertar vehículo: %s", e.getMessage());
 		}
 	}
 
