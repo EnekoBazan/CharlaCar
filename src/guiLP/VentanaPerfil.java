@@ -26,7 +26,6 @@ import domainLN.ButtonEditor;
 import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
-import domainLN.Viaje;
 
 public class VentanaPerfil extends JDialog{
 	
