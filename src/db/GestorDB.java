@@ -54,28 +54,8 @@ public class GestorDB {
 			System.err.println("Error al cerrar la conexión a la base de datos: " + e.getMessage());
 		}
 	}
-	public void crearTablaVehiculos() {
-
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
-			Statement stmt = con.createStatement()) {
-			
-		    String sql = """
-		            CREATE TABLE IF NOT EXISTS Vehiculo (
-		                matricula TEXT PRIMARY KEY,
-		                plazas INTEGER NOT NULL CHECK (plazas > 0),
-		                propietario TEXT,
-		                FOREIGN KEY (propietario) REFERENCES Usuario(dni)
-		            );
-		        """;
-	        	        
-	        if (!stmt.execute(sql)) {
-	        	System.out.println("- Se ha creado la tabla Vehiculo");
-	        }
-		} catch (Exception ex) {
-			System.err.format("* Error al crear la tabla Vehiculo: %s", ex.getMessage());
-			ex.printStackTrace();			
-		}
-	}
+	
+	//Crear Tablas
 	
 	public void crearTablaUsuario() {
 
@@ -102,7 +82,79 @@ public class GestorDB {
 		}
 	}
 	
+	public void crearTablaViaje() {
 
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+			Statement stmt = con.createStatement()) {
+			
+			   String sql = """
+				        CREATE TABLE IF NOT EXISTS Viaje (
+				            id INTEGER PRIMARY KEY,                
+				            origen TEXT NOT NULL,              
+				            destino TEXT NOT NULL,            
+				            plazas INTEGER NOT NULL,          
+				            dni_conductor INTEGER NOT NULL,
+				            FOREIGN KEY (dni_conductor) REFERENCES Usuario(dni)              
+				        );
+				    """;
+	        	        
+	        if (!stmt.execute(sql)) {
+	        	System.out.println("- Se ha creado la tabla Viaje");
+	        }
+		} catch (Exception ex) {
+			System.err.format("* Error al crear la tabla Viaje: %s", ex.getMessage());
+			ex.printStackTrace();			
+		}
+	}
+	
+	public void crearTablaVehiculos() {
+
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+			Statement stmt = con.createStatement()) {
+			
+		    String sql = """
+		            CREATE TABLE IF NOT EXISTS Vehiculo (
+		                matricula TEXT PRIMARY KEY,
+		                plazas INTEGER NOT NULL CHECK (plazas > 0),
+		                propietario TEXT,
+		                FOREIGN KEY (propietario) REFERENCES Usuario(dni)
+		            );
+		        """;
+	        	        
+	        if (!stmt.execute(sql)) {
+	        	System.out.println("- Se ha creado la tabla Vehiculo");
+	        }
+		} catch (Exception ex) {
+			System.err.format("* Error al crear la tabla Vehiculo: %s", ex.getMessage());
+			ex.printStackTrace();			
+		}
+	}
+	
+	public void crearTablaViajeUsuario() {
+
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+			Statement stmt = con.createStatement()) {
+			
+			   String sql = """
+				        CREATE TABLE IF NOT EXISTS ViajeUsuario (
+				            id_viaje INTEGER PRIMARY KEY,                
+				            dni_usuario TEXT,
+				            FOREIGN KEY (dni_usuario) REFERENCES Usuario(dni),  
+				            FOREIGN KEY(id_viaje) REFERENCES Viaje(id),
+				        );
+				    """;
+	        	        
+	        if (!stmt.execute(sql)) {
+	        	System.out.println("- Se ha creado la tabla ViajeUsuario");
+	        }
+		} catch (Exception ex) {
+			System.err.format("* Error al crear la tabla ViajeUsuario: %s", ex.getMessage());
+			ex.printStackTrace();			
+		}
+	}
+	
+	//Inserts
+	
 	public void insertarUsuarios(Usuario... usuarios) {
 
 		try {
