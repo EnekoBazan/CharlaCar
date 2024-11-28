@@ -85,7 +85,7 @@ public class GestorDB {
 			ex.printStackTrace();
 		}
 	}
-
+ 
 	public void insertarVehiculo(Vehiculo... vehiculos) {
 		if (getConnection() == null) {
 			System.err.println("No se puede insertar vehículos: conexión no establecida.");
