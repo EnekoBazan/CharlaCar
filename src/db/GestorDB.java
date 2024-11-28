@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Iterator;
-
 import domainLN.Usuario;
 import domainLN.Vehiculo;
 import domainLN.Viaje;
@@ -16,7 +14,7 @@ public class GestorDB {
 	protected static final String DRIVER_NAME = "org.sqlite.JDBC";
 	protected static final String DATABASE_FILE = "resources/db/charlacar.db";
 	protected static final String CONNECTION_STRING = "jdbc:sqlite:" + DATABASE_FILE;
-
+	
 	private Connection conexionBD;
 
 	//
@@ -140,7 +138,7 @@ public class GestorDB {
 				            id_viaje INTEGER PRIMARY KEY,                
 				            dni_usuario TEXT,
 				            FOREIGN KEY (dni_usuario) REFERENCES Usuario(dni),  
-				            FOREIGN KEY(id_viaje) REFERENCES Viaje(id),
+				            FOREIGN KEY(id_viaje) REFERENCES Viaje(id)
 				        );
 				    """;
 	        	        
