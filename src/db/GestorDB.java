@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Iterator;
 
 import domainLN.Usuario;
@@ -52,6 +53,54 @@ public class GestorDB {
 			System.err.println("Error al cerrar la conexión a la base de datos: " + e.getMessage());
 		}
 	}
+	public void crearTablaVehiculos() {
+
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+			Statement stmt = con.createStatement()) {
+			
+		    String sql = """
+		            CREATE TABLE IF NOT EXISTS Vehiculo (
+		                matricula TEXT PRIMARY KEY,
+		                plazas INTEGER NOT NULL CHECK (plazas > 0),
+		                propietario TEXT,
+		                FOREIGN KEY (propietario) REFERENCES Usuario(dni)
+		            );
+		        """;
+	        	        
+	        if (!stmt.execute(sql)) {
+	        	System.out.println("- Se ha creado la tabla Vehiculo");
+	        }
+		} catch (Exception ex) {
+			System.err.format("* Error al crear la tabla Vehiculo: %s", ex.getMessage());
+			ex.printStackTrace();			
+		}
+	}
+	
+	public void crearTablaUsuario() {
+
+		try (Connection con = DriverManager.getConnection(CONNECTION_STRING);
+			Statement stmt = con.createStatement()) {
+			
+			   String sql = """
+				        CREATE TABLE IF NOT EXISTS Usuario (
+				            dni TEXT PRIMARY KEY,                
+				            nombre TEXT NOT NULL,              
+				            apellido TEXT NOT NULL,            
+				            contraseña TEXT NOT NULL,          
+				            carnet INTEGER NOT NULL CHECK (carnet IN (0, 1)),
+				            rating REAL NOT NULL                
+				        );
+				    """;
+	        	        
+	        if (!stmt.execute(sql)) {
+	        	System.out.println("- Se ha creado la tabla Usuario");
+	        }
+		} catch (Exception ex) {
+			System.err.format("* Error al crear la tabla Usuario: %s", ex.getMessage());
+			ex.printStackTrace();			
+		}
+	}
+	
 
 	public void insertarUsuarios(Usuario... usuarios) {
 
