@@ -85,8 +85,8 @@ public class Usuario {
 	}
 	@Override
 	public String toString() {
-		return "Usuario [nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + ", contraseña=" + contraseña
-				+ ", carnet=" + carnet + ", rating=" + rating + "]";
+		return "Usuario dni: " + dni + ", nombre: " + nombre + ", apellido: " + apellido + ", contraseña: " + contraseña
+				+ ", carnet: " + carnet + ", rating: " + rating + ", viajesPorUsuario: " + viajesPorUsuario;
 	}
 	public void addViaje(Viaje v) {
 		viajesPorUsuario.add( v );
