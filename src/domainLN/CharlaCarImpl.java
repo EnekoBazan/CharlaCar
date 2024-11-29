@@ -138,9 +138,9 @@ public class CharlaCarImpl implements CharlaCarService {
 //		logedUser.addViaje(v);
 //	}
 
-	public void deleteViajeToUsuario(Viaje v) {
-		logedUser.deleteViaje(v);
-	}
+//	public void deleteViajeToUsuario(Viaje v) {
+//		logedUser.deleteViaje(v);
+//	}
 
 	public void inicializarViajesPorUsuario() {
 		if (logedUser == null) {

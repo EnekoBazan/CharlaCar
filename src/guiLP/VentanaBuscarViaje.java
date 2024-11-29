@@ -27,6 +27,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
+import db.GestorBD;
 import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
@@ -81,6 +82,14 @@ public class VentanaBuscarViaje extends JFrame {
 //						String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()) })
 //				.toArray(String[][]::new);
 
+//		
+//		datosEjemplo = GestorBD.getGestorDB().getViajes().stream()
+//		.map(viaje -> new String[] { matricula ,
+//				viaje.getVehiculo().getPropietario().getNombre(), viaje.getOrigen(), viaje.getDestino(),
+//				String.valueOf(viaje.getVehiculo().getPlazas()),
+//				String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()) })
+//		.toArray(String[][]::new);
+		
 		// PANEL PRINCIPAL
 		panelPrincipal = new JPanel(new BorderLayout());
 		panelPrincipal.setBorder(new EmptyBorder(5, 10, 5, 0));

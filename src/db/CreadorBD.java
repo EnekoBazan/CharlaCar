@@ -8,8 +8,10 @@ public class CreadorBD {
 public static void main(String[] args) throws SQLException {
 		
 		System.out.println("Conectando con la base de datos...");
-		GestorDB gestorDB = new GestorDB();
+		//GestorDB gestorDB = new GestorDB();
 
+		GestorBD gestorDB= GestorBD.getGestorDB();
+		
 		//Creacion de tablas
 		System.out.println("Creando tablas...");
 		gestorDB.crearTablaUsuario();

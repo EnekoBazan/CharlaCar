@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import db.GestorDB;
+import db.GestorBD;
 
 import java.awt.Font;
 
@@ -33,7 +33,7 @@ public class VentanaLogin extends JDialog {
 	private JLabel lblClave;
 	private JLabel lblRegistro;
 
-	GestorDB gestorDB = new GestorDB();
+	GestorBD gestorDB = GestorBD.getGestorDB();
 
 	static boolean loged = false;
 

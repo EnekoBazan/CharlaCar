@@ -17,7 +17,7 @@ import javax.swing.JPasswordField;
 //import javax.swing.JSlider;
 import javax.swing.JTextField;
 
-import db.GestorDB;
+import db.GestorBD;
 import domainLN.Usuario;
 
 import java.awt.event.ActionEvent;
@@ -38,7 +38,7 @@ public class VentanaRegistro extends JDialog {
 	private JButton btnRegistrar;
 	private JLabel lblLogin;
 
-	GestorDB gestorDB = new GestorDB();
+	GestorBD gestorDB = GestorBD.getGestorDB();
 
 	public VentanaRegistro() {
 		setModal(true);

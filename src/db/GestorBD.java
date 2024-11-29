@@ -14,7 +14,7 @@ import domainLN.Usuario;
 import domainLN.Vehiculo;
 import domainLN.Viaje;
 
-public class GestorDB {
+public class GestorBD {
 
 	protected static final String DRIVER_NAME = "org.sqlite.JDBC";
 	protected static final String DATABASE_FILE = "resources/db/charlacar.db";
@@ -22,9 +22,19 @@ public class GestorDB {
 	
 	private Connection conexionBD;
 
+	
+	private static GestorBD gestorDB;
+	
+	public static GestorBD getGestorDB() {
+		if (gestorDB == null) {
+			gestorDB = new GestorBD();
+		}
+		return gestorDB;
+	}
+	
 	//
 	//
-	public void GestorBD() {
+	private GestorBD() {
 		try {
 			Class.forName(DRIVER_NAME);
 		} catch (ClassNotFoundException ex) {
