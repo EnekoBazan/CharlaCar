@@ -21,7 +21,6 @@ import db.GestorDB;
 import java.awt.Font;
 
 import domainLN.CharlaCarImpl;
-import domainLN.Usuario;
 
 public class VentanaLogin extends JDialog {
 

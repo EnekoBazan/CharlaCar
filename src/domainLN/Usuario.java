@@ -21,7 +21,7 @@ public class Usuario {
 		this.apellido = apellido;
 		this.contraseña = contraseña;
 		this.carnet = carnet;
-		this.rating = f;
+		this.rating = 0;
 	}
 	public Usuario() {
 		super();
