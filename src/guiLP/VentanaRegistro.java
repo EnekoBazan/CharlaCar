@@ -47,7 +47,7 @@ public class VentanaRegistro extends JDialog {
         
         setLocationRelativeTo(null);
         
-        ImageIcon icon = new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png"));
+        ImageIcon icon = new ImageIcon("resources/images/favicon.png");;
 		setIconImage(icon.getImage());
 		
 		getContentPane().setBackground(new Color(217, 239, 248)); 

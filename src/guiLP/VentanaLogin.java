@@ -15,6 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import db.GestorDB;
+
 import java.awt.Font;
 
 import domainLN.CharlaCarImpl;
@@ -30,6 +33,8 @@ public class VentanaLogin extends JDialog {
 	private JLabel lblUsuario;
 	private JLabel lblClave;
 	private JLabel lblRegistro;
+
+	GestorDB gestorDB = new GestorDB();
 
 	static boolean loged = false;
 
@@ -70,8 +75,8 @@ public class VentanaLogin extends JDialog {
 
 		btnAcceder = new JButton("Acceder");
 		btnAcceder.setBounds(105, 110, 90, 20);
-		
-		btnAcceder.setForeground(new Color(33, 150, 243 ));
+
+		btnAcceder.setForeground(new Color(33, 150, 243));
 		btnAcceder.setBackground(Color.white);
 		btnAcceder.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
 		btnAcceder.setPreferredSize(new Dimension(60, 25));
@@ -83,16 +88,14 @@ public class VentanaLogin extends JDialog {
 		lblRegistro.setFont(new Font("Poppins", Font.BOLD, 10));
 		lblRegistro.setBounds(100, 130, 110, 20);
 		getContentPane().add(lblRegistro);
-		
-		 ImageIcon icon = new ImageIcon("resources/images/favicon.png");
-		 setIconImage(icon.getImage());
 
-		getContentPane().setBackground(new Color(217, 239, 248 ));
-		
+		ImageIcon icon = new ImageIcon("resources/images/favicon.png");
+		setIconImage(icon.getImage());
+
+		getContentPane().setBackground(new Color(217, 239, 248));
+
 		setLocationRelativeTo(null);
-		
 
-		
 		lblRegistro.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				dispose();
@@ -110,30 +113,32 @@ public class VentanaLogin extends JDialog {
 		});
 
 		btnAcceder.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        boolean usuarioEncontrado = false;
-		        
-		        for (Usuario user : CharlaCarImpl.getCharlaCarImpl().getListUsers()) {
-		        	System.out.println(user.toString());
-		            if (user.getNombre().equals(txtUser.getText())&& new String(passwordField.getPassword()).equals(user.getContraseña())) {
-		                usuarioEncontrado = true;
-		                loged = true;
-		                CharlaCarImpl.getCharlaCarImpl().setLoged(true);
-		                VentanaPrincipal.btnLogIn.setVisible(false);
-		                VentanaPrincipal.btnRegistro.setVisible(false);
-		                JOptionPane.showMessageDialog(null, "Bienvenido " + user.getNombre());
-		                
-		                CharlaCarImpl.getCharlaCarImpl().setLogedUser(user);
-		                VentanaPrincipal.btnUsuario.setEnabled(true);
-		                dispose();
-		                break;
-		            }
-		        }
-		        if (!usuarioEncontrado) {
-		            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
-		        }
-		    }
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String nombre = txtUser.getText();
+				String contraseña = new String(passwordField.getPassword());
+				
+				try {
+					gestorDB.connect(); 
+
+					if (gestorDB.existeUsuarioLogin(nombre, contraseña)) {
+						loged = true;
+						CharlaCarImpl.getCharlaCarImpl().setLoged(true);
+						VentanaPrincipal.btnLogIn.setVisible(false);
+						VentanaPrincipal.btnRegistro.setVisible(false);
+						JOptionPane.showMessageDialog(null, "Bienvenido " + nombre);
+
+						VentanaPrincipal.btnUsuario.setEnabled(true);
+						dispose(); 
+					} else {
+						JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+					}
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Error al acceder a la base de datos: " + ex.getMessage());
+					ex.printStackTrace();
+				}
+				gestorDB.close();
+			}
 		});
 
 //	

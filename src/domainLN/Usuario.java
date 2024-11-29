@@ -14,14 +14,14 @@ public class Usuario {
 	private float rating;
 	public HashMap<Usuario, ArrayList<Viaje>> viajesPorUsuario = new HashMap<Usuario, ArrayList<Viaje>>();
 	
-	public Usuario(String dni, String nombre, String apellido, String contraseña, boolean carnet, float rating) {
+	public Usuario(String dni, String nombre, String apellido, String contraseña, boolean carnet, float f) {
 		super();
 		this.dni = dni;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.contraseña = contraseña;
 		this.carnet = carnet;
-		this.rating = rating;
+		this.rating = f;
 	}
 	public Usuario() {
 		super();
@@ -64,11 +64,17 @@ public class Usuario {
 	public void setRating(float rating) {
 		this.rating = rating;
 	}
-	
-	
+
+	public HashMap<Usuario, ArrayList<Viaje>> getViajesPorUsuario() {
+		return viajesPorUsuario;
+	}
+
+	public void setViajesPorUsuario(HashMap<Usuario, ArrayList<Viaje>> viajesPorUsuario) {
+		this.viajesPorUsuario = viajesPorUsuario;
+	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(apellido, carnet, contraseña, dni, nombre, rating);
+		return Objects.hash(apellido, carnet, contraseña, dni, nombre, rating, viajesPorUsuario);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -81,8 +87,8 @@ public class Usuario {
 		Usuario other = (Usuario) obj;
 		return Objects.equals(apellido, other.apellido) && carnet == other.carnet
 				&& Objects.equals(contraseña, other.contraseña) && Objects.equals(dni, other.dni)
-				&& Objects.equals(nombre, other.nombre)
-				&& Float.floatToIntBits(rating) == Float.floatToIntBits(other.rating);
+				&& Objects.equals(nombre, other.nombre) && Objects.equals(rating, other.rating)
+				&& Objects.equals(viajesPorUsuario, other.viajesPorUsuario);
 	}
 	@Override
 	public String toString() {

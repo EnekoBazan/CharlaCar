@@ -24,7 +24,6 @@ public class GestorDB {
 
 	//
 	//
-	
 	public void GestorBD() {
 		try {
 			Class.forName(DRIVER_NAME);
@@ -36,7 +35,7 @@ public class GestorDB {
 
 	public void connect() {
 		try {
-			conexionBD = DriverManager.getConnection(DATABASE_FILE);
+			conexionBD = DriverManager.getConnection(CONNECTION_STRING);
 			System.out.println("Conexión a la base de datos establecida.");
 		} catch (SQLException e) {
 			System.err.println("Error al conectar a la base de datos: " + e.getMessage());
@@ -49,7 +48,7 @@ public class GestorDB {
 
 	public void close() {
 		try {
-			if (conexionBD != null) {
+			if (conexionBD != null && !conexionBD.isClosed()) {
 				conexionBD.close();
 				System.out.println("Conexión a la base de datos cerrada.");
 			}
@@ -177,7 +176,7 @@ public class GestorDB {
 				int carnet = u.isCarnet() ? 1 : 0;
 				stmt.setInt(5, carnet);
 
-				stmt.setDouble(6, u.getRating());
+				stmt.setDouble(6, 0);
 
 				if (stmt.executeUpdate() == 1) {
 					System.out.format("\n - Usuario insertado: %s", u.toString());
@@ -279,6 +278,64 @@ public class GestorDB {
 	
 	//Gets
 	
+	public List<Usuario> getUsuarios() {
+	    List<Usuario> usuarios = new ArrayList<>();
+	    String sql = "SELECT dni, nombre, apellido, contraseña, carnet, rating FROM Usuario";
+
+	    if (getConnection() == null) {
+	        System.err.println("No se puede obtener usuarios: conexión no establecida.");
+	        return usuarios;
+	    }
+
+	    try (PreparedStatement stmt = getConnection().prepareStatement(sql);
+	         ResultSet rs = stmt.executeQuery()) {
+	        while (rs.next()) {
+	            String dni = rs.getString("dni");
+	            String nombre = rs.getString("nombre");
+	            String apellido = rs.getString("apellido");
+	            String contraseña = rs.getString("contraseña");
+	            boolean carnet = rs.getInt("carnet") == 1;
+	            float rating = rs.getFloat("rating");
+
+	            usuarios.add(new Usuario(dni, nombre, apellido, contraseña, carnet, rating));
+	        }
+	    } catch (SQLException e) {
+	        System.err.format("\n* Error al obtener usuarios: %s", e.getMessage());
+	    }
+
+	    return usuarios;
+	}
+	
+	public Usuario getUsuarioByDni(String dni) {
+	    String sql = "SELECT dni, nombre, apellido, contraseña, carnet, rating FROM Usuario WHERE dni = ?";
+	    
+	    if (getConnection() == null) {
+	        System.err.println("No se puede buscar el usuario: conexión no establecida.");
+	        return null;
+	    }
+
+	    try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+	        stmt.setString(1, dni);
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                String nombre = rs.getString("nombre");
+	                String apellido = rs.getString("apellido");
+	                String contraseña = rs.getString("contraseña");
+	                boolean carnet = rs.getInt("carnet") == 1;
+	                float rating = rs.getFloat("rating");
+
+	                return new Usuario(dni, nombre, apellido, contraseña, carnet, rating);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.err.format("\n* Error al buscar el usuario con DNI %s: %s", dni, e.getMessage());
+	    }
+
+	    return null;
+	}
+	
+	
     public List<Viaje> getViajes() {
         List<Viaje> viajes = new ArrayList<>();
         
@@ -345,6 +402,33 @@ public class GestorDB {
         
         return viaje;
     }
+    
+    public List<Vehiculo> getVehiculos() {
+        List<Vehiculo> vehiculos = new ArrayList<>();
+        String sql = "SELECT matricula, plazas, propietario FROM Vehiculo";
+
+        if (getConnection() == null) {
+            System.err.println("No se puede obtener vehículos: conexión no establecida.");
+            return vehiculos;
+        }
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String matricula = rs.getString("matricula");
+                int plazas = rs.getInt("plazas");
+                String propietarioDni = rs.getString("propietario");
+
+                Usuario propietario = getUsuarioByDni(propietarioDni); // Recuperar el usuario propietario
+                vehiculos.add(new Vehiculo(matricula, plazas, propietario));
+            }
+        } catch (SQLException e) {
+            System.err.format("\n* Error al obtener vehículos: %s", e.getMessage());
+        }
+
+        return vehiculos;
+    }
+    
     public HashMap<Usuario, List<Viaje>> getViajeUsuario() {
     	
     	return null;
@@ -353,5 +437,26 @@ public class GestorDB {
     	
     	return null;
     }
-
+///resto de funciones 
+    
+    public boolean existeUsuarioLogin(String nombre, String contraseña) {
+        String sql = "SELECT * FROM Usuario WHERE nombre = ? AND contraseña = ?";
+        
+        if (getConnection() == null) {
+            System.err.println("No se puede verificar el usuario: conexión no establecida.");
+            return false;
+        }
+        try (PreparedStatement pstmt = getConnection().prepareStatement(sql)) {
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, contraseña);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.format("\n* Error al verificar las credenciales del usuario: %s", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

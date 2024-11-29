@@ -82,8 +82,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 		setResizable(false);
 
-		ImageIcon icon = new ImageIcon("resources/images/favicon.png");// imagen generada con
-																									// IA
+		ImageIcon icon = new ImageIcon("resources/images/favicon.png");
+																									
 		setIconImage(icon.getImage());
 
 		logger = Logger.getLogger(VentanaPrincipal.class.getName());
