@@ -14,7 +14,7 @@ public class Usuario {
 	private float rating;
 	public HashMap<Usuario, ArrayList<Viaje>> viajesPorUsuario = new HashMap<Usuario, ArrayList<Viaje>>();
 	
-	public Usuario(String dni, String nombre, String apellido, String contraseña, boolean carnet, float f) {
+	public Usuario(String dni, String nombre, String apellido, String contraseña, boolean carnet, float rating) {
 		super();
 		this.dni = dni;
 		this.nombre = nombre;
@@ -102,8 +102,8 @@ public class Usuario {
 		return "Viajes del usuario" + viajesPorUsuario;
 	}
 
-	public void deleteViaje(Viaje v) {
-		viajesPorUsuario.remove(v);
-	}
+//	public void deleteViaje(Viaje v) {
+//		viajesPorUsuario.remove(v);
+//	}
 
 }
