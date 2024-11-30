@@ -22,9 +22,10 @@ public class GestorBD {
 	
 	private Connection conexionBD;
 
-	
 	private static GestorBD gestorDB;
 	
+    private Usuario usuarioLogeado;
+
 	public static GestorBD getGestorDB() {
 		if (gestorDB == null) {
 			gestorDB = new GestorBD();
@@ -67,6 +68,11 @@ public class GestorBD {
 		}
 	}
 	
+    // Obtener el usuario logeado
+    public Usuario getUsuarioLogeado() {
+        return usuarioLogeado;
+    }
+    
 	//Crear Tablas
 	
 	public void crearTablaUsuario() {
@@ -345,7 +351,6 @@ public class GestorBD {
 	    return null;
 	}
 	
-	
     public List<Viaje> getViajes() {
         List<Viaje> viajes = new ArrayList<>();
         
@@ -403,6 +408,7 @@ public class GestorBD {
                     conductor.setDni(dniConductor);
                     viaje.setConductor(conductor);
                 }
+                System.out.println(viaje);
             } else {
                 System.out.println("\n- No se encontró un viaje con el ID: " + id);
             }
@@ -439,15 +445,143 @@ public class GestorBD {
         return vehiculos;
     }
     
+    public Vehiculo getVehiculoPorUsuario(String dniUsuario) {
+        String sql = "SELECT matricula, plazas, propietario FROM Vehiculo WHERE propietario = ?";
+        Vehiculo vehiculo = null;
+
+        if (getConnection() == null) {
+            System.err.println("No se puede obtener el vehículo: conexión no establecida.");
+            return null;
+        }
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setString(1, dniUsuario);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String matricula = rs.getString("matricula");
+                    int plazas = rs.getInt("plazas");
+                    String propietarioDni = rs.getString("propietario");
+
+                    Usuario propietario = getUsuarioByDni(propietarioDni);
+                    vehiculo = new Vehiculo(matricula, plazas, propietario);
+                    System.out.format("\n- Vehículo recuperado para el usuario con DNI %s: %s", dniUsuario, vehiculo.toString());
+                } else {
+                    System.out.format("\n- No se encontró vehículo para el usuario con DNI %s.", dniUsuario);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.format("\n* Error al obtener el vehículo del usuario con DNI %s: %s", dniUsuario, e.getMessage());
+        }
+
+        return vehiculo;
+    }
+
     public HashMap<Usuario, List<Viaje>> getViajeUsuario() {
-    	
-    	return null;
+        HashMap<Usuario, List<Viaje>> mapaViajeUsuario = new HashMap<>();
+        String sql = """
+            SELECT u.dni, u.nombre, u.apellido, u.contraseña, u.carnet, u.rating, 
+                   v.id, v.origen, v.destino, v.plazas, v.dni_conductor
+            FROM ViajeUsuario vu
+            JOIN Usuario u ON vu.dni_usuario = u.dni
+            JOIN Viaje v ON vu.id_viaje = v.id
+        """;
+
+        if (getConnection() == null) {
+            System.err.println("No se puede recuperar la relación Viaje-Usuario: conexión no establecida.");
+            return mapaViajeUsuario;
+        }
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                // Usuario
+                String dni = rs.getString("dni");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                String contraseña = rs.getString("contraseña");
+                boolean carnet = rs.getInt("carnet") == 1;
+                float rating = rs.getFloat("rating");
+
+                Usuario usuario = new Usuario(dni, nombre, apellido, contraseña, carnet, rating);
+
+                // Viaje
+                int id = rs.getInt("id");
+                String origen = rs.getString("origen");
+                String destino = rs.getString("destino");
+                int plazas = rs.getInt("plazas");
+                String dniConductor = rs.getString("dni_conductor");
+
+                Usuario conductor = dniConductor != null ? getUsuarioByDni(dniConductor) : null;
+                Viaje viaje = new Viaje(id, origen, destino, plazas, conductor, null);
+
+                mapaViajeUsuario.putIfAbsent(usuario, new ArrayList<>());
+                mapaViajeUsuario.get(usuario).add(viaje);
+            }
+            System.out.println(mapaViajeUsuario);
+        } catch (SQLException e) {
+            System.err.format("\n* Error al recuperar la relación Viaje-Usuario: %s", e.getMessage());
+        }
+
+        return mapaViajeUsuario;
     }
-    public HashMap<Usuario, List<Viaje>> getViajeUsuarioId() {
-    	
-    	return null;
+
+    public HashMap<Usuario, List<Viaje>> getViajeUsuarioId(int id) {
+        HashMap<Usuario, List<Viaje>> mapaViajesPorUsuarioId = new HashMap<>();
+
+        if (getConnection() == null) {
+            System.err.println("No se puede recuperar la relación Viaje-Usuario: conexión no establecida.");
+            return mapaViajesPorUsuarioId;
+        }
+
+        String sql = """
+            SELECT Vu.dni_usuario, U.nombre, U.apellido, U.contraseña, U.carnet, U.rating,
+                   V.id, V.origen, V.destino, V.plazas, V.dni_conductor
+            FROM ViajeUsuario Vu
+            JOIN Usuario U ON Vu.dni_usuario = U.dni
+            JOIN Viaje V ON Vu.id_viaje = V.id
+            WHERE V.id = ?;
+        """;
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    // Usuario
+                    String dni = rs.getString("dni_usuario");
+                    String nombre = rs.getString("nombre");
+                    String apellido = rs.getString("apellido");
+                    String contraseña = rs.getString("contraseña");
+                    boolean carnet = rs.getInt("carnet") == 1;
+                    float rating = rs.getFloat("rating");
+
+                    Usuario usuario = new Usuario(dni, nombre, apellido, contraseña, carnet, rating);
+
+                    // Viaje
+                    int viajeId = rs.getInt("id");
+                    String origen = rs.getString("origen");
+                    String destino = rs.getString("destino");
+                    int plazas = rs.getInt("plazas");
+                    String dniConductor = rs.getString("dni_conductor");
+                    
+                    Usuario conductor = dniConductor != null ? getUsuarioByDni(dniConductor) : null;
+                    Viaje viaje = new Viaje(viajeId, origen, destino, plazas, conductor, null);
+
+                    mapaViajesPorUsuarioId.computeIfAbsent(usuario, k -> new ArrayList<>()).add(viaje);
+                }
+                System.out.println(mapaViajesPorUsuarioId);
+            }
+
+        } catch (SQLException e) {
+            System.err.format("\n* Error al recuperar la relación Viaje-Usuario con ID %d: %s", id, e.getMessage());
+        }
+
+        return mapaViajesPorUsuarioId;
     }
-///resto de funciones 
+
+    //Resto de funciones 
     
     public boolean existeUsuarioLogin(String nombre, String contraseña) {
         String sql = "SELECT * FROM Usuario WHERE nombre = ? AND contraseña = ?";
@@ -461,12 +595,21 @@ public class GestorBD {
             pstmt.setString(2, contraseña);
             
             try (ResultSet rs = pstmt.executeQuery()) {
-                return rs.next();
+                if (rs.next()) {
+                    String dni = rs.getString("dni");
+                    String apellido = rs.getString("apellido");
+                    boolean carnet = rs.getInt("carnet") == 1;
+                    float rating = rs.getFloat("rating");
+
+                    usuarioLogeado = new Usuario(dni, nombre, apellido, contraseña, carnet, rating);
+                    return true;
+                }
             }
         } catch (SQLException e) {
             System.err.format("\n* Error al verificar las credenciales del usuario: %s", e.getMessage());
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
+    
 }

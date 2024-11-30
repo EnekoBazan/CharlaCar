@@ -11,7 +11,8 @@ public static void main(String[] args) throws SQLException {
 		//GestorDB gestorDB = new GestorDB();
 
 		GestorBD gestorDB= GestorBD.getGestorDB();
-		
+		gestorDB.connect();
+
 		//Creacion de tablas
 		System.out.println("Creando tablas...");
 		gestorDB.crearTablaUsuario();
@@ -22,5 +23,8 @@ public static void main(String[] args) throws SQLException {
 		
 //		gestorDB.getViajes();
 		gestorDB.getViajePorId(2);
+		gestorDB.getViajeUsuario();
+		gestorDB.getViajeUsuarioId(5);
+
 	}
 }
