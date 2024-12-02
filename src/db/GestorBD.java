@@ -69,10 +69,13 @@ public class GestorBD {
 	}
 	
     // Obtener el usuario logeado
+
     public Usuario getUsuarioLogeado() {
         return usuarioLogeado;
     }
-    
+	public Usuario setUsuarioLogeado(Usuario user) {
+		return usuarioLogeado = user;
+	}
 	//Crear Tablas
 	
 	public void crearTablaUsuario() {
@@ -213,7 +216,7 @@ public class GestorBD {
 		}
 		
 		try {
-			String sql = "INSERT INTO Viaje (id, origen, destino, plazas, dni_contuctor) VALUES (?, ?, ?, ?, ?);";
+			String sql = "INSERT INTO Viaje (id, origen, destino, plazas, dni_conductor) VALUES (?, ?, ?, ?, ?);";
 			PreparedStatement stmt = getConnection().prepareStatement(sql);
 			for (Viaje viaje : viajes) {
 				stmt.setInt(1, viaje.getId());
@@ -595,15 +598,7 @@ public class GestorBD {
             pstmt.setString(2, contraseña);
             
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    String dni = rs.getString("dni");
-                    String apellido = rs.getString("apellido");
-                    boolean carnet = rs.getInt("carnet") == 1;
-                    float rating = rs.getFloat("rating");
-
-                    usuarioLogeado = new Usuario(dni, nombre, apellido, contraseña, carnet, rating);
                     return true;
-                }
             }
         } catch (SQLException e) {
             System.err.format("\n* Error al verificar las credenciales del usuario: %s", e.getMessage());

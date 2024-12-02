@@ -83,7 +83,7 @@ public class VentanaCrearViaje extends JFrame {
 
 	// Tabla
 	private JTable tablaViaje;
-	private String[] cabecera = { "Origen", "Destino", "Asientos Disponibles", "Asientos Ocupados", "Info" };
+	private String[] cabecera = { "Origen", "Destino", "Asientos Disponibles"};
 	private Object[][] datos = {};
 	private JScrollPane scrollPane;
 	private DefaultTableModel tableModel;
@@ -253,6 +253,8 @@ public class VentanaCrearViaje extends JFrame {
 		            Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
 		            Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
 		            System.out.println(usuarioLogeado);
+		            System.out.println(vehiculo);
+
 		            if (vehiculo == null) {
 		                JOptionPane.showMessageDialog(
 		                    null,

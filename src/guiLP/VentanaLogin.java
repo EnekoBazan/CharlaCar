@@ -21,6 +21,7 @@ import db.GestorBD;
 import java.awt.Font;
 
 import domainLN.CharlaCarImpl;
+import domainLN.Usuario;
 
 public class VentanaLogin extends JDialog {
 
@@ -34,7 +35,7 @@ public class VentanaLogin extends JDialog {
 	private JLabel lblRegistro;
 
 	GestorBD gestorDB = GestorBD.getGestorDB();
-
+	private Usuario usuarioLogeado;
 	static boolean loged = false;
 
 	public VentanaLogin() {
@@ -126,8 +127,10 @@ public class VentanaLogin extends JDialog {
 						VentanaPrincipal.btnLogIn.setVisible(false);
 						VentanaPrincipal.btnRegistro.setVisible(false);
 						JOptionPane.showMessageDialog(null, "Bienvenido " + nombre);
-
-						VentanaPrincipal.btnUsuario.setEnabled(true);
+	                    usuarioLogeado = gestorDB.getUsuarioByDni(nombre);
+	                    gestorDB.setUsuarioLogeado(usuarioLogeado);
+	             		VentanaPrincipal.btnUsuario.setEnabled(true);
+	             		System.out.println(usuarioLogeado);
 						dispose(); 
 					} else {
 						JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
