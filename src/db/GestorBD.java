@@ -110,7 +110,7 @@ public class GestorBD {
 			
 			   String sql = """
 				        CREATE TABLE IF NOT EXISTS Viaje (
-				            id INTEGER PRIMARY KEY,                
+				            id INTEGER PRIMARY KEY AUTOINCREMENT,                
 				            origen TEXT NOT NULL,              
 				            destino TEXT NOT NULL,            
 				            plazas INTEGER NOT NULL,          
@@ -208,32 +208,37 @@ public class GestorBD {
 			ex.printStackTrace();
 		}
 	}
-
+	
 	public void insertarViaje(Viaje... viajes) {
-		if (getConnection() == null) {
-			System.err.println("No se puede insertar viajes: conexión no establecida.");
-			return;
-		}
-		
-		try {
-			String sql = "INSERT INTO Viaje (id, origen, destino, plazas, dni_conductor) VALUES (?, ?, ?, ?, ?);";
-			PreparedStatement stmt = getConnection().prepareStatement(sql);
-			for (Viaje viaje : viajes) {
-				stmt.setInt(1, viaje.getId());
-				stmt.setString(2, viaje.getOrigen());
-				stmt.setString(3, viaje.getDestino());
-				stmt.setInt(4, viaje.getPlazas());
-				if (viaje.getConductor() != null) {
-					stmt.setString(5, viaje.getConductor().getDni());
-				} else {
-					stmt.setNull(5, java.sql.Types.ARRAY);
-				}
-			}
-			
-		} catch (SQLException e) {
-			System.err.format("\n* Error al insertar viaje: %s", e.getMessage());
-		}
+	    if (getConnection() == null) {
+	        System.err.println("No se puede insertar viajes: conexión no establecida.");
+	        return;
+	    }
+
+	    String sql = "INSERT INTO Viaje (origen, destino, plazas, dni_conductor) VALUES (?, ?, ?, ?);";
+	    try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+	        for (Viaje viaje : viajes) {
+	            stmt.setString(1, viaje.getOrigen());
+	            stmt.setString(2, viaje.getDestino());
+	            stmt.setInt(3, viaje.getPlazas());
+	            if (viaje.getConductor() != null) {
+	                stmt.setString(4, viaje.getConductor().getDni());
+	            } else {
+	                stmt.setNull(4, java.sql.Types.VARCHAR);
+	            }
+
+	            if (stmt.executeUpdate() == 1) {
+	                System.out.format("Viaje insertado correctamente: %s%n", viaje);
+	            } else {
+	                System.out.format("Error al insertar el viaje: %s%n", viaje);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.err.format("* Error al insertar viaje: %s%n", e.getMessage());
+	    }
 	}
+
+
 	
 	public void insertarVehiculo(Vehiculo... vehiculos) {
 		if (getConnection() == null) {

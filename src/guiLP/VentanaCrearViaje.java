@@ -229,91 +229,57 @@ public class VentanaCrearViaje extends JFrame {
 			}
 		});
 		btnCrear.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Verificar que haya una fila seleccionada en la tabla
-				int filaSeleccionada = tablaViaje.getSelectedRow();
-				if (filaSeleccionada == -1) {
-					JOptionPane.showMessageDialog(null,
-							"Por favor, seleccione una fila de la tabla para crear el viaje.", "Fila no seleccionada",
-							JOptionPane.WARNING_MESSAGE);
-					return;
-				}
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        int filaSeleccionada = tablaViaje.getSelectedRow();
+		        if (filaSeleccionada == -1) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Por favor, seleccione una fila de la tabla para crear el viaje.", 
+		                "Fila no seleccionada", 
+		                JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
 
-				try {
-					gestorDB.connect();
+		        try {
+		            gestorDB.connect();
 
-					// Extraer datos de la fila seleccionada
-					String origen = (String) tableModel.getValueAt(filaSeleccionada, 0);
-					String destino = (String) tableModel.getValueAt(filaSeleccionada, 1);
-					int asientosDisponibles = Integer.parseInt((String) tableModel.getValueAt(filaSeleccionada, 2));
+		            // Extraer datos de la fila seleccionada
+		            String origen = (String) tableModel.getValueAt(filaSeleccionada, 0);
+		            String destino = (String) tableModel.getValueAt(filaSeleccionada, 1);
+		            int asientosDisponibles = Integer.parseInt((String) tableModel.getValueAt(filaSeleccionada, 2));
 
-					// Obtener usuario logeado y vehículo asociado
-					Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
-					System.out.println(usuarioLogeado.toString());
+		            // Obtener usuario logeado y su vehículo
+		            Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
+		            Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
+		            if (vehiculo == null) {
+		                JOptionPane.showMessageDialog(null, 
+		                    "No se encontró un vehículo asociado al usuario logeado.", 
+		                    "Error al crear viaje", 
+		                    JOptionPane.ERROR_MESSAGE);
+		                return;
+		            }
 
-					Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
-					System.out.println(usuarioLogeado.getDni());
+		            // Crear el viaje (sin ID, ya que se genera automáticamente)
+		            Viaje nuevoViaje = new Viaje(0, origen, destino, asientosDisponibles, usuarioLogeado, new ArrayList<>());
 
-					if (vehiculo == null) {
-						JOptionPane.showMessageDialog(null, "No se encontró un vehículo asociado al usuario logeado.",
-								"Error al crear viaje", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					System.out.println(vehiculo.toString());
+		            // Insertar en la base de datos
+		            gestorDB.insertarViaje(nuevoViaje);
 
-					
-					Set<Integer> idsUtilizados = new HashSet<>();
-					int idViaje = 0;
-
-					for (int i = 12; i < 10000; i++) {
-						idViaje = i;
-
-						while (idsUtilizados.contains(idViaje)) {
-							idViaje++;
-						}
-						idsUtilizados.add(idViaje);
-
-						Viaje nuevoViaje = new Viaje(idViaje, origen, destino, asientosDisponibles, usuarioLogeado,
-								new ArrayList<>());
-						gestorDB.insertarViaje(nuevoViaje);
-					}
-
-					// Crear un nuevo viaje con una lista vacía de pasajeros
-
-					// Guardar en la base de datos
-
-//		            boolean exito = gestorDB.insertarViaje(nuevoViaje);
-
-//		            if (exito) {
-//		                JOptionPane.showMessageDialog(
-//		                    null,
-//		                    "Viaje creado correctamente.",
-//		                    "Éxito",
-//		                    JOptionPane.INFORMATION_MESSAGE
-//		                );
-//
-//		                // Actualizar la tabla con los datos del nuevo viaje
-//		                tableModel.setValueAt(asientosDisponibles, filaSeleccionada, 2);
-//		                tableModel.setValueAt(0, filaSeleccionada, 3); // Asientos ocupados inicialmente en 0
-//		                tableModel.setValueAt("Vehículo: " + vehiculo.getMatricula(), filaSeleccionada, 4);
-//		            } else {
-//		                JOptionPane.showMessageDialog(
-//		                    null,
-//		                    "Hubo un error al guardar el viaje en la base de datos.",
-//		                    "Error al crear viaje",
-//		                    JOptionPane.ERROR_MESSAGE
-//		                );
-//		            }
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: " + ex.getMessage(), "Error",
-							JOptionPane.ERROR_MESSAGE);
-				} finally {
-					gestorDB.close();
-				}
-			}
-
+		            JOptionPane.showMessageDialog(null, 
+		                "Viaje creado correctamente.", 
+		                "Éxito", 
+		                JOptionPane.INFORMATION_MESSAGE);
+		        } catch (Exception ex) {
+		            JOptionPane.showMessageDialog(null, 
+		                "Ocurrió un error al crear el viaje: " + ex.getMessage(), 
+		                "Error", 
+		                JOptionPane.ERROR_MESSAGE);
+		        } finally {
+		            gestorDB.close();
+		        }
+		    }
 		});
+
 
 	}
 
