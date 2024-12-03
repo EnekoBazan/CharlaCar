@@ -1,7 +1,11 @@
 package domainLN;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.swing.JLabel;
 
 //GESTORLN patron singleton
 public class CharlaCarImpl implements CharlaCarService {
@@ -39,6 +43,7 @@ public class CharlaCarImpl implements CharlaCarService {
 		inicializarViajes();
 		inicializarUsers();
 		inicializarViajesPorUsuario();
+
 	}
 
 	public static CharlaCarImpl getCharlaCarImpl() {
@@ -48,6 +53,31 @@ public class CharlaCarImpl implements CharlaCarService {
 		return charlaCarImpl;
 	}
 	// ** END SINGLETON
+
+	private boolean ejecutando = true;
+
+	@Override
+	public void relojTiempoReal(JLabel lblHora) {
+		SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
+
+		while (ejecutando) {
+			try {
+				Date horaActual = new Date();
+
+				System.out.println("Hora actual: " + formatoHora.format(horaActual));
+				lblHora.setText(formatoHora.format(horaActual));
+
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				System.out.println("El hilo ha sido interrumpido");
+				ejecutando = false;
+			}
+		}
+	}
+
+	public void detenerHilo() {
+		ejecutando = false;
+	}
 
 	private void inicializarViajes() {
 		if (listaUsuarios.isEmpty()) {

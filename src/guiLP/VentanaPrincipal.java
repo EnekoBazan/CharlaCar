@@ -62,6 +62,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	private JLabel lblTextoAbajo1;
 	private JLabel lblTextoAbajo2;
 
+	private JLabel lblReloj;
+	
 	private Logger logger;
 
 	// Barra de menus
@@ -75,6 +77,15 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
 	public VentanaPrincipal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+//		addWindowListener(new WindowAdapter() {
+//		@Override
+//        public void windowClosing(java.awt.event.WindowEvent e) {
+//			dispose();
+//			CharlaCarImpl.getCharlaCarImpl().detenerHilo();
+//		}
+//	});
+		
 		setSize(700, 500);
 
 		setTitle("CharlaCar");
@@ -105,6 +116,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		lblTextoAbajo2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		// lblTexto2.setFont(new Font("Arial", Font.BOLD, 11)); //no se ven los iconos
 
+		//TODO: Hilo reloj
+//		lblReloj = new JLabel();
+//		CharlaCarImpl.getCharlaCarImpl().relojTiempoReal(lblReloj);
+//		panelBottom.add(lblReloj);
+		
 		panelBottom.add(lblTextoAbajo1);
 		panelBottom.add(lblTextoAbajo2);
 		panelBottom.setBackground(new Color(217, 239, 248));

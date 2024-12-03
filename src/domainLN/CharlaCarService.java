@@ -3,8 +3,15 @@ package domainLN;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JLabel;
+
 public interface CharlaCarService {
 
+	public void relojTiempoReal(JLabel lblHora);
+	public void detenerHilo();
+	//**************************************
+	
+	
 	public List<Viaje> getViajes();
 	//public void inicializarViajes();
 	public void addViaje(Viaje viaje);
