@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -36,7 +38,7 @@ public class VentanaCrearViaje extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	GestorBD gestorDB = GestorBD.getGestorDB();
-	
+
 	private static final Color COLOR_FONDO = new Color(217, 239, 248);
 	private static final Color COLOR_BOTONES = new Color(33, 150, 243);
 	private static final Color COLOR_TEXTO = new Color(60, 60, 60);
@@ -83,13 +85,13 @@ public class VentanaCrearViaje extends JFrame {
 
 	// Tabla
 	private JTable tablaViaje;
-	private String[] cabecera = { "Origen", "Destino", "Asientos Disponibles"};
+	private String[] cabecera = { "Origen", "Destino", "Asientos Disponibles" };
 	private Object[][] datos = {};
 	private JScrollPane scrollPane;
 	private DefaultTableModel tableModel;
 
 	public VentanaCrearViaje() {
-		
+
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(600, 600);
 		setTitle("CharlaCar - Crear Viaje");
@@ -143,7 +145,7 @@ public class VentanaCrearViaje extends JFrame {
 		panelSecundarioViaje.add(scrollPane, BorderLayout.CENTER);
 
 		// Botones
-	 	estilizarBoton(btnCrear);
+		estilizarBoton(btnCrear);
 		estilizarBoton(btnAplicar);
 
 		panelPrincipal.add(panelPrincipalSur, BorderLayout.SOUTH);
@@ -169,7 +171,7 @@ public class VentanaCrearViaje extends JFrame {
 		lbMatricula.setText("Matrícula: "); // + matricula);
 		lbMatricula.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelInfoSW.add(lbMatricula);
-		lbPlazas.setText("Plazas: " ); //+ plazas);
+		lbPlazas.setText("Plazas: "); // + plazas);
 		lbPlazas.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelInfoSW.add(lbPlazas);
 
@@ -227,51 +229,60 @@ public class VentanaCrearViaje extends JFrame {
 			}
 		});
 		btnCrear.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        // Verificar que haya una fila seleccionada en la tabla
-		        int filaSeleccionada = tablaViaje.getSelectedRow();
-		        if (filaSeleccionada == -1) {
-		            JOptionPane.showMessageDialog(
-		                null,
-		                "Por favor, seleccione una fila de la tabla para crear el viaje.",
-		                "Fila no seleccionada",
-		                JOptionPane.WARNING_MESSAGE
-		            );
-		            return;
-		        }
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Verificar que haya una fila seleccionada en la tabla
+				int filaSeleccionada = tablaViaje.getSelectedRow();
+				if (filaSeleccionada == -1) {
+					JOptionPane.showMessageDialog(null,
+							"Por favor, seleccione una fila de la tabla para crear el viaje.", "Fila no seleccionada",
+							JOptionPane.WARNING_MESSAGE);
+					return;
+				}
 
-		        try {
-		            gestorDB.connect();
+				try {
+					gestorDB.connect();
 
-		            // Extraer datos de la fila seleccionada
-		            String origen = (String) tableModel.getValueAt(filaSeleccionada, 0);
-		            String destino = (String) tableModel.getValueAt(filaSeleccionada, 1);
-		            int asientosDisponibles = Integer.parseInt((String) tableModel.getValueAt(filaSeleccionada, 2));
+					// Extraer datos de la fila seleccionada
+					String origen = (String) tableModel.getValueAt(filaSeleccionada, 0);
+					String destino = (String) tableModel.getValueAt(filaSeleccionada, 1);
+					int asientosDisponibles = Integer.parseInt((String) tableModel.getValueAt(filaSeleccionada, 2));
 
-		            // Obtener usuario logeado y vehículo asociado
-		            Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
-		            System.out.println(usuarioLogeado.toString());
-		            
-		            Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
-		            System.out.println(usuarioLogeado.getDni());
-		            
-		            if (vehiculo == null) {
-		                JOptionPane.showMessageDialog(
-		                    null,
-		                    "No se encontró un vehículo asociado al usuario logeado.",
-		                    "Error al crear viaje",
-		                    JOptionPane.ERROR_MESSAGE
-		                );
-		                return;
-		            }
-		            System.out.println(vehiculo.toString());
+					// Obtener usuario logeado y vehículo asociado
+					Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
+					System.out.println(usuarioLogeado.toString());
 
-		            // Crear un nuevo viaje con una lista vacía de pasajeros
-		            Viaje nuevoViaje = new Viaje(0, origen, destino, asientosDisponibles, usuarioLogeado, new ArrayList<>());
+					Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
+					System.out.println(usuarioLogeado.getDni());
 
-		            // Guardar en la base de datos
-		            gestorDB.insertarViaje(nuevoViaje);
+					if (vehiculo == null) {
+						JOptionPane.showMessageDialog(null, "No se encontró un vehículo asociado al usuario logeado.",
+								"Error al crear viaje", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					System.out.println(vehiculo.toString());
+
+					
+					Set<Integer> idsUtilizados = new HashSet<>();
+					int idViaje = 0;
+
+					for (int i = 12; i < 10000; i++) {
+						idViaje = i;
+
+						while (idsUtilizados.contains(idViaje)) {
+							idViaje++;
+						}
+						idsUtilizados.add(idViaje);
+
+						Viaje nuevoViaje = new Viaje(idViaje, origen, destino, asientosDisponibles, usuarioLogeado,
+								new ArrayList<>());
+						gestorDB.insertarViaje(nuevoViaje);
+					}
+
+					// Crear un nuevo viaje con una lista vacía de pasajeros
+
+					// Guardar en la base de datos
+
 //		            boolean exito = gestorDB.insertarViaje(nuevoViaje);
 
 //		            if (exito) {
@@ -294,21 +305,18 @@ public class VentanaCrearViaje extends JFrame {
 //		                    JOptionPane.ERROR_MESSAGE
 //		                );
 //		            }
-		        } catch (Exception ex) {
-		            JOptionPane.showMessageDialog(
-		                null,
-		                "Ocurrió un error inesperado: " + ex.getMessage(),
-		                "Error",
-		                JOptionPane.ERROR_MESSAGE
-		            );
-		        } finally {
-		            gestorDB.close();
-		        }
-		    }
-		    
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: " + ex.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
+				} finally {
+					gestorDB.close();
+				}
+			}
+
 		});
 
-}
+	}
+
 	TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {
 		JLabel result = new JLabel(value.toString());
 
