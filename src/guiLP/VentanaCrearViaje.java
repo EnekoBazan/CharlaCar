@@ -251,10 +251,11 @@ public class VentanaCrearViaje extends JFrame {
 
 		            // Obtener usuario logeado y vehículo asociado
 		            Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
+		            System.out.println(usuarioLogeado.toString());
+		            
 		            Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
-		            System.out.println(usuarioLogeado);
-		            System.out.println(vehiculo);
-
+		            System.out.println(usuarioLogeado.getDni());
+		            
 		            if (vehiculo == null) {
 		                JOptionPane.showMessageDialog(
 		                    null,
@@ -264,6 +265,7 @@ public class VentanaCrearViaje extends JFrame {
 		                );
 		                return;
 		            }
+		            System.out.println(vehiculo.toString());
 
 		            // Crear un nuevo viaje con una lista vacía de pasajeros
 		            Viaje nuevoViaje = new Viaje(0, origen, destino, asientosDisponibles, usuarioLogeado, new ArrayList<>());
@@ -301,7 +303,6 @@ public class VentanaCrearViaje extends JFrame {
 		            );
 		        } finally {
 		            gestorDB.close();
-		            System.out.println(usuarioLogeado);
 		        }
 		    }
 		    

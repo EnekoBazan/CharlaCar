@@ -117,7 +117,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		// lblTexto2.setFont(new Font("Arial", Font.BOLD, 11)); //no se ven los iconos
 
 		//TODO: Hilo reloj
-//		lblReloj = new JLabel();
+//		lblReloj = new JLabel(); 
 //		CharlaCarImpl.getCharlaCarImpl().relojTiempoReal(lblReloj);
 //		panelBottom.add(lblReloj);
 		

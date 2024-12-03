@@ -60,4 +60,10 @@ public class Vehiculo {
 		return Objects.equals(matricula, other.matricula) && plazas == other.plazas
 				&& Objects.equals(propietario, other.propietario);
 	}
+
+	@Override
+	public String toString() {
+		return "Vehiculo [matricula=" + matricula + ", plazas=" + plazas + ", propietario=" + propietario + "]";
+	}
+	
 }

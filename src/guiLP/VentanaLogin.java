@@ -127,8 +127,11 @@ public class VentanaLogin extends JDialog {
 						VentanaPrincipal.btnLogIn.setVisible(false);
 						VentanaPrincipal.btnRegistro.setVisible(false);
 						JOptionPane.showMessageDialog(null, "Bienvenido " + nombre);
-	                    usuarioLogeado = gestorDB.getUsuarioByDni(nombre);
+	                   
+						Usuario usuarioLogeado = gestorDB.getUsuarioByDni(nombre);
+						
 	                    gestorDB.setUsuarioLogeado(usuarioLogeado);
+	                    
 	             		VentanaPrincipal.btnUsuario.setEnabled(true);
 	             		System.out.println(usuarioLogeado);
 						dispose(); 
