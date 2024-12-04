@@ -79,7 +79,11 @@ public class VentanaBuscarViaje extends JFrame {
 				return false;
 			}
 		};
+		
 		tablaBusqueda = new JTable(tableModel);
+		tablaBusqueda.getColumnModel().getColumn(0).setMinWidth(0);  // Ocultar la columna ID
+        tablaBusqueda.getColumnModel().getColumn(0).setMaxWidth(0);  // Evitar que sea visible
+        tablaBusqueda.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0); // Evitar que aparezca en el header
 
 		try {
 			gestorBD.connect();
@@ -223,7 +227,6 @@ public class VentanaBuscarViaje extends JFrame {
 					}
 
 					gestorBD.insertarViajeUsuario(viajeSeleccionado, usuarioLogueado);
-
 					viajeSeleccionado.setPlazas(viajeSeleccionado.getPlazas() - 1);
 					gestorBD.insertarViaje(viajeSeleccionado);
 
@@ -248,7 +251,7 @@ public class VentanaBuscarViaje extends JFrame {
 	        try {
 	            return Integer.parseInt(tablaBusqueda.getValueAt(filaSeleccionada, 0).toString());
 	        	} catch (NumberFormatException e) {
-	            throw new IllegalStateException("El DNI seleccionado no es un número válido.");
+	            throw new IllegalStateException("El ID seleccionado no es un número válido.");
 	        }
 	    } else {
 	        throw new IllegalStateException("No se ha seleccionado ninguna fila.");
