@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
+
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -26,11 +28,18 @@ import domainLN.ButtonEditor;
 import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
+import io.Propiedades;
 
 public class VentanaPerfil extends JDialog{
 	
 	private static final long serialVersionUID = 1L;
 
+	//Propiedades
+  	private Propiedades propiedades;
+  	public Propiedades getPropiedades() {
+  		return propiedades;
+  	}
+	
 	ButtonEditor buttonEditor = new ButtonEditor();
 
 	//Panel
@@ -99,8 +108,15 @@ public class VentanaPerfil extends JDialog{
 		setTitle("Perfil");
 		setVisible(true);
 		setLocationRelativeTo(null);
-		ImageIcon icon = new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png"));//imagen generada con IA
-		setIconImage(icon.getImage());
+		
+		//Propiedades
+//		propiedades= new Propiedades();
+//		propiedades.cargar();
+//		setIconImage(new ImageIcon(getPropiedades().getProperty("favicon")).getImage());
+
+        
+//		ImageIcon icon = new ImageIcon(VentanaPrincipal.class.getResource("/resources/images/favicon.png"));//imagen generada con IA
+//		setIconImage(icon.getImage());
 		
 		panelPrincipal = new JPanel(new BorderLayout());
 		panelPrincipal.setBackground(new Color(217, 239, 248));

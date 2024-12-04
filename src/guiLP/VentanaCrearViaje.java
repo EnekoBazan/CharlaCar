@@ -32,6 +32,7 @@ import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
 import domainLN.Viaje;
+import io.Propiedades;
 
 public class VentanaCrearViaje extends JFrame {
 
@@ -89,7 +90,13 @@ public class VentanaCrearViaje extends JFrame {
 	private Object[][] datos = {};
 	private JScrollPane scrollPane;
 	private DefaultTableModel tableModel;
-
+	
+	//Propiedades
+  	private Propiedades propiedades;
+  	public Propiedades getPropiedades() {
+  		return propiedades;
+  	}
+  	
 	public VentanaCrearViaje() {
 
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -97,6 +104,11 @@ public class VentanaCrearViaje extends JFrame {
 		setTitle("CharlaCar - Crear Viaje");
 		setVisible(true);
 		setLocationRelativeTo(null);
+
+		//Propiedades
+		propiedades= new Propiedades();
+		propiedades.cargar();
+		setIconImage(new ImageIcon(getPropiedades().getProperty("favicon")).getImage());
 
 //		setIconImage(new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png")).getImage());
 
