@@ -349,7 +349,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gestorBD.connect();
 				
 				if (gestorBD.getUsuarioLogeado() != null) {
 					gestorBD.setUsuarioLogeado(null);
@@ -357,8 +356,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 					btnRegistro.setVisible(true);
 					btnUsuario.setEnabled(false);
 					logger.info("Has cerrado sesión");
-					
-					gestorBD.close();
+
 				}
 			}
 		});
@@ -408,7 +406,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 			VentanaRegistro vRegistro = new VentanaRegistro();
 			vRegistro.setVisible(true);
 		} else if (e.getActionCommand().equalsIgnoreCase("Buscar viaje")) {
-			if (CharlaCarImpl.getCharlaCarImpl().isLoged() == false) {
+			if (gestorBD.getUsuarioLogeado() == null) {
 				JOptionPane.showMessageDialog(null, "Antes debes iniciar sesion");
 			} else {
 				logger.info("Boton buscar viaje");
@@ -416,7 +414,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 				vBuscarViaje.setVisible(true);
 			}
 		} else if (e.getActionCommand().equalsIgnoreCase("Crear viaje")) {
-			if (CharlaCarImpl.getCharlaCarImpl().isLoged() == false) {
+			if (gestorBD.getUsuarioLogeado() == null) {
 				JOptionPane.showMessageDialog(null, "Antes debes iniciar sesion");
 			} else {
 				logger.info("Boton crear viaje");

@@ -141,7 +141,6 @@ public class VentanaLogin extends JDialog {
 					JOptionPane.showMessageDialog(null, "Error al acceder a la base de datos: " + ex.getMessage());
 					ex.printStackTrace();
 				}
-				gestorDB.close();
 			}
 		});
 
