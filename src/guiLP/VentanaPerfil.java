@@ -8,21 +8,30 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.net.URL;
+import java.util.List;
 
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JViewport;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import db.GestorBD;
@@ -30,6 +39,7 @@ import domainLN.ButtonEditor;
 import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
+import domainLN.Viaje;
 import io.Propiedades;
 
 public class VentanaPerfil extends JDialog{
@@ -43,7 +53,7 @@ public class VentanaPerfil extends JDialog{
   		return propiedades;
   	}
 	
-	ButtonEditor buttonEditor = new ButtonEditor();
+//	ButtonEditor buttonEditor = new ButtonEditor();
 
 	//Panel
 	private JPanel panelColor = new JPanel(new BorderLayout());
@@ -75,14 +85,17 @@ public class VentanaPerfil extends JDialog{
 	
 	//Tabla
 	private JTable tablaMisViajes;
-	private String[] cabecera = { "Matricula", "Propietario", "Origen", "Destino", "Asientos Totales", "Asientos Disponibles", "Acción" };
+	private String[] cabecera = {"Origen", "Destino", "Plazas", "DNI del conductor"};
 	private JScrollPane scrollPane;
 	private DefaultTableModel tableModel;
-	
+
 	private JTable tablaViajesUnidos;
-	private String[] cabecera2 = { "Matricula", "Propietario", "Origen", "Destino", "Asientos Totales", "Asientos Disponibles", "Acción" };
+	private String[] cabecera2 = {"Origen", "Destino", "Plazas", "DNI del conductor"};
 	private JScrollPane scrollPane2;
 	private DefaultTableModel tableModel2;
+	
+	private int filaMouseOver = -1;
+	private int colMouseOver = -1;
 	
 	String[][] datosEjemplo;
 		
@@ -182,20 +195,19 @@ public class VentanaPerfil extends JDialog{
       	Border tituloViajesUnidos = BorderFactory.createTitledBorder(bordeViajesUnidos,"Viajes Unidos");
       	panelCentroS.setBorder(tituloViajesUnidos);
       	panelCentroS.setBackground(Color.WHITE);
-//      	Object[][] datos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-//    	        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado)) // Filtra por usuario logueado
-//    	        .map(viaje -> new String[] {
-//    	                viaje.getVehiculo().getMatricula(),
-//    	                viaje.getVehiculo().getPropietario().getNombre(),
-//    	                viaje.getOrigen(),
-//    	                viaje.getDestino(),
-//    	                String.valueOf(viaje.getVehiculo().getPlazas()),
-//    	                String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()),
-//    	                "Eliminar"
-//    	        })
-//    	        .toArray(String[][]::new);
-    	
-//		tableModel = new DefaultTableModel(datos, cabecera);
+
+        // Configuración de las tabla
+        tableModel = new DefaultTableModel(null, cabecera) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                // Solo permitir edición en la columna de botones
+                return column == 4;
+            }
+        };
+        tablaMisViajes = new JTable(tableModel);
+	
 		tablaMisViajes = new JTable(tableModel) {
 
 			private static final long serialVersionUID = 1L;
@@ -205,24 +217,61 @@ public class VentanaPerfil extends JDialog{
 			}
 		};	
 		scrollPane = new JScrollPane(tablaMisViajes);
-		tablaMisViajes.setDefaultRenderer(Object.class, cellRenderer);
+//		tablaMisViajes.setDefaultRenderer(Object.class, cellRenderer);
 		tablaMisViajes.setPreferredScrollableViewportSize(new Dimension(150, 60)); // Tamaño deseado para la tabla
 		tablaMisViajes.setFillsViewportHeight(true); // Rellenar el área de visualización
 		tablaMisViajes.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelCentroCentro.add(scrollPane, BorderLayout.NORTH);
-		
-//		Object[][] datosViajesUnidos = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-//    	        .filter(viaje -> viaje.getListaPasajeros().contains(usuarioLogeado)) // Filtra por usuario logueado
-//    	        .map(viaje -> new String[] {
-//    	                viaje.getVehiculo().getMatricula(),
-//    	                viaje.getVehiculo().getPropietario().getNombre(),
-//    	                viaje.getOrigen(),
-//    	                viaje.getDestino(),
-//    	                String.valueOf(viaje.getVehiculo().getPlazas()),
-//    	                String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()),
-//    	                "Salir"    	        })
-//    	        .toArray(String[][]::new);
-//		tableModel2 = new DefaultTableModel(datosViajesUnidos, cabecera2);
+
+		tablaMisViajes.setDefaultRenderer(Object.class, (table, value, isSelected, hasFocus, row, column) -> {
+		    JLabel label = new JLabel(value + "");
+		    label.setFont(new Font("Arial", Font.PLAIN, 14));
+		    label.setOpaque(true);
+
+		    // Cambiar color de fondo de toda la fila cuando el ratón está sobre ella
+		    if (filaMouseOver == row) {
+		        label.setBackground(new Color(204, 229, 255));
+		    } else {
+		        label.setBackground(isSelected ? table.getSelectionBackground() : Color.WHITE);
+		    }
+
+		    return label;
+		});
+
+		tablaMisViajes.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+		        filaMouseOver = -1;
+		        tablaMisViajes.repaint();
+		    }
+		});
+
+		tablaMisViajes.addMouseMotionListener(new MouseMotionAdapter() {
+		    @Override
+		    public void mouseMoved(MouseEvent e) {
+		        filaMouseOver = tablaMisViajes.rowAtPoint(e.getPoint());
+		        if (filaMouseOver >= 0) {
+		            tablaMisViajes.repaint();
+		        }
+		    }
+		});
+//		tablaMisViajes.getColumn("Acciones").setCellRenderer(new ButtonRenderer());
+//		tablaMisViajes.getColumn("Acciones").setCellEditor(new ButtonEditor(new JCheckBox()));
+//		tablaMisViajes.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+//		tablaMisViajes.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(tablaMisViajes));
+
+		// Configuración de las tabla
+        tableModel2 = new DefaultTableModel(null, cabecera2) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                // Solo permitir edición en la columna de botones
+                return column == 4;
+            }
+        };
+        tablaViajesUnidos = new JTable(tableModel2);	
+        
 		tablaViajesUnidos = new JTable(tableModel2) {
 
 			private static final long serialVersionUID = 1L;
@@ -232,12 +281,49 @@ public class VentanaPerfil extends JDialog{
 			}
 		};	
 		scrollPane2 = new JScrollPane(tablaViajesUnidos);
-		tablaViajesUnidos.setDefaultRenderer(Object.class, cellRenderer);
+//		tablaViajesUnidos.setDefaultRenderer(Object.class, cellRenderer);
 		tablaViajesUnidos.setPreferredScrollableViewportSize(new Dimension(150, 60)); // Tamaño deseado para la tabla
 		tablaViajesUnidos.setFillsViewportHeight(true); // Rellenar el área de visualización
 		tablaViajesUnidos.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelCentroS.add(scrollPane2, BorderLayout.CENTER);
-    	
+	    JButton bSalir = new JButton("Salir");
+
+		tablaViajesUnidos.setDefaultRenderer(Object.class, (table, value, isSelected, hasFocus, row, column) -> {
+		    JLabel label = new JLabel(value + "");
+		    label.setFont(new Font("Arial", Font.PLAIN, 14));
+		    label.setOpaque(true);
+		    // Cambiar color de fondo de toda la fila cuando el ratón está sobre ella
+		    if (filaMouseOver == row) {
+		        label.setBackground(new Color(204, 229, 255));
+		    } else {
+		        label.setBackground(isSelected ? table.getSelectionBackground() : Color.WHITE);
+		    }
+
+		    return label;
+		});
+		tablaViajesUnidos.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseExited(MouseEvent e) {
+		        filaMouseOver = -1;
+		        tablaViajesUnidos.repaint();
+		    }
+		});
+
+		tablaViajesUnidos.addMouseMotionListener(new MouseMotionAdapter() {
+		    @Override
+		    public void mouseMoved(MouseEvent e) {
+		        filaMouseOver = tablaViajesUnidos.rowAtPoint(e.getPoint());
+		        if (filaMouseOver >= 0) {
+		        	tablaViajesUnidos.repaint();
+		        }
+		    }
+		});
+
+//		tablaViajesUnidos.getColumn("Acciones").setCellRenderer(new ButtonRenderer());
+//		tablaViajesUnidos.getColumn("Acciones").setCellEditor(new ButtonEditor(new JCheckBox()));
+//		tablaViajesUnidos.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+//		tablaViajesUnidos.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(tablaViajesUnidos));
+		
 		// Botones
 		panelSur.add(btnEliminar);
 		btnEliminar.setBackground(new Color(33, 150, 243));
@@ -261,206 +347,99 @@ public class VentanaPerfil extends JDialog{
 		panelColor.setBorder(new EmptyBorder(20,20,20,20));
 		panelColor.setBackground(new Color(237, 242, 255));
     	add(panelColor);
-    	
 //    	System.out.println(usuarioLogeado.getViajes());
+    	
     	btnSalir.addActionListener(new ActionListener() {
-
     	    @Override
     	    public void actionPerformed(ActionEvent e) {
-    	        // Obtener la fila seleccionada de la tabla
-    	        int numFila = tablaViajesUnidos.getSelectedRow();
-    	        
-    	        if (numFila != -1) { // Verifica si se ha seleccionado una fila válida
-    	            // Aquí, eliminamos la fila de la tabla (en la base de datos o donde se almacenen los datos)
-    	            // Suponemos que tienes una forma de acceder a los viajes del usuario logueado.
+    	        int selectedRow = tablaViajesUnidos.getSelectedRow();
+    	        if (selectedRow != -1) {
+    	            // Obtener el ID del viaje desde la columna correspondiente
+    	            int viajeId = (int) tablaViajesUnidos.getValueAt(selectedRow, 0);
+    	            Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
 
-    	            String matricula = (String) tableModel2.getValueAt(numFila, 0);
-    	            String propietario = (String) tableModel2.getValueAt(numFila, 1);
-    	            String origen = (String) tableModel2.getValueAt(numFila, 2);
-    	            String destino = (String) tableModel2.getValueAt(numFila, 3);
-    	            int asientosTotal = Integer.parseInt((String) tableModel2.getValueAt(numFila, 4));
-    	            int asientosDisponibles = Integer.parseInt((String) tableModel2.getValueAt(numFila, 5));
-
-    	            // Crear un nuevo objeto viaje que corresponde con los datos seleccionados
-    	            Vehiculo vehiculo = new Vehiculo(matricula, asientosTotal, 
-    	                new Usuario(propietario, "", "", "", true, 0.0f)); // Crear un vehículo
-//    	            Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
-//    	            viaje.setVehiculo(vehiculo);
-
-    	            // Eliminar el viaje del usuario logueado
-//    	            CharlaCarImpl.getCharlaCarImpl().deleteViajeToUsuario(viaje);  // Método hipotético para eliminar un viaje
-    	            
-    	            // Eliminar la fila de la tabla
-    	            tableModel2.removeRow(numFila);
-    	            
-    	            // Actualizar la tabla con los datos más recientes
-//    	            actualizarTablaViajesUnidos();
-    	            
-    	            // Mostrar mensaje de éxito
-    	            JOptionPane.showMessageDialog(null, "Has salido del viaje exitosamente.");
+    	            // Llamar a deleteViajeUsuario
+    	            boolean success = gestorDB.deleteViajeUsuario(viajeId, usuarioLogeado.getDni());
+    	            if (success) {
+    	                // Eliminar la fila de la tabla
+    	                ((DefaultTableModel) tablaViajesUnidos.getModel()).removeRow(selectedRow);
+    	                JOptionPane.showMessageDialog(null, "Has salido del viaje exitosamente.");
+    	            } else {
+    	                JOptionPane.showMessageDialog(null, "Error al salir del viaje. Verifica la base de datos.");
+    	            }
     	        } else {
-    	            JOptionPane.showMessageDialog(null, "Debes seleccionar un viaje.");
+    	            JOptionPane.showMessageDialog(null, "Por favor selecciona un viaje para salir.");
     	        }
     	    }
     	});
+
+
+    	btnEliminar.addActionListener(new ActionListener() {
+    	    @Override
+    	    public void actionPerformed(ActionEvent e) {
+    	        int selectedRow = tablaMisViajes.getSelectedRow();
+    	        if (selectedRow != -1) {
+    	            // Obtener el ID del viaje desde la columna correspondiente
+    	            int viajeId = (int) tablaMisViajes.getValueAt(selectedRow, 0);
+
+    	            // Llamar a deleteViaje
+    	            boolean success = gestorDB.deleteViaje(viajeId);
+    	            if (success) {
+    	                // Eliminar la fila de la tabla
+    	                ((DefaultTableModel) tablaMisViajes.getModel()).removeRow(selectedRow);
+    	                JOptionPane.showMessageDialog(null, "El viaje ha sido eliminado exitosamente.");
+    	            } else {
+    	                JOptionPane.showMessageDialog(null, "Error al eliminar el viaje. Verifica la base de datos.");
+    	            }
+    	        } else {
+    	            JOptionPane.showMessageDialog(null, "Por favor selecciona un viaje para eliminar.");
+    	        }
+    	    }
+    	});
+
+
+
+        cargarDatosEnTablas();
+//        tablaMisViajes.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+//        tablaMisViajes.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor());
+//
+//        tablaViajesUnidos.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+//        tablaViajesUnidos.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor());
         
 
-    	
-    	btnEliminar.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Obtener la fila seleccionada de la tabla
-    	        int numFila = tablaMisViajes.getSelectedRow();
-    	        
-    	        if (numFila != -1) { // Verifica si se ha seleccionado una fila válida
-    	            // Aquí, eliminamos la fila de la tabla (en la base de datos o donde se almacenen los datos)
-    	            // Suponemos que tienes una forma de acceder a los viajes del usuario logueado.
-
-    	            String matricula = (String) tableModel.getValueAt(numFila, 0);
-    	            String propietario = (String) tableModel.getValueAt(numFila, 1);
-    	            String origen = (String) tableModel.getValueAt(numFila, 2);
-    	            String destino = (String) tableModel.getValueAt(numFila, 3);
-    	            int asientosTotal = Integer.parseInt((String) tableModel.getValueAt(numFila, 4));
-    	            int asientosDisponibles = Integer.parseInt((String) tableModel.getValueAt(numFila, 5));
-
-    	            // Crear un nuevo objeto viaje que corresponde con los datos seleccionados
-    	            Vehiculo vehiculo = new Vehiculo(matricula, asientosTotal, 
-    	                new Usuario(propietario, "", "", "", true, 0.0f)); // Crear un vehículo
-//    	            Viaje viaje = new Viaje(origen, destino, asientosDisponibles, 0, null, "");
-//    	            viaje.setVehiculo(vehiculo);
-
-    	            
-    	            // Eliminar el viaje del usuario logueado
-    	            CharlaCarImpl.getCharlaCarImpl().getViajes().stream();  // Método hipotético para eliminar un viaje
-    	            
-    	            // Eliminar la fila de la tabla
-    	            tableModel.removeRow(numFila);
-    	            
-    	            // Actualizar la tabla con los datos más recientes
-//    	            actualizarTablaViajesUnidos();
-    	            
-    	            // Mostrar mensaje de éxito
-    	            JOptionPane.showMessageDialog(null, "El viaje ha sido eliminado exitosamente.");
-    	        } else {
-    	            JOptionPane.showMessageDialog(null, "Debes seleccionar un viaje.");
-    	        }
-    	    }
-    	});
-    	tablaMisViajes.getColumnModel().getColumn(6).setCellRenderer(buttonRenderer);
-    	tablaViajesUnidos.getColumnModel().getColumn(6).setCellRenderer(buttonRenderer);
-    	tablaMisViajes.getColumnModel().getColumn(6).setCellEditor(buttonEditor);
-    	tablaViajesUnidos.getColumnModel().getColumn(6).setCellEditor(buttonEditor);
 	}
-	TableCellRenderer buttonRenderer = new DefaultTableCellRenderer() {
+	private void cargarDatosEnTablas() {
+        Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
 
-	    private static final long serialVersionUID = 1L;
+        // Limpia las tablas antes de recargar los datos
+        tableModel.setRowCount(0);
+        tableModel2.setRowCount(0);
 
-	    @Override
-	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-//	        if (value instanceof String && value.equals("")) {  // Check if the value is "Salir"
-//	            JButton button = new JButton("");
-//	            button.setBackground(new Color(33, 150, 243));
-//	            button.setForeground(Color.WHITE);
-//	            button.setFont(new Font("Arial", Font.BOLD, 12));
-//	            button.setBorder(new EmptyBorder(5,5,5,5));
-//	            
-//	            // Acción al pasar el ratón por encima
-//	            button.addMouseListener(new java.awt.event.MouseAdapter() {
-//	                @Override
-//	                public void mouseEntered(java.awt.event.MouseEvent evt) {
-//	                    button.setBackground(new Color(41, 121, 255));  // Color al pasar el ratón
-//	                }
-//	                @Override
-//	                public void mouseExited(java.awt.event.MouseEvent evt) {
-//	                    button.setBackground(new Color(33, 150, 243));  // Color original
-//	                }
-//	            });
-	            
-//	            // Acción al hacer clic en el botón
-//	            button.addActionListener(new ActionListener() {
-//	                @Override
-//	                public void actionPerformed(ActionEvent e) {
-//	                    // Logic to handle the "Salir" action
-//	                    int numFila = table.getSelectedRow();
-//	                    if (numFila != -1) {
-//	                        // Handle the action (e.g., remove the row)
-//	                        ((DefaultTableModel) table.getModel()).removeRow(numFila);
-//	                        JOptionPane.showMessageDialog(null, "Has salido del viaje.");
-//	                    }
-//	                }
-//	            });
-//
-//	            return button;
-//	        }
-	        // Default renderer for other values
-	        return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	    }
-	};
+        // Carga de "Mis Viajes" (conductor es el usuario logeado)
+        List<Viaje> misViajes = gestorDB.getViajes();
+        misViajes.stream()
+                .filter(v -> v.getConductor() != null && v.getConductor().getDni().equals(usuarioLogeado.getDni()))
+                .forEach(viaje -> tableModel.addRow(new Object[]{
+                		viaje.getId(),
+                        viaje.getOrigen(),
+                        viaje.getDestino(),
+                        viaje.getPlazas(),
+                        viaje.getConductor().getDni(),
+                        "Eliminar"
+                }));
 
-	
-
-	// Personalizamos el renderizador para los botones
-	TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {
-	    JLabel result = new JLabel(value.toString());
-
-	    // Si la columna es la de los botones (última columna)
-	    if (column == table.getColumnCount() - 1) {
-	        JButton boton = new JButton(value.toString());
-	        boton.setBackground(new Color(33, 150, 243));
-	        boton.setForeground(Color.WHITE);
-	        boton.setFont(new Font("Arial", Font.BOLD, 12));
-
-	        // Acción para el botón "Eliminar" en Mis Viajes
-	        if ("Eliminar".equals(value)) {
-	            boton.addActionListener(new ActionListener() {
-	                @Override
-	                public void actionPerformed(ActionEvent e) {
-	                    // Aquí puedes implementar la lógica para eliminar el viaje
-	                    int numFila = table.getSelectedRow();
-	                    if (numFila != -1) {
-	                        // Eliminar el viaje
-	                        String matricula = (String) tableModel.getValueAt(numFila, 0);
-	                        // Lógica para eliminar el viaje (en base de datos, lista, etc.)
-	                        // Luego eliminar la fila de la tabla
-	                        tableModel.removeRow(numFila);
-	                        JOptionPane.showMessageDialog(null, "El viaje ha sido eliminado.");
-	                    } else {
-	                        JOptionPane.showMessageDialog(null, "Debes seleccionar un viaje.");
-	                    }
-	                }
-	            });
-	        }
-
-	        // Acción para el botón "Salir" en Viajes Unidos
-	        else if ("Salir".equals(value)) {
-	            boton.addActionListener(new ActionListener() {
-	                @Override
-	                public void actionPerformed(ActionEvent e) {
-	                    // Aquí puedes implementar la lógica para salir del viaje
-	                    int numFila = table.getSelectedRow();
-	                    if (numFila != -1) {
-	                        // Lógica para salir del viaje (en base de datos, lista, etc.)
-	                        // Luego eliminar la fila de la tabla
-	                        tableModel2.removeRow(numFila);
-	                        JOptionPane.showMessageDialog(null, "Has salido del viaje.");
-	                    } else {
-	                        JOptionPane.showMessageDialog(null, "Debes seleccionar un viaje.");
-	                    }
-	                }
-	            });
-	        }
-
-	        return boton; // Retorna el botón para mostrarlo en la celda
-	    }
-
-	    result.setHorizontalAlignment(JLabel.CENTER);
-	    result.setForeground(new Color(60, 60, 60));
-	    result.setBackground(Color.white);
-	    result.setOpaque(true);
-	    return result;
-	};
-
+        // Carga de "Viajes Unidos" (usuario logeado es pasajero)
+        gestorDB.getViajeUsuario().getOrDefault(usuarioLogeado, List.of())
+                .forEach(viaje -> tableModel2.addRow(new Object[]{
+                		viaje.getId(),
+                        viaje.getOrigen(),
+                        viaje.getDestino(),
+                        viaje.getPlazas(),
+                        viaje.getConductor() != null ? viaje.getConductor().getDni() : "N/A",
+                        "Salir"
+                }));
+        
+    }
 	public void ratingEstrellas() {
 		float rating;
 		Usuario usuarioLogeado= gestorDB.getUsuarioLogeado();
@@ -521,4 +500,55 @@ public class VentanaPerfil extends JDialog{
 			panelCentroA.repaint();
 		}
 	}
+//	public class ButtonRenderer extends JButton implements TableCellRenderer {
+//	    public ButtonRenderer() {
+//	        setOpaque(true);
+//	    }
+//
+//	    @Override
+//	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+//	        setText(value == null ? "Click" : value.toString());
+//	        setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+//	        return this;
+//	    }
+//	}
+//	public class ButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
+//	    private JButton button;
+//	    private String label;
+//	    private boolean clicked;
+//
+//	    public ButtonEditor() {
+//	        button = new JButton();
+//	        button.setOpaque(true);
+//	        button.addActionListener(this);
+//	    }
+//
+//	    @Override
+//	    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+//	        label = value == null ? "Click" : value.toString();
+//	        button.setText(label);
+//	        clicked = true;
+//	        return button;
+//	    }
+//
+//	    @Override
+//	    public Object getCellEditorValue() {
+//	        if (clicked) {
+//	            System.out.println("HOLA"); // Acción al hacer clic
+//	        }
+//	        clicked = false;
+//	        return label;
+//	    }
+//
+//	    @Override
+//	    public void actionPerformed(ActionEvent e) {
+//	        fireEditingStopped(); // Detener edición después del clic
+//	    }
+//
+//	    @Override
+//	    public boolean stopCellEditing() {
+//	        clicked = false;
+//	        return super.stopCellEditing();
+//	    }
+//	}
 }

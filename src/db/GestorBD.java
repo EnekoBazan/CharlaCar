@@ -589,6 +589,52 @@ public class GestorBD {
         return mapaViajesPorUsuarioId;
     }
 
+    //Delete
+    public boolean deleteViaje(int viajeId) {
+        if (getConnection() == null) {
+            System.err.println("No se puede eliminar el viaje: conexión no establecida.");
+            return false;
+        }
+
+        String sql = "DELETE FROM Viaje WHERE id = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, viajeId);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Viaje eliminado exitosamente. ID: " + viajeId);
+                return true;
+            } else {
+                System.err.println("No se encontró un viaje con el ID proporcionado: " + viajeId);
+            }
+        } catch (SQLException e) {
+            System.err.format("* Error al eliminar el viaje con ID %d: %s%n", viajeId, e.getMessage());
+        }
+        return false;
+    }
+    public boolean deleteViajeUsuario(int viajeId, String usuarioDni) {
+        if (getConnection() == null) {
+            System.err.println("No se puede eliminar la relación Viaje-Usuario: conexión no establecida.");
+            return false;
+        }
+
+        String sql = "DELETE FROM ViajeUsuario WHERE id_viaje = ? AND dni_usuario = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, viajeId);
+            stmt.setString(2, usuarioDni);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Relación Viaje-Usuario eliminada exitosamente. Viaje ID: " + viajeId + ", Usuario DNI: " + usuarioDni);
+                return true;
+            } else {
+                System.err.println("No se encontró una relación Viaje-Usuario con los datos proporcionados: Viaje ID: " + viajeId + ", Usuario DNI: " + usuarioDni);
+            }
+        } catch (SQLException e) {
+            System.err.format("* Error al eliminar la relación Viaje-Usuario: Viaje ID=%d, Usuario DNI=%s, Error=%s%n", viajeId, usuarioDni, e.getMessage());
+        }
+        return false;
+    }
+
+
     //Resto de funciones 
     
     public boolean existeUsuarioLogin(String nombre, String contraseña) {
