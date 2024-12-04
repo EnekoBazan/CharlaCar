@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -28,7 +29,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import db.GestorBD;
-import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
 import domainLN.Viaje;
@@ -42,8 +42,6 @@ public class VentanaBuscarViaje extends JFrame {
 	private JPanel panelPrincipal;
 
 	private JTable tablaBusqueda;
-	private String[] cabecera;
-	private String[][] datosEjemplo;
 
 	private JScrollPane scrollPane;
 	private JButton btnUnirse;
@@ -57,9 +55,9 @@ public class VentanaBuscarViaje extends JFrame {
 	private DefaultTableModel tableModel;
 	private TableRowSorter<DefaultTableModel> rowSorter;
 
-	// private JButton btnFiltrar;
+	GestorBD gestorBD = GestorBD.getGestorDB();
 
-	@SuppressWarnings("serial")
+	// private JButton btnFiltrar;
 	public VentanaBuscarViaje() {
 
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -67,45 +65,63 @@ public class VentanaBuscarViaje extends JFrame {
 		setTitle("CharlaCar");
 		setLocationRelativeTo(null);
 
-		setIconImage(new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png")).getImage());
+		ImageIcon icon = new ImageIcon("resources/images/favicon.png");
+		setIconImage(icon.getImage());
 
-		// CABECERA DE TABLA
-		cabecera = new String[] { "Matricula", "Propietario", "Origen", "Destino", "Asientos Totales",
-				"Asientos Disponibles" };
-		///// DATOS DE EJEMPLO
+		String[] cabecera = { "Origen", "Destino", "Plazas", "Conductor", "Matricula" };
+		DefaultTableModel tableModel = new DefaultTableModel(cabecera, 0);
 
-		// Lógica para preparar los datos de ejemplo
-//		datosEjemplo = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-//				.map(viaje -> new String[] { viaje.getVehiculo().getMatricula(),
-//						viaje.getVehiculo().getPropietario().getNombre(), viaje.getOrigen(), viaje.getDestino(),
-//						String.valueOf(viaje.getVehiculo().getPlazas()),
-//						String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()) })
-//				.toArray(String[][]::new);
-
-//		
-//		datosEjemplo = GestorBD.getGestorDB().getViajes().stream()
-//		.map(viaje -> new String[] { matricula ,
-//				viaje.getVehiculo().getPropietario().getNombre(), viaje.getOrigen(), viaje.getDestino(),
-//				String.valueOf(viaje.getVehiculo().getPlazas()),
-//				String.valueOf(viaje.getVehiculo().getPlazas() - viaje.getEspaciosDisponibles()) })
-//		.toArray(String[][]::new);
-		
-		// PANEL PRINCIPAL
-		panelPrincipal = new JPanel(new BorderLayout());
-		panelPrincipal.setBorder(new EmptyBorder(5, 10, 5, 0));
-
-		tableModel = new DefaultTableModel(datosEjemplo, cabecera);
-		tablaBusqueda = new JTable(tableModel) {
-
+		tablaBusqueda = new JTable() {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
 
+		try {
+			gestorBD.connect();
+			List<Viaje> viajes = gestorBD.getViajes();
+			for (Viaje viaje : viajes) {
+				String conductor = "Sin conductor";
+				String matricula = "No asignada";
+
+				if (viaje.getConductor() != null) {
+					Usuario conductorInfo = gestorBD.getUsuarioByDni(viaje.getConductor().getDni());
+					if (conductorInfo != null) {
+						conductor = conductorInfo.getNombre() + " " + conductorInfo.getApellido();
+					}
+
+					Vehiculo vehiculo = gestorBD.getVehiculoPorUsuario(viaje.getConductor().getDni());
+					if (vehiculo != null) {
+						matricula = vehiculo.getMatricula();
+					}
+				}
+
+				tableModel.addRow(new Object[] { viaje.getOrigen(), viaje.getDestino(), viaje.getPlazas(), conductor,
+						matricula });
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Error al cargar viajes: " + e.getMessage());
+		} finally {
+			gestorBD.close();
+		}
+
+		// PANEL PRINCIPAL
+		scrollPane = new JScrollPane(tablaBusqueda);
+		panelPrincipal = new JPanel(new BorderLayout());
+		panelPrincipal.setBorder(new EmptyBorder(5, 10, 5, 0));
+		panelPrincipal.add(scrollPane, BorderLayout.CENTER);
+
+		
+		// RENDERER ENCABEZADO
 		JTableHeader header = tablaBusqueda.getTableHeader();
 		header.setDefaultRenderer(new DefaultTableCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 					boolean hasFocus, int row, int column) {
 				JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
@@ -121,7 +137,7 @@ public class VentanaBuscarViaje extends JFrame {
 
 				label.setHorizontalAlignment(JLabel.CENTER);
 				label.setOpaque(true);
-				
+
 				return label;
 			}
 		});
@@ -177,37 +193,42 @@ public class VentanaBuscarViaje extends JFrame {
 		this.tablaBusqueda.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.tablaBusqueda.setDefaultRenderer(Object.class, cellRenderer);
 		this.add(panelPrincipal);
-
+		
 		btnUnirse.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				int numFila = tablaBusqueda.getSelectedRow();
-				if (numFila != -1) {
-					String matricula = (String) tableModel.getValueAt(numFila, 0);
-					String propietario = (String) tableModel.getValueAt(numFila, 1);
-					String origen = (String) tableModel.getValueAt(numFila, 2);
-					String destino = (String) tableModel.getValueAt(numFila, 3);
-					int asientosTotal = Integer.parseInt((String) tableModel.getValueAt(numFila, 4));
-					int asientosDisponibles = Integer.parseInt((String) tableModel.getValueAt(numFila, 5));
+				try {
 
-					Vehiculo vehiculo = new Vehiculo(matricula, asientosTotal,
-							new Usuario(propietario, "", "", "", true, 0.0f));
-//					Viaje viaje = new Viaje(origen, destino, asientosDisponibles, propietario, "");
-//					viaje.setVehiculo(vehiculo);
+					gestorBD.connect();
 
-//					CharlaCarImpl.getCharlaCarImpl().addViajeToUsuario(viaje);
-//					System.out.println(viaje);
-					// System.out.println(CharlaCarImpl.getCharlaCarImpl().getLogedUser().visualizarListaViajes);
+					Usuario usuarioLogueado = gestorBD.getUsuarioLogeado();
+					int idViajeSeleccionado = obtenerIdViajeSeleccionado(); 
 
-					if (CharlaCarImpl.getCharlaCarImpl().isLoged() == false) {
-						JOptionPane.showMessageDialog(null, "No estas logeado");
-					} else {
-						JOptionPane.showMessageDialog(null, "Te has unido al viaje!!");
+					Viaje viajeSeleccionado = gestorBD.getViajePorId(idViajeSeleccionado);
+					if (viajeSeleccionado == null) {
+						JOptionPane.showMessageDialog(null, "No se encontró el viaje seleccionado.");
+						return;
 					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Debes seleccionar un viaje");
+
+					if (viajeSeleccionado.getPlazas() <= 0) {
+						JOptionPane.showMessageDialog(null, "Lo sentimos, no quedan plazas disponibles en este viaje.");
+						return;
+					}
+
+					gestorBD.insertarViajeUsuario(viajeSeleccionado, usuarioLogueado);
+
+		//	seria el restar asientos		//viajeSeleccionado.setPlazas(viajeSeleccionado.getPlazas() - 1);
+					gestorBD.insertarViaje(viajeSeleccionado); 
+
+					JOptionPane.showMessageDialog(null, "Te has unido al viaje correctamente.");
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null,
+							"Ocurrió un error al intentar unirte al viaje: " + ex.getMessage());
+					ex.printStackTrace();
+				} finally {
+					gestorBD.close();
 				}
 			}
 
@@ -215,7 +236,14 @@ public class VentanaBuscarViaje extends JFrame {
 		setVisible(true);
 
 	}
-	// RENDERER ENCABEZADO
+	
+	private int obtenerIdViajeSeleccionado() {
+	    int filaSeleccionada = tablaBusqueda.getSelectedRow();
+	    if (filaSeleccionada >= 0) {
+	        return (int) tablaBusqueda.getValueAt(filaSeleccionada, 0);
+	    }
+		return filaSeleccionada;	
+	}
 
 	//// RENDERER
 	TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {
