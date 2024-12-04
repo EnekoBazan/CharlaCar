@@ -130,7 +130,6 @@ public class VentanaLogin extends JDialog {
 	                    gestorDB.setUsuarioLogeado(usuarioLogeado);
 	                    
 	             		VentanaPrincipal.btnUsuario.setEnabled(true);
-	             		CharlaCarImpl.getCharlaCarImpl().setLoged(true);
 	             		
 	             		System.out.println(usuarioLogeado);
 	             		
