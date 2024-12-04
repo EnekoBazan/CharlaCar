@@ -35,7 +35,6 @@ public class VentanaLogin extends JDialog {
 	private JLabel lblRegistro;
 
 	GestorBD gestorDB = GestorBD.getGestorDB();
-	private Usuario usuarioLogeado;
 	static boolean loged = false;
 
 	public VentanaLogin() {
@@ -122,18 +121,18 @@ public class VentanaLogin extends JDialog {
 					gestorDB.connect(); 
 
 					if (gestorDB.existeUsuarioLogin(nombre, contraseña)) {
-						loged = true;
-						CharlaCarImpl.getCharlaCarImpl().setLoged(true);
 						VentanaPrincipal.btnLogIn.setVisible(false);
 						VentanaPrincipal.btnRegistro.setVisible(false);
 						JOptionPane.showMessageDialog(null, "Bienvenido " + nombre);
 	                   
-						Usuario usuarioLogeado = gestorDB.getUsuarioByDni(nombre);
+						Usuario usuarioLogeado = gestorDB.getUsuarioByNombreAndContraseña(nombre, contraseña);
 						
 	                    gestorDB.setUsuarioLogeado(usuarioLogeado);
 	                    
 	             		VentanaPrincipal.btnUsuario.setEnabled(true);
+	             		
 	             		System.out.println(usuarioLogeado);
+	             		
 						dispose(); 
 					} else {
 						JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
