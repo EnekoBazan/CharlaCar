@@ -27,7 +27,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import db.GestorBD;
 import domainLN.CharlaCarImpl;
+import domainLN.Usuario;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
 
@@ -63,7 +65,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	private JLabel lblTextoAbajo2;
 
 	private JLabel lblReloj;
-	
+
 	private Logger logger;
 
 	// Barra de menus
@@ -74,6 +76,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	// Elementos JMenuJuegos
 	private JMenuItem menuItemPerfil = new JMenuItem("Perfil");
 	private JMenuItem menuItemCerrarSesion = new JMenuItem("Cerrar sesión");
+	private JMenuItem menuItemEliminarCuenta = new JMenuItem("Eliminar cuenta");
+
+	GestorBD gestorBD = GestorBD.getGestorDB();
 
 	public VentanaPrincipal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,7 +90,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 //			CharlaCarImpl.getCharlaCarImpl().detenerHilo();
 //		}
 //	});
-		
+
 		setSize(700, 500);
 
 		setTitle("CharlaCar");
@@ -94,7 +99,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		setResizable(false);
 
 		ImageIcon icon = new ImageIcon("resources/images/favicon.png");
-																									
+
 		setIconImage(icon.getImage());
 
 		logger = Logger.getLogger(VentanaPrincipal.class.getName());
@@ -116,11 +121,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		lblTextoAbajo2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		// lblTexto2.setFont(new Font("Arial", Font.BOLD, 11)); //no se ven los iconos
 
-		//TODO: Hilo reloj
+		// TODO: Hilo reloj
 //		lblReloj = new JLabel(); 
 //		CharlaCarImpl.getCharlaCarImpl().relojTiempoReal(lblReloj);
 //		panelBottom.add(lblReloj);
-		
+
 		panelBottom.add(lblTextoAbajo1);
 		panelBottom.add(lblTextoAbajo2);
 		panelBottom.setBackground(new Color(217, 239, 248));
@@ -253,7 +258,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		btnUsuario.setBackground(Color.white);
 		btnUsuario.setPreferredSize(new Dimension(70, 25));
 		btnUsuario.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
-		if(!CharlaCarImpl.getCharlaCarImpl().isLoged() == true) {
+		if (!CharlaCarImpl.getCharlaCarImpl().isLoged() == true) {
 			btnUsuario.setEnabled(false);
 		}
 		// Configuración JMenuUsuario
@@ -263,6 +268,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		// Items del menu "Usuario"
 		menuUsuario.add(menuItemPerfil);
 		menuItemPerfil.setMnemonic(KeyEvent.VK_S);
+		menuUsuario.addSeparator();
+		menuUsuario.add(menuItemEliminarCuenta);
 		menuUsuario.addSeparator();
 		menuUsuario.add(menuItemCerrarSesion);
 		menuItemCerrarSesion.setMnemonic(KeyEvent.VK_S);
@@ -283,6 +290,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 		btnBuscar.addActionListener(this);
 		btnCrear.addActionListener(this);
 		menuItemPerfil.addActionListener(this);
+		menuItemCerrarSesion.addActionListener(this);
+		menuItemEliminarCuenta.addActionListener(this);
 
 		this.add(panelPrincipal);
 
@@ -298,6 +307,93 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 //				logger.info("Has abierto el menu 'Usuario'");
 //			}
 //		});
+		menuItemPerfil.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!isVentanaPerfilOpen) { // Solo abre la ventana si no está abierta
+					isVentanaPerfilOpen = true; // Cambia el estado para evitar duplicación
+					VentanaPerfil vPerfil = new VentanaPerfil();
+					vPerfil.setVisible(true);
+
+					// Añade un listener para restablecer el estado cuando la ventana se cierre
+					vPerfil.addWindowListener(new WindowAdapter() {
+						@Override
+						public void windowClosing(WindowEvent windowEvent) {
+							isVentanaPerfilOpen = false; // Restablece el estado al cerrar la ventana
+						}
+					});
+
+					logger.info("Ventana 'Perfil' abierta");
+				}
+			}
+		});
+		btnUsuario.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (gestorBD.getUsuarioLogeado() != null) {
+					JComponent source = (JComponent) e.getSource();
+					JPopupMenu popupMenu = menuUsuario.getPopupMenu();
+					popupMenu.show(source, 0, source.getHeight());
+					logger.info("Has abierto el menú 'Usuario'");
+				} else {
+					JOptionPane.showMessageDialog(null, "Inicie sesión para visualizar su perfil.");
+					btnLogIn.setVisible(true);
+					btnRegistro.setVisible(true);
+					btnUsuario.setEnabled(false);
+				}
+			}
+		});
+		menuItemCerrarSesion.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gestorBD.connect();
+				
+				if (gestorBD.getUsuarioLogeado() != null) {
+					gestorBD.setUsuarioLogeado(null);
+					btnLogIn.setVisible(true);
+					btnRegistro.setVisible(true);
+					btnUsuario.setEnabled(false);
+					logger.info("Has cerrado sesión");
+					
+					gestorBD.close();
+				}
+			}
+		});
+		menuItemEliminarCuenta.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gestorBD.connect();
+				Usuario logeado = gestorBD.getUsuarioLogeado();
+
+				if (logeado == null) {
+					JOptionPane.showMessageDialog(null, "No hay ningún usuario logueado.");
+					return;
+				}
+				if (logeado != null) {
+					int opcion = JOptionPane.showConfirmDialog(null,
+							"Eliminaras tu cuenta permanentemente\n ¿Deseas continuar?", "Confirmación",
+							JOptionPane.YES_NO_OPTION);
+
+					if (opcion == JOptionPane.YES_OPTION) {
+						JOptionPane.showMessageDialog(null, "Tu cuenta ha sido eliminada");
+						gestorBD.deleteUsuario(logeado);
+						btnLogIn.setVisible(true);
+						btnRegistro.setVisible(true);
+						btnUsuario.setEnabled(false);
+						gestorBD.setUsuarioLogeado(null);
+
+					} else if (opcion == JOptionPane.NO_OPTION) {
+						logger.info("Has cancelado la eliminación de tu cuenta");
+					}
+				}
+				gestorBD.close();
+			}
+
+		});
 	}
 
 	// ARRIBA PARA LLAMAM A LA LLAMADA CON EL OBJETO
@@ -340,54 +436,5 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 //				// Cerrar sesion
 //			}
 		}
-		menuItemPerfil.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!isVentanaPerfilOpen) { // Solo abre la ventana si no está abierta
-					isVentanaPerfilOpen = true; // Cambia el estado para evitar duplicación
-					VentanaPerfil vPerfil = new VentanaPerfil();
-					vPerfil.setVisible(true);
-
-					// Añade un listener para restablecer el estado cuando la ventana se cierre
-					vPerfil.addWindowListener(new WindowAdapter() {
-						@Override
-						public void windowClosing(WindowEvent windowEvent) {
-							isVentanaPerfilOpen = false; // Restablece el estado al cerrar la ventana
-						}
-					});
-
-					logger.info("Ventana 'Perfil' abierta");
-				}
-			}
-		});
-		btnUsuario.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (CharlaCarImpl.getCharlaCarImpl().isLoged() == true) {
-					JComponent source = (JComponent) e.getSource();
-					JPopupMenu popupMenu = menuUsuario.getPopupMenu();
-					popupMenu.show(source, 0, source.getHeight());
-					logger.info("Has abierto el menú 'Usuario'");
-				} else {
-					JOptionPane.showMessageDialog(null, "Inicie sesión para visualizar su perfil.");
-				}
-			}
-		});
-		menuItemCerrarSesion.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (CharlaCarImpl.getCharlaCarImpl().isLoged() == true) {
-					CharlaCarImpl.getCharlaCarImpl().setLoged(false);
-					btnLogIn.setVisible(true);
-					btnRegistro.setVisible(true);
-					btnUsuario.setEnabled(false);
-					logger.info("Has cerrado sesión");
-				} 
-			}
-		});
 	}
-
 }
