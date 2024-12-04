@@ -24,6 +24,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+
+import db.GestorBD;
 import domainLN.ButtonEditor;
 import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
@@ -34,7 +36,8 @@ public class VentanaPerfil extends JDialog{
 	
 	private static final long serialVersionUID = 1L;
 
-	//Propiedades
+	GestorBD gestorDB = GestorBD.getGestorDB();
+	
   	private Propiedades propiedades;
   	public Propiedades getPropiedades() {
   		return propiedades;
@@ -108,12 +111,11 @@ public class VentanaPerfil extends JDialog{
 		setTitle("Perfil");
 		setVisible(true);
 		setLocationRelativeTo(null);
-		
-		//Propiedades
-//		propiedades= new Propiedades();
-//		propiedades.cargar();
-//		setIconImage(new ImageIcon(getPropiedades().getProperty("favicon")).getImage());
+        gestorDB.connect();
 
+//        URL imagePath = getClass().getResource("/images/favicon.png");
+//        ImageIcon icon = new ImageIcon(imagePath);
+//        setIconImage(icon.getImage());
         
 //		ImageIcon icon = new ImageIcon(VentanaPrincipal.class.getResource("/resources/images/favicon.png"));//imagen generada con IA
 //		setIconImage(icon.getImage());
@@ -126,24 +128,21 @@ public class VentanaPerfil extends JDialog{
       	Border tituloBordeUsuario = BorderFactory.createTitledBorder(bordeUsuario,"Usuario");
     	panelNorte.setBorder(tituloBordeUsuario);
     	panelNorte.setBackground(Color.WHITE);
-    		
-		lbNombre.setText("Nombre:  " + CharlaCarImpl.getCharlaCarImpl().getLogedUser().getNombre());
+
+    	Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
+        Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
+        
+		lbNombre.setText("Nombre:  " + usuarioLogeado.getNombre());
 		panelNorte.add(lbNombre, BorderLayout.NORTH);
 		lbNombre.setBorder(new EmptyBorder(2,5,2,5));
-		lbApellido.setText("Apellido:  " + CharlaCarImpl.getCharlaCarImpl().getLogedUser().getApellido());
+		lbApellido.setText("Apellido:  " + usuarioLogeado.getApellido());
 		panelNorte.add(lbApellido, BorderLayout.CENTER);
 		lbApellido.setBorder(new EmptyBorder(2,5,2,5));
-		lbDNI.setText("DNI:  " + CharlaCarImpl.getCharlaCarImpl().getLogedUser().getDni());
+		lbDNI.setText("DNI:  " + usuarioLogeado.getDni());
 		panelNorte.add(lbDNI, BorderLayout.SOUTH);
 		lbDNI.setBorder(new EmptyBorder(2,5,2,5));
 		
-//		Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogedUser();
-//		String matricula = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-//		        .filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
-//		        .map(viaje -> viaje.getVehiculo().getMatricula())
-//		        .findFirst()
-//		        .orElse("No disponible");
-//		lblMatricula.setText("Matrícula:  " + matricula);
+		lblMatricula.setText("Matrícula:  " + vehiculo.getMatricula());
 		panelNorte.add(lblMatricula, BorderLayout.SOUTH);
 		lblMatricula.setBorder(new EmptyBorder(2,5,2,5));
 		
@@ -464,7 +463,8 @@ public class VentanaPerfil extends JDialog{
 
 	public void ratingEstrellas() {
 		float rating;
-		rating = CharlaCarImpl.getCharlaCarImpl().getLogedUser().getRating(); 
+		Usuario usuarioLogeado= gestorDB.getUsuarioLogeado();
+		rating = usuarioLogeado.getRating(); 
 		if(rating == 0) {
 			panelCentroA.removeAll();
 			panelCentroA.add(lblestrellaG1);

@@ -105,6 +105,8 @@ public class VentanaCrearViaje extends JFrame {
 		setVisible(true);
 		setLocationRelativeTo(null);
 
+        gestorDB.connect();
+
 		//Propiedades
 		propiedades= new Propiedades();
 		propiedades.cargar();
@@ -112,16 +114,7 @@ public class VentanaCrearViaje extends JFrame {
 
 //		setIconImage(new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png")).getImage());
 
-		Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogedUser();
-//		String matricula = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-//				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
-//				.map(viaje -> viaje.getVehiculo().getMatricula()).findFirst().orElse("No disponible");
-//		Vehiculo vehiculo = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-//				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
-//				.map(viaje -> viaje.getVehiculo()).findFirst().orElse(new Vehiculo());
-//		Integer plazas = CharlaCarImpl.getCharlaCarImpl().getViajes().stream()
-//				.filter(viaje -> viaje.getVehiculo().getPropietario().equals(usuarioLogeado))
-//				.map(viaje -> viaje.getVehiculo().getPlazas()).findFirst().orElse(0);
+//		Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogedUser();
 
 		panelPrincipal.setBackground(COLOR_FONDO);
 		panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -180,10 +173,15 @@ public class VentanaCrearViaje extends JFrame {
 		Border bordeInfoUsuario = BorderFactory.createLineBorder(Color.BLACK);
 		Border tituloBordeInfoUsuario = BorderFactory.createTitledBorder(bordeInfoUsuario, "Vehículo");
 		panelInfoSW.setBorder(tituloBordeInfoUsuario);
-		lbMatricula.setText("Matrícula: "); // + matricula);
+		
+        Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
+        Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
+		System.out.println("Usuario : " + usuarioLogeado);
+		System.out.println("Vehiculo usuario : " + vehiculo);
+		lbMatricula.setText("Matrícula: " +  vehiculo.getMatricula());
 		lbMatricula.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelInfoSW.add(lbMatricula);
-		lbPlazas.setText("Plazas: "); // + plazas);
+		lbPlazas.setText("Plazas: " + vehiculo.getPlazas());
 		lbPlazas.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelInfoSW.add(lbPlazas);
 
@@ -263,6 +261,8 @@ public class VentanaCrearViaje extends JFrame {
 		            // Obtener usuario logeado y su vehículo
 		            Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
 		            Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
+		            System.out.println("usuarioLogeado :" + usuarioLogeado);
+		            System.out.println("vahiiivulo : " + vehiculo);
 		            if (vehiculo == null) {
 		                JOptionPane.showMessageDialog(null, 
 		                    "No se encontró un vehículo asociado al usuario logeado.", 
