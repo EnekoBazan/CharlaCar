@@ -130,6 +130,7 @@ public class VentanaLogin extends JDialog {
 	                    gestorDB.setUsuarioLogeado(usuarioLogeado);
 	                    
 	             		VentanaPrincipal.btnUsuario.setEnabled(true);
+	             		CharlaCarImpl.getCharlaCarImpl().setLoged(true);
 	             		
 	             		System.out.println(usuarioLogeado);
 	             		
@@ -141,7 +142,6 @@ public class VentanaLogin extends JDialog {
 					JOptionPane.showMessageDialog(null, "Error al acceder a la base de datos: " + ex.getMessage());
 					ex.printStackTrace();
 				}
-				gestorDB.close();
 			}
 		});
 

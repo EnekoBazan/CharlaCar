@@ -349,16 +349,15 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gestorBD.connect();
 				
 				if (gestorBD.getUsuarioLogeado() != null) {
 					gestorBD.setUsuarioLogeado(null);
 					btnLogIn.setVisible(true);
 					btnRegistro.setVisible(true);
 					btnUsuario.setEnabled(false);
+					CharlaCarImpl.getCharlaCarImpl().setLoged(false);
 					logger.info("Has cerrado sesión");
-					
-					gestorBD.close();
+
 				}
 			}
 		});
