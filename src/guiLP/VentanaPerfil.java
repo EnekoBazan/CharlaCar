@@ -2,7 +2,6 @@ package guiLP;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -11,32 +10,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.net.URL;
 import java.util.List;
 
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JViewport;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 
 import db.GestorBD;
-import domainLN.ButtonEditor;
-import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 import domainLN.Vehiculo;
 import domainLN.Viaje;
@@ -255,6 +244,7 @@ public class VentanaPerfil extends JDialog{
 		        }
 		    }
 		});
+		
 //		tablaMisViajes.getColumn("Acciones").setCellRenderer(new ButtonRenderer());
 //		tablaMisViajes.getColumn("Acciones").setCellEditor(new ButtonEditor(new JCheckBox()));
 //		tablaMisViajes.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
@@ -323,7 +313,13 @@ public class VentanaPerfil extends JDialog{
 //		tablaViajesUnidos.getColumn("Acciones").setCellEditor(new ButtonEditor(new JCheckBox()));
 //		tablaViajesUnidos.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
 //		tablaViajesUnidos.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(tablaViajesUnidos));
-		
+		tablaMisViajes.getColumnModel().getColumn(0).setMinWidth(0);
+		tablaMisViajes.getColumnModel().getColumn(0).setMaxWidth(0);
+		tablaMisViajes.getColumnModel().getColumn(0).setWidth(0);
+		tablaViajesUnidos.getColumnModel().getColumn(0).setMinWidth(0);
+		tablaViajesUnidos.getColumnModel().getColumn(0).setMaxWidth(0);
+		tablaViajesUnidos.getColumnModel().getColumn(0).setWidth(0);
+
 		// Botones
 		panelSur.add(btnEliminar);
 		btnEliminar.setBackground(new Color(33, 150, 243));
