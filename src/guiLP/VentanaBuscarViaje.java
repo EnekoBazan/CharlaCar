@@ -68,7 +68,7 @@ public class VentanaBuscarViaje extends JFrame {
 		ImageIcon icon = new ImageIcon("resources/images/favicon.png");
 		setIconImage(icon.getImage());
 
-		String[] cabecera = { "Origen", "Destino", "Plazas", "Conductor", "Matricula" };
+		String[] cabecera = { "id", "Origen", "Destino", "Plazas", "Conductor", "Matricula" };
 		tableModel = new DefaultTableModel(cabecera, 0);
 
 		tablaBusqueda = new JTable() {
@@ -79,11 +79,11 @@ public class VentanaBuscarViaje extends JFrame {
 				return false;
 			}
 		};
-		
+
 		tablaBusqueda = new JTable(tableModel);
-		tablaBusqueda.getColumnModel().getColumn(0).setMinWidth(0);  // Ocultar la columna ID
-        tablaBusqueda.getColumnModel().getColumn(0).setMaxWidth(0);  // Evitar que sea visible
-        tablaBusqueda.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0); // Evitar que aparezca en el header
+		tablaBusqueda.getColumnModel().getColumn(0).setMinWidth(0);
+		tablaBusqueda.getColumnModel().getColumn(0).setMaxWidth(0); // Evitar que sea visible
+		tablaBusqueda.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0); // Evitar que aparezca en el header
 
 		try {
 			gestorBD.connect();
@@ -104,7 +104,7 @@ public class VentanaBuscarViaje extends JFrame {
 					}
 				}
 
-				tableModel.addRow(new Object[] { viaje.getOrigen(), viaje.getDestino(), viaje.getPlazas(), conductor,
+				tableModel.addRow(new Object[] { viaje.getId(), viaje.getOrigen(), viaje.getDestino(), viaje.getPlazas(), conductor,
 						matricula });
 			}
 		} catch (Exception e) {
@@ -214,23 +214,24 @@ public class VentanaBuscarViaje extends JFrame {
 					Viaje viajeSeleccionado = gestorBD.getViajePorId(idViajeSeleccionado);
 					if (viajeSeleccionado == null) {
 						JOptionPane.showMessageDialog(null, "No se encontró el viaje seleccionado.");
-						return;
 					}
 
-					if (viajeSeleccionado.getPlazas() <= 0) {
+					else if (viajeSeleccionado.getPlazas() <= 0) {
 						JOptionPane.showMessageDialog(null, "Lo sentimos, no quedan plazas disponibles en este viaje.");
-						return;
-					}
-					if (viajeSeleccionado.getConductor().getDni().equals(usuarioLogueado.getDni())) {
+
+					} else if (viajeSeleccionado.getConductor().getDni().equals(usuarioLogueado.getDni())) {
 						JOptionPane.showMessageDialog(null, "No puedes unirte a un viaje que has creado.");
-						return;
+
+					} else {
+
+						gestorBD.deleteViaje(viajeSeleccionado.getId());
+						
+						viajeSeleccionado.setPlazas(viajeSeleccionado.getPlazas() - 1);
+						gestorBD.insertarViaje(viajeSeleccionado);
+						
+
+						JOptionPane.showMessageDialog(null, "Te has unido al viaje correctamente.");
 					}
-
-					gestorBD.insertarViajeUsuario(viajeSeleccionado, usuarioLogueado);
-					viajeSeleccionado.setPlazas(viajeSeleccionado.getPlazas() - 1);
-					gestorBD.insertarViaje(viajeSeleccionado);
-
-					JOptionPane.showMessageDialog(null, "Te has unido al viaje correctamente.");
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
 							"Ocurrió un error al intentar unirte al viaje: " + ex.getMessage());
@@ -245,17 +246,16 @@ public class VentanaBuscarViaje extends JFrame {
 
 	}
 
-	private int obtenerIdViajeSeleccionado() {
-	    int filaSeleccionada = tablaBusqueda.getSelectedRow();
-	    if (filaSeleccionada >= 0) {
-	        try {
-	            return Integer.parseInt(tablaBusqueda.getValueAt(filaSeleccionada, 0).toString());
-	        	} catch (NumberFormatException e) {
-	            throw new IllegalStateException("El ID seleccionado no es un número válido.");
-	        }
-	    } else {
-	        throw new IllegalStateException("No se ha seleccionado ninguna fila.");
-	    }
+	private int obtenerIdViajeSeleccionado( ) {
+		
+		int filaSeleccionada = tablaBusqueda.getSelectedRow();
+		
+        if (filaSeleccionada != -1) {
+        	
+            return (int) tablaBusqueda.getValueAt(filaSeleccionada,0);
+		}
+		
+		return -1;
 	}
 
 	//// RENDERER

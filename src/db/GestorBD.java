@@ -344,36 +344,36 @@ public class GestorBD {
 
 		return usuarios;
 	}
-	
+
 	public Usuario getUsuarioByNombreAndContraseña(String nombre, String contraseña) {
-	    String sql = "SELECT dni, nombre, apellido, contraseña, carnet, rating FROM Usuario WHERE nombre = ? AND contraseña = ?";
+		String sql = "SELECT dni, nombre, apellido, contraseña, carnet, rating FROM Usuario WHERE nombre = ? AND contraseña = ?";
 
-	    if (getConnection() == null) {
-	        System.err.println("No se puede buscar el usuario: conexión no establecida.");
-	        return null;
-	    }
+		if (getConnection() == null) {
+			System.err.println("No se puede buscar el usuario: conexión no establecida.");
+			return null;
+		}
 
-	    try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
-	        stmt.setString(1, nombre);
-	        stmt.setString(2, contraseña);
+		try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+			stmt.setString(1, nombre);
+			stmt.setString(2, contraseña);
 
-	        try (ResultSet rs = stmt.executeQuery()) {
-	            if (rs.next()) {
-	                String dni = rs.getString("dni");
-	                String apellido = rs.getString("apellido");
-	                boolean carnet = rs.getInt("carnet") == 1;
-	                float rating = rs.getFloat("rating");
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					String dni = rs.getString("dni");
+					String apellido = rs.getString("apellido");
+					boolean carnet = rs.getInt("carnet") == 1;
+					float rating = rs.getFloat("rating");
 
-	                return new Usuario(dni, nombre, apellido, contraseña, carnet, rating);
-	            }
-	        }
-	    } catch (SQLException e) {
-	        System.err.format("\n* Error al buscar el usuario con nombre %s y contraseña: %s", nombre, e.getMessage());
-	    }
+					return new Usuario(dni, nombre, apellido, contraseña, carnet, rating);
+				}
+			}
+		} catch (SQLException e) {
+			System.err.format("\n* Error al buscar el usuario con nombre %s y contraseña: %s", nombre, e.getMessage());
+		}
 
-	    return null;
+		return null;
 	}
-	
+
 	public Usuario getUsuarioByDni(String dni) {
 		String sql = "SELECT dni, nombre, apellido, contraseña, carnet, rating FROM Usuario WHERE dni = ?";
 
@@ -429,7 +429,7 @@ public class GestorBD {
 				}
 				viajes.add(viaje);
 			}
-			System.out.println(viajes);
+			System.out.println(viajes.size());
 		} catch (SQLException e) {
 			System.err.format("\n* Error al recuperar los viajes: %s", e.getMessage());
 		}
@@ -572,7 +572,6 @@ public class GestorBD {
 				mapaViajeUsuario.putIfAbsent(usuario, new ArrayList<>());
 				mapaViajeUsuario.get(usuario).add(viaje);
 			}
-			System.out.println(mapaViajeUsuario);
 		} catch (SQLException e) {
 			System.err.format("\n* Error al recuperar la relación Viaje-Usuario: %s", e.getMessage());
 		}
@@ -624,7 +623,6 @@ public class GestorBD {
 
 					mapaViajesPorUsuarioId.computeIfAbsent(usuario, k -> new ArrayList<>()).add(viaje);
 				}
-				System.out.println(mapaViajesPorUsuarioId);
 			}
 
 		} catch (SQLException e) {
@@ -634,8 +632,8 @@ public class GestorBD {
 		return mapaViajesPorUsuarioId;
 	}
 
-	//Delete
-	
+	// Delete
+
 	public boolean deleteViaje(int viajeId) {
 		if (getConnection() == null) {
 			System.err.println("No se puede eliminar el viaje: conexión no establecida.");
@@ -683,7 +681,7 @@ public class GestorBD {
 		}
 		return false;
 	}
-	
+
 	// Resto de funciones
 
 	public boolean existeUsuarioLogin(String nombre, String contraseña) {
@@ -705,6 +703,30 @@ public class GestorBD {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public int getViajePorDestinoYMatricula(String origen, String destino) {
+
+		int id = -1;
+
+		String sql = "SELECT id FROM Viaje WHERE origen = ? AND destino = ?;";
+
+		try {
+			PreparedStatement pstmt = getConnection().prepareStatement(sql);
+			pstmt.setString(1, origen);
+			pstmt.setString(2, destino);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				id = rs.getInt("id");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return id;
 	}
 
 }
