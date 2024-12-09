@@ -21,7 +21,7 @@ public class VentanaDeCarga extends JFrame {
         this.onCargaCompleta = onCargaCompleta; // Asignar el callback
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(230, 100);
-        setTitle("Cargando...");
+        setTitle("");
         setLocationRelativeTo(null);
         setResizable(false);
 
