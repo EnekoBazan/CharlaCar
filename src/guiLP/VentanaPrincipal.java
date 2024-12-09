@@ -64,7 +64,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 	private JLabel lblTextoAbajo1;
 	private JLabel lblTextoAbajo2;
 
-	private JLabel lblReloj;
+	//private JLabel lblReloj;
 
 	private Logger logger;
 

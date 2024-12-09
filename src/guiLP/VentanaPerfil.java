@@ -84,7 +84,7 @@ public class VentanaPerfil extends JDialog{
 	private DefaultTableModel tableModel2;
 	
 	private int filaMouseOver = -1;
-	private int colMouseOver = -1;
+	//private int colMouseOver = -1;
 	
 	String[][] datosEjemplo;
 		
@@ -276,7 +276,7 @@ public class VentanaPerfil extends JDialog{
 		tablaViajesUnidos.setFillsViewportHeight(true); // Rellenar el área de visualización
 		tablaViajesUnidos.setBorder(new EmptyBorder(5, 5, 5, 5));
 		panelCentroS.add(scrollPane2, BorderLayout.CENTER);
-	    JButton bSalir = new JButton("Salir");
+	    //JButton bSalir = new JButton("Salir");
 
 		tablaViajesUnidos.setDefaultRenderer(Object.class, (table, value, isSelected, hasFocus, row, column) -> {
 		    JLabel label = new JLabel(value + "");

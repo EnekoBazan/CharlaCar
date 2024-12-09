@@ -19,8 +19,6 @@ import javax.swing.JTextField;
 import db.GestorBD;
 
 import java.awt.Font;
-
-import domainLN.CharlaCarImpl;
 import domainLN.Usuario;
 
 public class VentanaLogin extends JDialog {
