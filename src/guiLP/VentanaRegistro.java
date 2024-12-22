@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 
 import db.GestorBD;
 import domainLN.Usuario;
+import domainLN.Vehiculo;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -184,7 +185,11 @@ public class VentanaRegistro extends JDialog {
 				String contraseña = new String(passwordField.getPassword());
 				String dni = txtDNI.getText();
 				boolean carnet = checkCarnet.isSelected();
-
+				
+				String matricula = txtMatricula.getText();
+				int asientos = Integer.parseInt(txtAsientos.getText());
+				
+				
 				boolean usuarioExistente = false;
 				gestorDB.connect();
 				for (Usuario usuario : gestorDB.getUsuarios()) {
@@ -200,6 +205,8 @@ public class VentanaRegistro extends JDialog {
 				} else {
 					Usuario nuevoUsuario = new Usuario(dni, nombreUsuario, apellido, contraseña, carnet, 0);
 					gestorDB.insertarUsuarios(nuevoUsuario);
+					Vehiculo v = new Vehiculo(matricula, asientos, nuevoUsuario);
+					gestorDB.insertarVehiculo(v);
 					System.out.println(nuevoUsuario);
 					JOptionPane.showMessageDialog(null, "Registro exitoso. Bienvenido " + nombreUsuario);
 					dispose();
