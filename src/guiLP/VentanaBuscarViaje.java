@@ -228,6 +228,7 @@ public class VentanaBuscarViaje extends JFrame {
 						
 						viajeSeleccionado.setPlazas(viajeSeleccionado.getPlazas() - 1);
 						gestorBD.insertarViaje(viajeSeleccionado);
+						//gestorBD.insertarViajeUsuario(viajeSeleccionado, usuarioLogueado);
 						
 
 						JOptionPane.showMessageDialog(null, "Te has unido al viaje correctamente.");
