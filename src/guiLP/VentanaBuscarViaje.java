@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -104,8 +105,8 @@ public class VentanaBuscarViaje extends JFrame {
 					}
 				}
 
-				tableModel.addRow(new Object[] { viaje.getId(), viaje.getOrigen(), viaje.getDestino(), viaje.getPlazas(), conductor,
-						matricula });
+				tableModel.addRow(new Object[] { viaje.getId(), viaje.getOrigen(), viaje.getDestino(),
+						viaje.getPlazas(), conductor, matricula });
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -208,30 +209,47 @@ public class VentanaBuscarViaje extends JFrame {
 
 					gestorBD.connect();
 
+					HashMap<Usuario, List<Viaje>> viajeUsuario = gestorBD.getViajeUsuario();
 					Usuario usuarioLogueado = gestorBD.getUsuarioLogeado();
 					int idViajeSeleccionado = obtenerIdViajeSeleccionado();
 
+					if (idViajeSeleccionado <= 0) {
+						JOptionPane.showMessageDialog(null, "Por favor selecciona un viaje válido.");
+						return;
+					}
+
 					Viaje viajeSeleccionado = gestorBD.getViajePorId(idViajeSeleccionado);
+
 					if (viajeSeleccionado == null) {
 						JOptionPane.showMessageDialog(null, "No se encontró el viaje seleccionado.");
 					}
 
-					else if (viajeSeleccionado.getPlazas() <= 0) {
+					if (viajeSeleccionado.getPlazas() <= 0) {
 						JOptionPane.showMessageDialog(null, "Lo sentimos, no quedan plazas disponibles en este viaje.");
 
-					} else if (viajeSeleccionado.getConductor().getDni().equals(usuarioLogueado.getDni())) {
+					}
+					if (viajeSeleccionado.getConductor().getDni().equals(usuarioLogueado.getDni())) {
 						JOptionPane.showMessageDialog(null, "No puedes unirte a un viaje que has creado.");
+					}
+					boolean yaUnido = false;
+					if (viajeUsuario.containsKey(usuarioLogueado)) {
+						List<Viaje> viajesDelUsuario = viajeUsuario.get(usuarioLogueado);
+						yaUnido = viajesDelUsuario.contains(viajeSeleccionado);
+					}
+					if (yaUnido) {
+						JOptionPane.showMessageDialog(null, "Ya te has unido a este viaje.");
+					}
+					try {
 
-					} else {
-
-						gestorBD.deleteViaje(viajeSeleccionado.getId());
-						
+						gestorBD.deleteViaje(idViajeSeleccionado);
 						viajeSeleccionado.setPlazas(viajeSeleccionado.getPlazas() - 1);
 						gestorBD.insertarViaje(viajeSeleccionado);
-						//gestorBD.insertarViajeUsuario(viajeSeleccionado, usuarioLogueado);
-						
+
+						gestorBD.insertarViajeUsuario(viajeSeleccionado, usuarioLogueado);
 
 						JOptionPane.showMessageDialog(null, "Te has unido al viaje correctamente.");
+					} catch (Exception ex) {
+						throw ex;
 					}
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
@@ -247,15 +265,15 @@ public class VentanaBuscarViaje extends JFrame {
 
 	}
 
-	private int obtenerIdViajeSeleccionado( ) {
-		
+	private int obtenerIdViajeSeleccionado() {
+
 		int filaSeleccionada = tablaBusqueda.getSelectedRow();
-		
-        if (filaSeleccionada != -1) {
-        	
-            return (int) tablaBusqueda.getValueAt(filaSeleccionada,0);
+
+		if (filaSeleccionada != -1) {
+
+			return (int) tablaBusqueda.getValueAt(filaSeleccionada, 0);
 		}
-		
+
 		return -1;
 	}
 
