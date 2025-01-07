@@ -2,6 +2,7 @@ package guiLP;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -21,9 +22,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 import db.GestorBD;
 import domainLN.Usuario;
@@ -195,6 +202,12 @@ public class VentanaPerfil extends JDialog{
                 return column == 4;
             }
         };
+        
+     // Estilo dinámico para las filas
+ 
+
+
+        
         tablaMisViajes = new JTable(tableModel);
 	
 		tablaMisViajes = new JTable(tableModel) {
@@ -205,6 +218,59 @@ public class VentanaPerfil extends JDialog{
 					return false;
 			}
 		};	
+		tablaMisViajes.setDefaultRenderer(Object.class, (table, value, isSelected, hasFocus, row, column) -> {
+            JLabel label = new JLabel(value.toString());
+            label.setOpaque(true);
+            label.setHorizontalAlignment(JLabel.CENTER);
+            label.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+            label.setForeground(isSelected ? Color.BLACK : Color.DARK_GRAY);
+            return label;
+        });
+        
+     // Filtro dinámico para buscar en la tabla
+        JTextField filtro = new JTextField(20);
+        filtro.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate1(DocumentEvent e) {
+                aplicarFiltro();
+            }
+
+            public void removeUpdate1(DocumentEvent e) {
+                aplicarFiltro();
+            }
+
+            public void changedUpdate1(DocumentEvent e) {
+                aplicarFiltro();
+            }
+
+            private void aplicarFiltro() {
+                TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+                tablaMisViajes.setRowSorter(sorter);
+                String texto = filtro.getText();
+                if (texto.trim().isEmpty()) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + texto));
+                }
+            }
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+        });
 		scrollPane = new JScrollPane(tablaMisViajes);
 //		tablaMisViajes.setDefaultRenderer(Object.class, cellRenderer);
 		tablaMisViajes.setPreferredScrollableViewportSize(new Dimension(150, 60)); // Tamaño deseado para la tabla
@@ -496,6 +562,23 @@ public class VentanaPerfil extends JDialog{
 			panelCentroA.repaint();
 		}
 	}
+	// Renderizador para botones en las tablas
+	public class ButtonRenderer extends JButton implements TableCellRenderer {
+	    public ButtonRenderer(String label) {
+	        setText(label);
+	        setOpaque(true);
+	        setBackground(new Color(33, 150, 243));
+	        setForeground(Color.WHITE);
+	        setFont(new Font("Arial", Font.BOLD, 12));
+	    }
+
+	    @Override
+	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+	                                                   boolean hasFocus, int row, int column) {
+	        return this;
+	    }
+	}
+
 //	public class ButtonRenderer extends JButton implements TableCellRenderer {
 //	    public ButtonRenderer() {
 //	        setOpaque(true);

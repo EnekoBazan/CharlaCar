@@ -4,210 +4,170 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
-//GESTORLN patron singleton
+// Implementación de Singleton para la lógica de CharlaCar
 public class CharlaCarImpl implements CharlaCarService {
 
-	private Usuario logedUser;
-	private boolean isLoged = false;
+    private Usuario logedUser;
+    private boolean isLoged = false;
 
-	public boolean isLoged() {
+    private List<Viaje> listaViajes;
+    private List<Usuario> listaUsuarios;
+    private ArrayList<Viaje> listaViajesPorUsuarios;
+
+    private static CharlaCarImpl charlaCarImpl;
+
+    private CharlaCarImpl() {
+        listaViajes = new ArrayList<>();
+        listaUsuarios = new ArrayList<>();
+        listaViajesPorUsuarios = new ArrayList<>();
+        inicializarUsers();
+        inicializarViajes();
+    }
+
+    public static synchronized CharlaCarImpl getCharlaCarImpl() {
+        if (charlaCarImpl == null) {
+            charlaCarImpl = new CharlaCarImpl();
+        }
+        return charlaCarImpl;
+    }
+
+    public boolean isLoged() {
+        return isLoged;
+    }
+
+    public void setLoged(boolean isLoged) {
+        this.isLoged = isLoged;
+    }
+
+    public Usuario getLogedUser() {
+        return logedUser;
+    }
+
+    public void setLogedUser(Usuario u) {
+        this.logedUser = u;
+        inicializarViajesPorUsuario();
+    }
+
+    public List<Viaje> getViajes() {
+        return new ArrayList<>(listaViajes);
+    }
+
+    public boolean addViaje(Viaje viaje) {
+        if (viaje != null && !listaViajes.contains(viaje)) {
+            listaViajes.add(viaje);
+        }
 		return isLoged;
-	}
+    }
 
-	public void setLoged(boolean isLoged) {
-		this.isLoged = isLoged;
-	}
+    public boolean deleteViaje(Viaje viaje) {
+        return listaViajes.remove(viaje);
+    }
 
-	public void setLogedUser(Usuario u) {
-		logedUser = u;
-		transferirViajesAListaUsuario(); // Llamamos al método que transfiere los viajes a la lista del usuario
-	}
+    public List<Usuario> getListUsers() {
+        return new ArrayList<>(listaUsuarios);
+    }
 
-	public Usuario getLogedUser() {
-		return logedUser;
-	}
+    public boolean addUser(Usuario user) {
+        if (user != null && !listaUsuarios.contains(user)) {
+            listaUsuarios.add(user);
+        }
+		return isLoged;
+    }
 
-	private List<Viaje> listaViajes;
-	private List<Usuario> listaUsuarios;
-	private ArrayList<Viaje> listaViajesPorUsuarios;
-	// ** Singleton
-	private static CharlaCarImpl charlaCarImpl;
+    public boolean deleteUser(Usuario user) {
+        return listaUsuarios.remove(user);
+    }
 
-	private CharlaCarImpl() {
-		listaViajes = new ArrayList<Viaje>();
-		listaUsuarios = new ArrayList<Usuario>();
-		listaViajesPorUsuarios = new ArrayList<Viaje>();
-		inicializarViajes();
-		inicializarUsers();
-		inicializarViajesPorUsuario();
+    public void relojTiempoReal(JLabel lblHora) {
+        Runnable relojTask = () -> {
+            SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
+            while (isLoged) {
+                try {
+                    String horaActual = formatoHora.format(new Date());
+                    SwingUtilities.invokeLater(() -> lblHora.setText(horaActual));
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    System.err.println("El hilo del reloj fue interrumpido.");
+                    Thread.currentThread().interrupt();
+                }
+            }
+        };
+        new Thread(relojTask).start();
+    }
 
-	}
+    public void inicializarViajesPorUsuario() {
+        if (logedUser == null) {
+            listaViajesPorUsuarios.clear();
+            return;
+        }
+        listaViajesPorUsuarios = listaViajes.stream()
+            .filter(viaje -> viaje.getListaPasajeros().contains(logedUser))
+            .collect(Collectors.toCollection(ArrayList::new));
+    }
 
-	public static CharlaCarImpl getCharlaCarImpl() {
-		if (charlaCarImpl == null) {
-			charlaCarImpl = new CharlaCarImpl();
-		}
-		return charlaCarImpl;
-	}
-	// ** END SINGLETON
+    private void inicializarViajes() {
+        // Verificar que haya usuarios suficientes antes de asignar conductores
+        if (listaUsuarios.isEmpty()) {
+            inicializarUsers();
+        }
 
-	private boolean ejecutando = true;
+        if (listaUsuarios.size() < 3) {
+            throw new IllegalStateException("No hay suficientes usuarios para inicializar los viajes.");
+        }
+
+        Usuario conductorPredeterminado = listaUsuarios.get(0);
+
+        listaViajes.add(new Viaje(1, "Valencia", "Barcelona", 4, logedUser, listaUsuarios));
+        listaViajes.add(new Viaje(2, "Bilbao", "Sevilla", 3, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(3, "Vitoria", "Valencia", 2, listaUsuarios.get(1), listaUsuarios));
+        listaViajes.add(new Viaje(4, "Madrid", "Bilbao", 1, listaUsuarios.get(4), listaUsuarios));
+        listaViajes.add(new Viaje(5, "Malaga", "Santander", 5, listaUsuarios.get(5), listaUsuarios));
+        listaViajes.add(new Viaje(6, "Galicia", "Malaga", 2, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(7, "Sevilla", "Cordoba", 4, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(8, "Valencia", "Castellon", 3, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(9, "Bilbao", "San Sebastian", 6, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(10, "Zaragoza", "Huesca", 2, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(11, "Oviedo", "Gijon", 5, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(12, "Madrid", "Toledo", 3, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(13, "Barcelona", "Tarragona", 4, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(14, "Valencia", "Alicante", 2, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(15, "Bilbao", "Vitoria", 2, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(16, "Sevilla", "Cadiz", 5, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(17, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(18, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(19, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(20, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
+        listaViajes.add(new Viaje(21, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
+    }
+
+    private void inicializarUsers() {
+        if (listaUsuarios.isEmpty()) {
+        	
+        	listaUsuarios.add(new Usuario("73627382J", "a", "Palotes", "a", true, 2.0f));
+        	listaUsuarios.add(new Usuario("73627382J", "Juan", "Perez", "contraseña", true, 4.0f));
+        	listaUsuarios.add(new Usuario("73627382J", "Maria", "Lopez", "contraseña", true, 1.0f));
+        	listaUsuarios.add(new Usuario("73627382J", "Ana", "Garcia", "contraseña", true, 5.0f));
+        	listaUsuarios.add(new Usuario("73627382J", "Pedro", "Rodriguez", "contraseña", true, 3.0f));
+        	listaUsuarios.add(new Usuario("12345678A", "Alejandro", "Gonzalez", "pass123", true, 4.5f));
+        	listaUsuarios.add(new Usuario("87654321B", "Luisa", "Diaz", "luisa123", true, 3.8f));
+        	listaUsuarios.add(new Usuario("45678912C", "Carlos", "Fernandez", "carlos456", true, 2.9f));
+        	listaUsuarios.add(new Usuario("23456789D", "Marta", "Sanchez", "marta789", true, 4.2f));
+        	listaUsuarios.add(new Usuario("98765432E", "Javier", "Torres", "javier321", true, 3.5f));
+        }
+
+        // Establecer un usuario logueado si no existe
+        if (logedUser == null) {
+            logedUser = listaUsuarios.get(0);
+        }
+    }
 
 	@Override
-	public void relojTiempoReal(JLabel lblHora) {
-		SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
-
-		while (ejecutando) {
-			try {
-				Date horaActual = new Date();
-
-				System.out.println("Hora actual: " + formatoHora.format(horaActual));
-				lblHora.setText(formatoHora.format(horaActual));
-
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				System.out.println("El hilo ha sido interrumpido");
-				ejecutando = false;
-			}
-		}
-	}
-
 	public void detenerHilo() {
-		ejecutando = false;
+		// TODO Auto-generated method stub
+		
 	}
-
-	private void inicializarViajes() {
-		if (listaUsuarios.isEmpty()) {
-			inicializarUsers();
-		}
-//
-//		Vehiculo vehiculo = new Vehiculo("1234 HYS", 6, listaUsuarios.get(0));
-//		Vehiculo vehiculo1 = new Vehiculo("9372 BMN", 5, listaUsuarios.get(1));
-//		Vehiculo vehiculo2 = new Vehiculo("8754 KLO", 5, listaUsuarios.get(2));
-//		Vehiculo vehiculo3 = new Vehiculo("1730 HGR", 5, listaUsuarios.get(3));
-//		Vehiculo vehiculo4 = new Vehiculo("0034 GTR", 5, listaUsuarios.get(4));
-//		Vehiculo vehiculo5 = new Vehiculo("7890 ABC", 2, listaUsuarios.get(5));
-//		Vehiculo vehiculo6 = new Vehiculo("4567 DEF", 8, listaUsuarios.get(6));
-//		Vehiculo vehiculo7 = new Vehiculo("9012 GHI", 7, listaUsuarios.get(7));
-//		Vehiculo vehiculo8 = new Vehiculo("5678 JKL", 12, listaUsuarios.get(8));
-//		Vehiculo vehiculo9 = new Vehiculo("2345 MNO", 20, listaUsuarios.get(9));
-
-		listaViajes.add(new Viaje(1, "Valencia", "Barcelona", 4, logedUser, listaUsuarios));
-		listaViajes.add(new Viaje(2, "Bilbao", "Sevilla", 3, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(3, "Vitoria", "Valencia", 2, listaUsuarios.get(1), listaUsuarios));
-		listaViajes.add(new Viaje(4, "Madrid", "Bilbao", 1, listaUsuarios.get(4), listaUsuarios));
-		listaViajes.add(new Viaje(5, "Malaga", "Santander", 5, listaUsuarios.get(5), listaUsuarios));
-		listaViajes.add(new Viaje(6, "Galicia", "Malaga", 2, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(7, "Sevilla", "Cordoba", 4, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(8, "Valencia", "Castellon", 3, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(9, "Bilbao", "San Sebastian", 6, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(10, "Zaragoza", "Huesca", 2, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(11, "Oviedo", "Gijon", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(12, "Madrid", "Toledo", 3, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(13, "Barcelona", "Tarragona", 4, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(14, "Valencia", "Alicante", 2, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(15, "Bilbao", "Vitoria", 2, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(16, "Sevilla", "Cadiz", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(17, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(18, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(19, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(20, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
-		listaViajes.add(new Viaje(21, "Malaga", "Santander", 5, listaUsuarios.get(0), listaUsuarios));
-	}
-
-	private void inicializarUsers() {
-		listaUsuarios.add(new Usuario("73627382J", "a", "Palotes", "a", true, 2.0f));
-		listaUsuarios.add(new Usuario("73627382J", "Juan", "Perez", "contraseña", true, 4.0f));
-		listaUsuarios.add(new Usuario("73627382J", "Maria", "Lopez", "contraseña", true, 1.0f));
-		listaUsuarios.add(new Usuario("73627382J", "Ana", "Garcia", "contraseña", true, 5.0f));
-		listaUsuarios.add(new Usuario("73627382J", "Pedro", "Rodriguez", "contraseña", true, 3.0f));
-		listaUsuarios.add(new Usuario("12345678A", "Alejandro", "Gonzalez", "pass123", true, 4.5f));
-		listaUsuarios.add(new Usuario("87654321B", "Luisa", "Diaz", "luisa123", true, 3.8f));
-		listaUsuarios.add(new Usuario("45678912C", "Carlos", "Fernandez", "carlos456", true, 2.9f));
-		listaUsuarios.add(new Usuario("23456789D", "Marta", "Sanchez", "marta789", true, 4.2f));
-		listaUsuarios.add(new Usuario("98765432E", "Javier", "Torres", "javier321", true, 3.5f));
-
-	}
-
-	@Override
-	public List<Viaje> getViajes() {
-		return listaViajes;
-	}
-
-	@Override
-	public void addViaje(Viaje viaje) {
-		listaViajes.add(viaje);
-
-	}
-
-	@Override
-	public void deleteViaje(Viaje viaje) {
-		listaViajes.remove(viaje);
-	}
-
-	@Override
-	public List<Usuario> getListUsers() {
-		return listaUsuarios;
-	}
-
-	@Override
-	public void addUser(Usuario user) {
-		listaUsuarios.add(user);
-
-	}
-
-	@Override
-	public void deleteUser(Usuario user) {
-		listaUsuarios.remove(user);
-	}
-
-//	public void addViajeToUsuario(Viaje v) {
-//		logedUser.addViaje(v);
-//	}
-
-//	public void deleteViajeToUsuario(Viaje v) {
-//		logedUser.deleteViaje(v);
-//	}
-
-	public void inicializarViajesPorUsuario() {
-		if (logedUser == null) {
-			System.out.println("No hay usuario logueado.");
-			return;
-		}
-
-		// Filtramos los viajes donde el usuario logueado está incluido
-		listaViajesPorUsuarios.clear(); // Limpiamos la lista antes de llenarla
-		for (Viaje viaje : listaViajes) {
-			if (viaje.getListaPasajeros().contains(logedUser)) {
-				listaViajesPorUsuarios.add(viaje);
-			}
-		}
-	}
-
-//	@Override
-//	public ArrayList<Viaje> getViajesPorUsuario() {
-//		return listaViajesPorUsuarios;
-//	}
-
-	// Método que transfiere los viajes del CharlaCarImpl a la lista de viajes del
-	// usuario logueado
-	public void transferirViajesAListaUsuario() {
-		// Verificar si el usuario logueado existe
-		if (logedUser == null) {
-			System.out.println("No hay usuario logueado.");
-			return;
-		}
-
-		// Obtener los viajes correspondientes al usuario logueado desde CharlaCarImpl
-//	    ArrayList<Viaje> viajesDeCharlaCar = getViajesPorUsuario();
-
-		// Agregar estos viajes a la lista de viajes del usuario
-//		for (Viaje viaje : listaViajesPorUsuarios) {
-//			logedUser.addViaje(viaje); // Suponiendo que addViaje() agrega el viaje a la lista de viajes del usuario
-//		}
-	}
-
 }

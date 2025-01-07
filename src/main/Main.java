@@ -10,16 +10,22 @@ public class Main {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                GestorBD gestorBD = GestorBD.getGestorDB();
-                gestorBD.connect();
-
                 // Crear la ventana de carga con un callback para abrir la ventana principal
                 new VentanaDeCarga(() -> {
-                    EventQueue.invokeLater(() -> {
-                        new VentanaPrincipal();
-                    });
-                });
-
+                    try {
+                        // Conectar la base de datos durante la carga
+                        GestorBD gestorBD = GestorBD.getGestorDB();
+                        gestorBD.connect();
+                        
+                        // Abrir la ventana principal
+                        EventQueue.invokeLater(() -> {
+                            new VentanaPrincipal();
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.err.println("Error al conectar con la base de datos.");
+                    }
+                }, "Iniciando la aplicación...");
             } catch (Exception e) {
                 e.printStackTrace();
             }
