@@ -16,245 +16,208 @@ import domainLN.Viaje;
 
 public class GestorBD {
 
-	protected static final String DRIVER_NAME = "org.sqlite.JDBC";
-	protected static final String DATABASE_FILE = "resources/db/charlacar.db";
-	protected static final String CONNECTION_STRING = "jdbc:sqlite:" + DATABASE_FILE;
+    protected static final String DRIVER_NAME = "org.sqlite.JDBC";
+    protected static final String DATABASE_FILE = "resources/db/charlacar.db";
+    protected static final String CONNECTION_STRING = "jdbc:sqlite:" + DATABASE_FILE;
 
-	private Connection conexionBD;
+    private Connection conexionBD;
 
-	private static GestorBD gestorDB;
+    private static GestorBD gestorDB;
 
-	private Usuario usuarioLogeado;
+    private Usuario usuarioLogeado;
 
-	public static GestorBD getGestorDB() {
-		if (gestorDB == null) {
-			gestorDB = new GestorBD();
-		}
-		return gestorDB;
-	}
+    public static synchronized GestorBD getGestorDB() {
+        if (gestorDB == null) {
+            gestorDB = new GestorBD();
+        }
+        return gestorDB;
+    }
 
-	//
-	//
-	private GestorBD() {
-		try {
-			Class.forName(DRIVER_NAME);
-		} catch (ClassNotFoundException ex) {
-			System.err.format("\n* Error al cargar el driver de BBDD: %s", ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
+    private GestorBD() {
+        try {
+            Class.forName(DRIVER_NAME);
+        } catch (ClassNotFoundException ex) {
+            System.err.format("\n* Error al cargar el driver de BBDD: %s", ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
 
-	public void connect() {
-		try {
-			conexionBD = DriverManager.getConnection(CONNECTION_STRING);
-			System.out.println("Conexión a la base de datos establecida.");
-		} catch (SQLException e) {
-			System.err.println("Error al conectar a la base de datos: " + e.getMessage());
-		}
-	}
+    public void connect() {
+        try {
+            conexionBD = DriverManager.getConnection(CONNECTION_STRING);
+            System.out.println("Conexión a la base de datos establecida.");
+        } catch (SQLException e) {
+            System.err.println("Error al conectar a la base de datos: " + e.getMessage());
+        }
+    }
 
-	public Connection getConnection() {
-		return conexionBD;
-	}
+    public Connection getConnection() {
+        return conexionBD;
+    }
 
-	public void close() {
-		try {
-			if (conexionBD != null && !conexionBD.isClosed()) {
-				conexionBD.close();
-				System.out.println("Conexión a la base de datos cerrada.");
-			}
-		} catch (SQLException e) {
-			System.err.println("Error al cerrar la conexión a la base de datos: " + e.getMessage());
-		}
-	}
+    public void close() {
+        try {
+            if (conexionBD != null && !conexionBD.isClosed()) {
+                conexionBD.close();
+                System.out.println("Conexión a la base de datos cerrada.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al cerrar la conexión a la base de datos: " + e.getMessage());
+        }
+    }
 
-	// Obtener el usuario logeado
+    public Usuario getUsuarioLogeado() {
+        return usuarioLogeado;
+    }
 
-	public Usuario getUsuarioLogeado() {
-		return usuarioLogeado;
-	}
+    public Usuario setUsuarioLogeado(Usuario user) {
+        return usuarioLogeado = user;
+    }
 
-	public Usuario setUsuarioLogeado(Usuario user) {
-		return usuarioLogeado = user;
-	}
-	// Crear Tablas
+    public void crearTablas() {
+        crearTablaUsuario();
+        crearTablaViaje();
+        crearTablaVehiculos();
+        crearTablaViajeUsuario();
+    }
 
-	public void crearTablaUsuario() {
+    void crearTablaUsuario() {
+        ejecutarSQL("""
+                CREATE TABLE IF NOT EXISTS Usuario (
+                    dni TEXT PRIMARY KEY,
+                    nombre TEXT NOT NULL,
+                    apellido TEXT NOT NULL,
+                    contraseña TEXT NOT NULL,
+                    carnet INTEGER NOT NULL CHECK (carnet IN (0, 1)),
+                    rating REAL NOT NULL
+                );
+            """, "Usuario");
+    }
 
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+    void crearTablaViaje() {
+        ejecutarSQL("""
+                CREATE TABLE IF NOT EXISTS Viaje (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    origen TEXT NOT NULL,
+                    destino TEXT NOT NULL,
+                    plazas INTEGER NOT NULL,
+                    dni_conductor INTEGER NOT NULL,
+                    FOREIGN KEY (dni_conductor) REFERENCES Usuario(dni)
+                );
+            """, "Viaje");
+    }
 
-			String sql = """
-					    CREATE TABLE IF NOT EXISTS Usuario (
-					        dni TEXT PRIMARY KEY,
-					        nombre TEXT NOT NULL,
-					        apellido TEXT NOT NULL,
-					        contraseña TEXT NOT NULL,
-					        carnet INTEGER NOT NULL CHECK (carnet IN (0, 1)),
-					        rating REAL NOT NULL
-					    );
-					""";
+    void crearTablaVehiculos() {
+        ejecutarSQL("""
+                CREATE TABLE IF NOT EXISTS Vehiculo (
+                    matricula TEXT PRIMARY KEY,
+                    plazas INTEGER NOT NULL CHECK (plazas > 0),
+                    propietario TEXT,
+                    FOREIGN KEY (propietario) REFERENCES Usuario(dni)
+                );
+            """, "Vehiculo");
+    }
 
-			if (!stmt.execute(sql)) {
-				System.out.println("- Se ha creado la tabla Usuario");
-			}
-		} catch (Exception ex) {
-			System.err.format("* Error al crear la tabla Usuario: %s", ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
+    void crearTablaViajeUsuario() {
+        ejecutarSQL("""
+                CREATE TABLE IF NOT EXISTS ViajeUsuario (
+                    id_viaje INTEGER PRIMARY KEY,
+                    dni_usuario TEXT,
+                    FOREIGN KEY (dni_usuario) REFERENCES Usuario(dni),
+                    FOREIGN KEY(id_viaje) REFERENCES Viaje(id)
+                );
+            """, "ViajeUsuario");
+    }
 
-	public void crearTablaViaje() {
+    private void ejecutarSQL(String sql, String tablaNombre) {
+        try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+            if (!stmt.execute(sql)) {
+                System.out.printf("- Se ha creado la tabla %s%n", tablaNombre);
+            }
+        } catch (SQLException ex) {
+            System.err.format("* Error al crear la tabla %s: %s%n", tablaNombre, ex.getMessage());
+        }
+    }
 
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+    public void deleteUsuario(Usuario usuario) {
+        if (!usuarioExiste(usuario.getDni())) {
+            System.err.println("El usuario no existe en la base de datos.");
+            return;
+        }
 
-			String sql = """
-					    CREATE TABLE IF NOT EXISTS Viaje (
-					        id INTEGER PRIMARY KEY AUTOINCREMENT,
-					        origen TEXT NOT NULL,
-					        destino TEXT NOT NULL,
-					        plazas INTEGER NOT NULL,
-					        dni_conductor INTEGER NOT NULL,
-					        FOREIGN KEY (dni_conductor) REFERENCES Usuario(dni)
-					    );
-					""";
+        String sql = "DELETE FROM Usuario WHERE dni = ?;";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setString(1, usuario.getDni());
+            if (stmt.executeUpdate() == 1) {
+                System.out.printf("\n- Usuario eliminado: %s%n", usuario);
+            } else {
+                System.out.printf("\n- No se ha eliminado el usuario: %s%n", usuario);
+            }
+        } catch (SQLException e) {
+            System.err.format("\n* Error al eliminar el usuario: %s%n", e.getMessage());
+        }
+    }
 
-			if (!stmt.execute(sql)) {
-				System.out.println("- Se ha creado la tabla Viaje");
-			}
-		} catch (Exception ex) {
-			System.err.format("* Error al crear la tabla Viaje: %s", ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
+    public void insertarUsuarios(Usuario... usuarios) {
+        String sql = "INSERT INTO Usuario (dni, nombre, apellido, contraseña, carnet, rating) VALUES (?, ?, ?, ?, ?, ?);";
 
-	public void crearTablaVehiculos() {
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            System.out.println("\n- Insertando Usuarios...");
+            for (Usuario u : usuarios) {
+                stmt.setString(1, u.getDni());
+                stmt.setString(2, u.getNombre());
+                stmt.setString(3, u.getApellido());
+                stmt.setString(4, u.getContrasena());
+                stmt.setInt(5, u.isCarnet() ? 1 : 0);
+                stmt.setDouble(6, u.getRating());
 
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
+                if (stmt.executeUpdate() == 1) {
+                    System.out.printf("\n - Usuario insertado: %s%n", u);
+                } else {
+                    System.out.printf("\n - No se ha insertado el usuario: %s%n", u);
+                }
+            }
+        } catch (SQLException ex) {
+            System.err.format("\n* Error al insertar datos de la BBDD: %s%n", ex.getMessage());
+        }
+    }
 
-			String sql = """
-					    CREATE TABLE IF NOT EXISTS Vehiculo (
-					        matricula TEXT PRIMARY KEY,
-					        plazas INTEGER NOT NULL CHECK (plazas > 0),
-					        propietario TEXT,
-					        FOREIGN KEY (propietario) REFERENCES Usuario(dni)
-					    );
-					""";
+    private boolean usuarioExiste(String dni) {
+        String sql = "SELECT COUNT(*) FROM Usuario WHERE dni = ?;";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            stmt.setString(1, dni);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al verificar existencia del usuario: " + e.getMessage());
+            return false;
+        }
+    }
 
-			if (!stmt.execute(sql)) {
-				System.out.println("- Se ha creado la tabla Vehiculo");
-			}
-		} catch (Exception ex) {
-			System.err.format("* Error al crear la tabla Vehiculo: %s", ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
+    public void insertarViaje(Viaje... viajes) {
+        String sql = "INSERT INTO Viaje (origen, destino, plazas, dni_conductor) VALUES (?, ?, ?, ?);";
 
-	public void crearTablaViajeUsuario() {
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            for (Viaje viaje : viajes) {
+                stmt.setString(1, viaje.getOrigen());
+                stmt.setString(2, viaje.getDestino());
+                stmt.setInt(3, viaje.getPlazas());
+                if (viaje.getConductor() != null) {
+                    stmt.setString(4, viaje.getConductor().getDni());
+                } else {
+                    stmt.setNull(4, java.sql.Types.VARCHAR);
+                }
 
-		try (Connection con = DriverManager.getConnection(CONNECTION_STRING); Statement stmt = con.createStatement()) {
-
-			String sql = """
-					    CREATE TABLE IF NOT EXISTS ViajeUsuario (
-					        id_viaje INTEGER PRIMARY KEY,
-					        dni_usuario TEXT,
-					        FOREIGN KEY (dni_usuario) REFERENCES Usuario(dni),
-					        FOREIGN KEY(id_viaje) REFERENCES Viaje(id)
-					    );
-					""";
-
-			if (!stmt.execute(sql)) {
-				System.out.println("- Se ha creado la tabla ViajeUsuario");
-			}
-		} catch (Exception ex) {
-			System.err.format("* Error al crear la tabla ViajeUsuario: %s", ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
-	// DELETE
-
-	public void deleteUsuario(Usuario usuario) {
-		if (getConnection() == null) {
-			System.err.println("No se puede eliminar el usuario: conexión no establecida.");
-			return;
-		}
-
-		String sql = "DELETE FROM Usuario WHERE dni = ?;";
-		try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
-			stmt.setString(1, usuario.getDni());
-
-			if (stmt.executeUpdate() == 1) {
-				System.out.format("\n- Usuario eliminado: %s", usuario.toString());
-			} else {
-				System.out.format("\n- No se ha eliminado el usuario: %s", usuario.toString());
-			}
-		} catch (SQLException e) {
-			System.err.format("\n* Error al eliminar el usuario: %s", e.getMessage());
-		}
-	}
-
-	// Inserts
-
-	public void insertarUsuarios(Usuario... usuarios) {
-
-		try {
-
-			String sql = "INSERT INTO Usuario (dni, nombre, apellido, contraseña, carnet, rating) VALUES (?, ?, ?, ?, ?, ?);";
-
-			PreparedStatement stmt = getConnection().prepareStatement(sql);
-
-			System.out.print("\n- Insertando Usuarios...");
-
-			for (Usuario u : usuarios) {
-				stmt.setString(1, u.getDni());
-				stmt.setString(2, u.getNombre());
-				stmt.setString(3, u.getApellido());
-				stmt.setString(4, u.getContraseña());
-
-				int carnet = u.isCarnet() ? 1 : 0;
-				stmt.setInt(5, carnet);
-
-				stmt.setDouble(6, 0);
-
-				if (stmt.executeUpdate() == 1) {
-					System.out.format("\n - Usuario insertado: %s", u.toString());
-				} else {
-					System.out.format("\n - No se ha insertado el cliente: %s", u.toString());
-				}
-			}
-		} catch (Exception ex) {
-			System.err.format("\n* Error al insertar datos de la BBDD: %s", ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
-
-	public void insertarViaje(Viaje... viajes) {
-		if (getConnection() == null) {
-			System.err.println("No se puede insertar viajes: conexión no establecida.");
-			return;
-		}
-
-		String sql = "INSERT INTO Viaje (origen, destino, plazas, dni_conductor) VALUES (?, ?, ?, ?);";
-		try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
-			for (Viaje viaje : viajes) {
-				stmt.setString(1, viaje.getOrigen());
-				stmt.setString(2, viaje.getDestino());
-				stmt.setInt(3, viaje.getPlazas());
-				if (viaje.getConductor() != null) {
-					stmt.setString(4, viaje.getConductor().getDni());
-				} else {
-					stmt.setNull(4, java.sql.Types.VARCHAR);
-				}
-
-				if (stmt.executeUpdate() == 1) {
-					System.out.format("Viaje insertado correctamente: %s%n", viaje);
-				} else {
-					System.out.format("Error al insertar el viaje: %s%n", viaje);
-				}
-			}
-		} catch (SQLException e) {
-			System.err.format("* Error al insertar viaje: %s%n", e.getMessage());
-		}
-	}
+                if (stmt.executeUpdate() == 1) {
+                    System.out.printf("Viaje insertado correctamente: %s%n", viaje);
+                } else {
+                    System.out.printf("Error al insertar el viaje: %s%n", viaje);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.format("* Error al insertar viaje: %s%n", e.getMessage());
+        }
+    }
 
 	public void insertarVehiculo(Vehiculo... vehiculos) {
 		if (getConnection() == null) {
@@ -498,38 +461,42 @@ public class GestorBD {
 	}
 
 	public Vehiculo getVehiculoPorUsuario(String dniUsuario) {
-		String sql = "SELECT matricula, plazas, propietario FROM Vehiculo WHERE propietario = ?";
-		Vehiculo vehiculo = null;
+	    String sql = "SELECT matricula, plazas, propietario FROM Vehiculo WHERE propietario = ?";
+	    Vehiculo vehiculo = null;
 
-		if (getConnection() == null) {
-			System.err.println("No se puede obtener el vehículo: conexión no establecida.");
-			return null;
-		}
+	    if (getConnection() == null) {
+	        System.err.println("No se puede obtener el vehículo: conexión no establecida.");
+	        return null;
+	    }
 
-		try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
-			stmt.setString(1, dniUsuario);
+	    try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+	        stmt.setString(1, dniUsuario);
 
-			try (ResultSet rs = stmt.executeQuery()) {
-				if (rs.next()) {
-					String matricula = rs.getString("matricula");
-					int plazas = rs.getInt("plazas");
-					String propietarioDni = rs.getString("propietario");
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                String matricula = rs.getString("matricula");
+	                int plazas = rs.getInt("plazas");
+	                String propietarioDni = rs.getString("propietario");
 
-					Usuario propietario = getUsuarioByDni(propietarioDni);
-					vehiculo = new Vehiculo(matricula, plazas, propietario);
-					System.out.format("\n- Vehículo recuperado para el usuario con DNI %s: %s", dniUsuario,
-							vehiculo.toString());
-				} else {
-					System.out.format("\n- No se encontró vehículo para el usuario con DNI %s.", dniUsuario);
-				}
-			}
-		} catch (SQLException e) {
-			System.err.format("\n* Error al obtener el vehículo del usuario con DNI %s: %s", dniUsuario,
-					e.getMessage());
-		}
+	                Usuario propietario = getUsuarioByDni(propietarioDni);
+	                if (propietario == null) {
+	                    System.err.format("No se encontró un propietario válido para el vehículo con matrícula %s.%n", matricula);
+	                    return null; // Retorna null si no hay propietario válido
+	                }
 
-		return vehiculo;
+	                vehiculo = new Vehiculo(matricula, plazas, propietario);
+	                System.out.format("- Vehículo recuperado para el usuario con DNI %s: %s%n", dniUsuario, vehiculo.toString());
+	            } else {
+	                System.out.format("- No se encontró vehículo para el usuario con DNI %s.%n", dniUsuario);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.err.format("* Error al obtener el vehículo del usuario con DNI %s: %s%n", dniUsuario, e.getMessage());
+	    }
+
+	    return vehiculo;
 	}
+
 
 	public HashMap<Usuario, List<Viaje>> getViajeUsuario() {
 		HashMap<Usuario, List<Viaje>> mapaViajeUsuario = new HashMap<>();
@@ -728,5 +695,33 @@ public class GestorBD {
 
 		return id;
 	}
+	public void unirUsuarioAViaje(Viaje viaje, Usuario usuario) throws SQLException {
+	    if (getConnection() == null) {
+	        System.err.println("No se puede conectar a la base de datos.");
+	        return;
+	    }
+
+	    String checkSql = "SELECT COUNT(*) FROM ViajeUsuario WHERE id_viaje = ? AND dni_usuario = ?";
+	    try (PreparedStatement checkStmt = getConnection().prepareStatement(checkSql)) {
+	        checkStmt.setInt(1, viaje.getId());
+	        checkStmt.setString(2, usuario.getDni());
+	        ResultSet rs = checkStmt.executeQuery();
+
+	        if (rs.next() && rs.getInt(1) > 0) {
+	            System.out.println("El usuario ya está unido a este viaje. No se realizará la inserción.");
+	            return; // Si el registro ya existe, salir del método
+	        }
+	    }
+
+	    String insertSql = "INSERT INTO ViajeUsuario (id_viaje, dni_usuario) VALUES (?, ?)";
+	    try (PreparedStatement insertStmt = getConnection().prepareStatement(insertSql)) {
+	        insertStmt.setInt(1, viaje.getId());
+	        insertStmt.setString(2, usuario.getDni());
+	        insertStmt.executeUpdate();
+	        System.out.println("Usuario unido al viaje con éxito.");
+	    }
+	}
+
+
 
 }

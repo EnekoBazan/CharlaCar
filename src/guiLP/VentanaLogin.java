@@ -2,6 +2,7 @@ package guiLP;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -10,6 +11,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,149 +19,161 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import db.GestorBD;
-
-import java.awt.Font;
 import domainLN.Usuario;
 
 public class VentanaLogin extends JDialog {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private JTextField txtUser;
-	private JPasswordField passwordField;
-	private JButton btnAcceder;
-	private JLabel lblUsuario;
-	private JLabel lblClave;
-	private JLabel lblRegistro;
+    private JTextField txtUser;
+    private JPasswordField passwordField;
+    private JButton btnAcceder;
+    private JLabel lblUsuario;
+    private JLabel lblClave;
+    private JLabel lblRegistro;
+    private JCheckBox checkMostrarClave;
+    private JButton btnRecuperarClave;
 
-	GestorBD gestorDB = GestorBD.getGestorDB();
-	static boolean loged = false;
+    GestorBD gestorDB = GestorBD.getGestorDB();
 
-	public VentanaLogin() {
+    public VentanaLogin() {
 
-		setModal(true);
+        setModal(true);
+        getContentPane().setLayout(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(350, 250);
+        setTitle("CharlaCar (LogIn)");
+        setResizable(false);
 
-		getContentPane().setLayout(null);
+        // Campo de Usuario
+        txtUser = new JTextField();
+        txtUser.setBounds(140, 30, 150, 25);
+        getContentPane().add(txtUser);
 
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-//		addWindowListener(new WindowAdapter() {
-//			@Override
-//            public void windowClosing(java.awt.event.WindowEvent e) {
-//                JOptionPane.showMessageDialog(null, "No puedes cerrar esta ventana");
-//			}
-//		});	
+        lblUsuario = new JLabel("Usuario:");
+        lblUsuario.setBounds(30, 30, 100, 25);
+        getContentPane().add(lblUsuario);
 
-		setSize(300, 200);
-		setTitle("CharlaCar (LogIn)");
-		setResizable(false);
+        // Campo de Contraseña
+        passwordField = new JPasswordField();
+        passwordField.setBounds(140, 70, 150, 25);
+        getContentPane().add(passwordField);
 
-		txtUser = new JTextField();
-		txtUser.setBounds(105, 25, 90, 20);
-		getContentPane().add(txtUser);
-		txtUser.setColumns(10);
+        lblClave = new JLabel("Contraseña:");
+        lblClave.setBounds(30, 70, 100, 25);
+        getContentPane().add(lblClave);
 
-		passwordField = new JPasswordField();
-		passwordField.setBounds(105, 70, 90, 20);
-		getContentPane().add(passwordField);
+        // Botón de "Mostrar Contraseña"
+        checkMostrarClave = new JCheckBox("Mostrar contraseña");
+        checkMostrarClave.setBounds(140, 100, 150, 20);
+        checkMostrarClave.setBackground(new Color(217, 239, 248));
+        getContentPane().add(checkMostrarClave);
 
-		lblUsuario = new JLabel("Usuario:");
-		lblUsuario.setBounds(30, 25, 90, 15);
-		getContentPane().add(lblUsuario);
+        checkMostrarClave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (checkMostrarClave.isSelected()) {
+                    passwordField.setEchoChar((char) 0); // Muestra la contraseña
+                } else {
+                    passwordField.setEchoChar('*'); // Oculta la contraseña
+                }
+            }
+        });
 
-		lblClave = new JLabel("Clave:");
-		lblClave.setBounds(30, 70, 90, 15);
-		getContentPane().add(lblClave);
+        // Botón "Acceder"
+        btnAcceder = new JButton("Acceder");
+        btnAcceder.setBounds(140, 140, 100, 30);
+        btnAcceder.setForeground(new Color(33, 150, 243));
+        btnAcceder.setBackground(Color.white);
+        btnAcceder.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
+        btnAcceder.setPreferredSize(new Dimension(60, 25));
+        getContentPane().add(btnAcceder);
 
-		btnAcceder = new JButton("Acceder");
-		btnAcceder.setBounds(105, 110, 90, 20);
+        btnAcceder.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                autenticarUsuario();
+            }
+        });
 
-		btnAcceder.setForeground(new Color(33, 150, 243));
-		btnAcceder.setBackground(Color.white);
-		btnAcceder.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
-		btnAcceder.setPreferredSize(new Dimension(60, 25));
+        // Enlace para Registro
+        lblRegistro = new JLabel("¿No estás registrado?");
+        lblRegistro.setForeground(Color.BLUE);
+        lblRegistro.setFont(new Font("Poppins", Font.BOLD, 10));
+        lblRegistro.setBounds(120, 180, 150, 20);
+        lblRegistro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR)); // Cambiar cursor
+        getContentPane().add(lblRegistro);
 
-		getContentPane().add(btnAcceder);
+        lblRegistro.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                dispose();
+                VentanaRegistro vRegistro = new VentanaRegistro();
+                vRegistro.setVisible(true);
+            }
 
-		lblRegistro = new JLabel("No estas Registrado?");
-		lblRegistro.setForeground(Color.BLUE);
-		lblRegistro.setFont(new Font("Poppins", Font.BOLD, 10));
-		lblRegistro.setBounds(100, 130, 110, 20);
-		getContentPane().add(lblRegistro);
+            public void mouseEntered(MouseEvent e) {
+                lblRegistro.setText("<html><u>¿No estás registrado?</u></html>");
+            }
 
-		ImageIcon icon = new ImageIcon("resources/images/favicon.png");
-		setIconImage(icon.getImage());
+            public void mouseExited(MouseEvent e) {
+                lblRegistro.setText("¿No estás registrado?");
+            }
+        });
 
-		getContentPane().setBackground(new Color(217, 239, 248));
+        // Botón "Recuperar Contraseña"
+        btnRecuperarClave = new JButton("Recuperar contraseña");
+        btnRecuperarClave.setBounds(115, 210, 150, 30);
+        btnRecuperarClave.setForeground(new Color(33, 150, 243));
+        btnRecuperarClave.setBackground(Color.white);
+        btnRecuperarClave.setBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)));
+        btnRecuperarClave.setPreferredSize(new Dimension(60, 25));
+        btnRecuperarClave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        getContentPane().add(btnRecuperarClave);
 
-		setLocationRelativeTo(null);
+        btnRecuperarClave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Por favor, contacta al administrador para recuperar tu contraseña.", "Recuperar contraseña", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
 
-		lblRegistro.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				dispose();
-				VentanaRegistro vRegistro = new VentanaRegistro();
-				vRegistro.setVisible(true);
-			}
+        // Estilo general
+        ImageIcon icon = new ImageIcon("resources/images/favicon.png");
+        setIconImage(icon.getImage());
+        getContentPane().setBackground(new Color(217, 239, 248));
+        setLocationRelativeTo(null);
+    }
 
-			public void mouseEntered(MouseEvent e) {
-				lblRegistro.setText("<html><u>No estas Registrado?</u></html>"); // ayuda de copilot
-			}
+    private void autenticarUsuario() {
+        String nombre = txtUser.getText().trim();
+        String contraseña = new String(passwordField.getPassword()).trim();
 
-			public void mouseExited(MouseEvent e) {
-				lblRegistro.setText("No estas Registrado?");
-			}
-		});
+        if (nombre.isEmpty() || contraseña.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Por favor, completa todos los campos.", "Validación", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-		btnAcceder.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String nombre = txtUser.getText();
-				String contraseña = new String(passwordField.getPassword());
-				
-				try {
-					gestorDB.connect(); 
+        try {
+            gestorDB.connect();
 
-					if (gestorDB.existeUsuarioLogin(nombre, contraseña)) {
-						VentanaPrincipal.btnLogIn.setVisible(false);
-						VentanaPrincipal.btnRegistro.setVisible(false);
-						JOptionPane.showMessageDialog(null, "Bienvenido " + nombre);
-	                   
-						Usuario usuarioLogeado = gestorDB.getUsuarioByNombreAndContraseña(nombre, contraseña);
-						
-	                    gestorDB.setUsuarioLogeado(usuarioLogeado);
-	                    
-	             		VentanaPrincipal.btnUsuario.setEnabled(true);
-	             		
-	             		System.out.println(usuarioLogeado);
-	             		
-						dispose(); 
-					} else {
-						JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
-					}
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Error al acceder a la base de datos: " + ex.getMessage());
-					ex.printStackTrace();
-				}
-			}
-		});
+            if (gestorDB.existeUsuarioLogin(nombre, contraseña)) {
+                VentanaPrincipal.btnLogIn.setVisible(false);
+                VentanaPrincipal.btnRegistro.setVisible(false);
+                JOptionPane.showMessageDialog(null, "Bienvenido " + nombre);
 
-//	
-//	@Override
-//	public void actionPerformed(ActionEvent e) {
-//		if (e.getActionCommand().equalsIgnoreCase("acceder")) {
-//			for (Usuario user : userService.getListUsers()) {
-//				if (user.getNombre().equalsIgnoreCase(txtUser.getText())
-//						&& user.getContraseña().equalsIgnoreCase(passwordField.getText())) {
-//					JOptionPane.showMessageDialog(null, "Bienvenido " + user.getNombre());
-//					dispose();
-//					VentanaPrincipal vPrincipal = new VentanaPrincipal();
-//					vPrincipal.setVisible(true);
-//					break;
-//				} else {
-//					JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
-//				}
-//			}
-//		} // else if(e.getActionCommand()) {}
-//
-//	}
-	}
+                Usuario usuarioLogeado = gestorDB.getUsuarioByNombreAndContraseña(nombre, contraseña);
+                gestorDB.setUsuarioLogeado(usuarioLogeado);
+
+                VentanaPrincipal.btnUsuario.setEnabled(true);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.", "Error de autenticación", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al acceder a la base de datos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        } finally {
+            gestorDB.close();
+        }
+    }
 }

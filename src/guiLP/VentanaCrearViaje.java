@@ -1,29 +1,13 @@
 package guiLP;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.*;
 
 import db.GestorBD;
 import domainLN.Usuario;
@@ -33,311 +17,228 @@ import io.Propiedades;
 
 public class VentanaCrearViaje extends JFrame {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	GestorBD gestorDB = GestorBD.getGestorDB();
+    // Colores y Fuentes
+    private static final Color COLOR_FONDO = new Color(217, 239, 248);
+    private static final Color COLOR_BOTONES = new Color(33, 150, 243);
+    private static final Color COLOR_TEXTO = new Color(60, 60, 60);
+    private static final Font FUENTE_NORMAL = new Font("Inter", Font.PLAIN, 14);
 
-	private static final Color COLOR_FONDO = new Color(217, 239, 248);
-	private static final Color COLOR_BOTONES = new Color(33, 150, 243);
-	private static final Color COLOR_TEXTO = new Color(60, 60, 60);
-	private static final Font FUENTE_NORMAL = new Font("Inter", Font.PLAIN, 14);
+    private GestorBD gestorDB = GestorBD.getGestorDB();
+    private JTable tablaViaje;
+    private DefaultTableModel tableModel;
+    private JTextField txtFiltroTabla;
 
-	Usuario user;
-	// Paneles
-	private JPanel panelPrincipal = new JPanel(new BorderLayout());
-	private JPanel panelPrincipalSur = new JPanel();
-	private JPanel panelSecundario = new JPanel(new BorderLayout());
-	private JPanel panelSecundarioViaje = new JPanel(new BorderLayout());
-	private JPanel panelInfo = new JPanel(new BorderLayout());
-	private JPanel panelInfoN = new JPanel(new BorderLayout());
-	private JPanel panelInfoN1 = new JPanel(new GridLayout(1, 2));
-	private JPanel panelInfoN2 = new JPanel(new GridLayout(1, 2));
-	private JPanel panelInfoN3 = new JPanel(new GridLayout(1, 2));
-	private JPanel panelInfoC = new JPanel(new BorderLayout());
-	private JPanel panelInfoC1 = new JPanel(new GridLayout(1, 2));
-	private JPanel panelInfoS = new JPanel(new BorderLayout());
-	private JPanel panelInfoSW = new JPanel(new GridLayout(3, 1));
-	private JPanel panelInfoSE = new JPanel(new GridLayout(1, 2));
+    // Paneles y Componentes
+    private JComboBox<String> comboCiudadesOrigen;
+    private JComboBox<String> comboCiudadesDestino;
+    private JComboBox<String> comboAsientos;
 
-	// Boton
-	private JButton btnCrear = new JButton("Crear");
-	private JButton btnAplicar = new JButton("Aplicar");
+    public VentanaCrearViaje() {
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(800, 600);
+        setTitle("CharlaCar - Crear Viaje");
+        setLocationRelativeTo(null);
 
-	// Label
-	private JLabel lbViaje = new JLabel();
-	private JLabel lbMatricula = new JLabel();
-	private JLabel lbPlazas = new JLabel();
-	private JLabel lbOrigen = new JLabel("Origen: ");
-	private JLabel lbDestino = new JLabel("Destino: ");
-	private JLabel lbAsientos = new JLabel("Asientos disponibles: ");
+        // Cargar propiedades
+        Propiedades propiedades = new Propiedades();
+        propiedades.cargar();
+        setIconImage(new ImageIcon(propiedades.getProperty("favicon")).getImage());
 
-	// ComboBox
-	private String[] numAsientos = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-	private JComboBox<String> comboAsientos = new JComboBox<>(numAsientos);
+        // Configurar la ventana principal
+        JPanel panelPrincipal = new JPanel(new BorderLayout());
+        panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
+        panelPrincipal.setBackground(COLOR_FONDO);
 
-	private String[] ciudadesEspaña = { "Madrid", "Barcelona", "Valencia", "Sevilla", "Zaragoza", "Málaga", "Murcia",
-			"Palma", "Las Palmas", "Bilbao", "Alicante", "Córdoba", "Valladolid", "Vigo", "Gijón",
-			"Hospitalet de Llobregat", "La Coruña", "Vitoria", "Granada" };
-	private JComboBox<String> comboCiudadesOrigen = new JComboBox<>(ciudadesEspaña);
-	private JComboBox<String> comboCiudadesDestino = new JComboBox<>(ciudadesEspaña);
+        // Panel Superior (Formulario)
+        JPanel panelFormulario = crearPanelFormulario();
+        panelPrincipal.add(panelFormulario, BorderLayout.NORTH);
 
-	// Tabla
-	private JTable tablaViaje;
-	private String[] cabecera = { "Origen", "Destino", "Asientos Disponibles" };
-	private Object[][] datos = {};
-	private JScrollPane scrollPane;
-	private DefaultTableModel tableModel;
-	
-	//Propiedades
-  	private Propiedades propiedades;
-  	public Propiedades getPropiedades() {
-  		return propiedades;
-  	}
-  	
-	public VentanaCrearViaje() {
+        // Panel Central (Tabla)
+        JPanel panelTabla = crearPanelTabla();
+        panelPrincipal.add(panelTabla, BorderLayout.CENTER);
 
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(600, 600);
-		setTitle("CharlaCar - Crear Viaje");
-		setVisible(true);
-		setLocationRelativeTo(null);
+        // Panel Inferior (Botones)
+        JPanel panelBotones = crearPanelBotones();
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
-        gestorDB.connect();
+        add(panelPrincipal);
+        setVisible(true);
+    }
 
-		//Propiedades
-		propiedades= new Propiedades();
-		propiedades.cargar();
-		setIconImage(new ImageIcon(getPropiedades().getProperty("favicon")).getImage());
+    private JPanel crearPanelFormulario() {
+        JPanel panelFormulario = new JPanel(new GridLayout(3, 2, 10, 10));
+        panelFormulario.setBorder(new TitledBorder("Datos del Viaje"));
+        panelFormulario.setBackground(COLOR_FONDO);
 
-//		setIconImage(new ImageIcon(VentanaPrincipal.class.getResource("/images/favicon.png")).getImage());
+        JLabel lblOrigen = new JLabel("Origen:");
+        estilizarLabel(lblOrigen);
 
-//		Usuario usuarioLogeado = CharlaCarImpl.getCharlaCarImpl().getLogedUser();
+        JLabel lblDestino = new JLabel("Destino:");
+        estilizarLabel(lblDestino);
 
-		panelPrincipal.setBackground(COLOR_FONDO);
-		panelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
-		panelSecundario.setBackground(COLOR_FONDO);
-		panelSecundario.setBorder(BorderFactory.createCompoundBorder(new SoftBevelBorder(SoftBevelBorder.RAISED),
-				new EmptyBorder(15, 15, 15, 15)));
-		panelPrincipal.add(panelSecundario);
-		Border bordeSecundario = BorderFactory.createLineBorder(Color.BLACK);
-		Border tituloBordeSecundario = BorderFactory.createTitledBorder(bordeSecundario, "Crear Viaje");
-		panelSecundario.setBorder(tituloBordeSecundario);
-		panelPrincipalSur.setBackground(COLOR_FONDO);
+        JLabel lblAsientos = new JLabel("Asientos:");
+        estilizarLabel(lblAsientos);
 
-		panelSecundarioViaje.add(lbViaje, BorderLayout.CENTER);
-		panelSecundarioViaje.setBackground(COLOR_FONDO);
-		panelSecundario.add(panelSecundarioViaje, BorderLayout.SOUTH);
-		Border bordeViaje = BorderFactory.createLineBorder(Color.BLACK);
-		Border tituloBordeViaje = BorderFactory.createTitledBorder(bordeViaje, "Viaje");
-		panelSecundarioViaje.setBorder(tituloBordeViaje);
+        String[] ciudades = { "Madrid", "Barcelona", "Valencia", "Sevilla", "Málaga" };
+        comboCiudadesOrigen = new JComboBox<>(ciudades);
+        comboCiudadesDestino = new JComboBox<>(ciudades);
+        String[] asientos = { "1", "2", "3", "4", "5", "6" };
+        comboAsientos = new JComboBox<>(asientos);
 
-		// Tabla
-		tableModel = new DefaultTableModel(datos, cabecera);
-		tablaViaje = new JTable(tableModel) {
-			private static final long serialVersionUID = 1L;
+        estilizarComboBox(comboCiudadesOrigen);
+        estilizarComboBox(comboCiudadesDestino);
+        estilizarComboBox(comboAsientos);
 
-			public boolean isCellEditable(int row, int column) {
-				return false; // Las celdas no deben ser editables
-			}
-		};
-		scrollPane = new JScrollPane(tablaViaje);
-		tablaViaje.setPreferredScrollableViewportSize(new Dimension(150, 60)); // Tamaño deseado para la tabla
-		tablaViaje.setFillsViewportHeight(true); // Rellenar el área de visualización
-		tablaViaje.setBorder(new EmptyBorder(5, 5, 5, 5));
-		panelSecundarioViaje.add(scrollPane, BorderLayout.CENTER);
+        panelFormulario.add(lblOrigen);
+        panelFormulario.add(comboCiudadesOrigen);
+        panelFormulario.add(lblDestino);
+        panelFormulario.add(comboCiudadesDestino);
+        panelFormulario.add(lblAsientos);
+        panelFormulario.add(comboAsientos);
 
-		// Botones
-		estilizarBoton(btnCrear);
-		estilizarBoton(btnAplicar);
+        return panelFormulario;
+    }
 
-		panelPrincipal.add(panelPrincipalSur, BorderLayout.SOUTH);
-		panelPrincipalSur.add(btnCrear, BorderLayout.SOUTH);
-		panelPrincipalSur.add(btnAplicar, BorderLayout.SOUTH);
+    private JPanel crearPanelTabla() {
+        JPanel panelTabla = new JPanel(new BorderLayout());
+        panelTabla.setBorder(new TitledBorder("Lista de Viajes"));
+        panelTabla.setBackground(COLOR_FONDO);
 
-		panelSecundario.add(panelInfo, BorderLayout.CENTER);
-		panelInfo.setBorder(new EmptyBorder(20, 20, 20, 20));
-		panelInfo.setBackground(COLOR_FONDO);
+        // Crear modelo de tabla
+        String[] columnas = { "Origen", "Destino", "Asientos" };
+        tableModel = new DefaultTableModel(columnas, 0);
+        tablaViaje = new JTable(tableModel) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (column == 2) { // Condicional: colorear filas según asientos
+                    int asientos = Integer.parseInt(getValueAt(row, column).toString());
+                    c.setBackground(asientos < 3 ? new Color(255, 204, 204) : Color.WHITE);
+                } else {
+                    c.setBackground(row % 2 == 0 ? new Color(240, 248, 255) : Color.WHITE);
+                }
+                return c;
+            }
+        };
 
-		estilizarLabel(lbOrigen);
-		estilizarLabel(lbDestino);
-		estilizarLabel(lbAsientos);
-		estilizarLabel(lbMatricula);
-		estilizarLabel(lbPlazas);
+        JScrollPane scrollPane = new JScrollPane(tablaViaje);
+        tablaViaje.setFillsViewportHeight(true);
+        panelTabla.add(scrollPane, BorderLayout.CENTER);
 
-		Border bordeInfo = BorderFactory.createLineBorder(Color.BLACK);
-		Border tituloBordeInfo = BorderFactory.createTitledBorder(bordeInfo, "Info");
-		panelInfoSE.setBorder(tituloBordeInfo);
-		Border bordeInfoUsuario = BorderFactory.createLineBorder(Color.BLACK);
-		Border tituloBordeInfoUsuario = BorderFactory.createTitledBorder(bordeInfoUsuario, "Vehículo");
-		panelInfoSW.setBorder(tituloBordeInfoUsuario);
-		
-        Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
-        Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
-		System.out.println("Usuario : " + usuarioLogeado);
-		System.out.println("Vehiculo usuario : " + vehiculo);
-		lbMatricula.setText("Matrícula: " +  vehiculo.getMatricula());
-		lbMatricula.setBorder(new EmptyBorder(5, 5, 5, 5));
-		panelInfoSW.add(lbMatricula);
-		lbPlazas.setText("Plazas: " + vehiculo.getPlazas());
-		lbPlazas.setBorder(new EmptyBorder(5, 5, 5, 5));
-		panelInfoSW.add(lbPlazas);
+        // Campo de búsqueda
+        JPanel panelFiltro = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelFiltro.setBackground(COLOR_FONDO);
+        JLabel lblFiltro = new JLabel("Buscar:");
+        estilizarLabel(lblFiltro);
 
-		comboCiudadesOrigen.setSelectedIndex(-1);
-		comboCiudadesDestino.setSelectedIndex(-1);
-		comboAsientos.setSelectedIndex(-1);
+        txtFiltroTabla = new JTextField(15);
+        txtFiltroTabla.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) { filtrarTabla(); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { filtrarTabla(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) { filtrarTabla(); }
+        });
 
-		estilizarComboBox(comboCiudadesOrigen);
-		estilizarComboBox(comboCiudadesDestino);
-		estilizarComboBox(comboAsientos);
+        panelFiltro.add(lblFiltro);
+        panelFiltro.add(txtFiltroTabla);
+        panelTabla.add(panelFiltro, BorderLayout.NORTH);
 
-		panelInfoN1.add(lbOrigen);
-		panelInfoN1.add(comboCiudadesOrigen);
-		panelInfoN2.add(lbDestino);
-		panelInfoN2.add(comboCiudadesDestino);
-		panelInfoN3.add(lbAsientos);
-		panelInfoN3.add(comboAsientos);
+        return panelTabla;
+    }
 
-		panelInfo.add(panelInfoN, BorderLayout.NORTH);
-		panelInfoN.add(panelInfoN1, BorderLayout.NORTH);
-		panelInfoN.add(panelInfoN2, BorderLayout.CENTER);
-		panelInfoN.add(panelInfoN3, BorderLayout.SOUTH);
-		panelInfo.add(panelInfoC, BorderLayout.CENTER);
-		panelInfoC.add(panelInfoC1, BorderLayout.NORTH);
-		panelInfoC.setBackground(COLOR_FONDO);
-		panelInfo.add(panelInfoS, BorderLayout.SOUTH);
-		panelInfoS.add(panelInfoSW, BorderLayout.WEST);
-		panelInfoS.add(panelInfoSE, BorderLayout.CENTER);
+    private JPanel crearPanelBotones() {
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        panelBotones.setBackground(COLOR_FONDO);
 
-		stylePanel(panelInfoN1);
-		stylePanel(panelInfoN2);
-		stylePanel(panelInfoN3);
-		stylePanel(panelInfoC1);
-		stylePanel(panelInfoSW);
-		stylePanel(panelInfoSE);
+        JButton btnAgregar = new JButton("Agregar a Tabla");
+        JButton btnCrearViaje = new JButton("Crear Viaje");
+        estilizarBoton(btnAgregar);
+        estilizarBoton(btnCrearViaje);
 
-		this.add(panelPrincipal);
+        btnAgregar.addActionListener(e -> agregarFilaATabla());
+        btnCrearViaje.addActionListener(e -> crearViajeDesdeTabla());
 
-		btnAplicar.addActionListener(new ActionListener() {
+        panelBotones.add(btnAgregar);
+        panelBotones.add(btnCrearViaje);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String origen = (String) comboCiudadesOrigen.getSelectedItem();
-				String destino = (String) comboCiudadesDestino.getSelectedItem();
-				String asientosDisponibles = (String) comboAsientos.getSelectedItem();
+        return panelBotones;
+    }
 
-				if (origen != null && destino != null && asientosDisponibles != null) {
-					tableModel.addRow(new Object[] { origen, destino, asientosDisponibles });
+    private void agregarFilaATabla() {
+        String origen = (String) comboCiudadesOrigen.getSelectedItem();
+        String destino = (String) comboCiudadesDestino.getSelectedItem();
+        String asientos = (String) comboAsientos.getSelectedItem();
 
-					comboCiudadesOrigen.setSelectedIndex(-1);
-					comboCiudadesDestino.setSelectedIndex(-1);
-					comboAsientos.setSelectedIndex(-1);
+        if (origen == null || destino == null || asientos == null || origen.equals(destino)) {
+            JOptionPane.showMessageDialog(this, "Complete todos los campos y asegúrese de que el origen y destino sean diferentes.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-				}
-			}
-		});
-		btnCrear.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        int filaSeleccionada = tablaViaje.getSelectedRow();
-		        if (filaSeleccionada == -1) {
-		            JOptionPane.showMessageDialog(null, 
-		                "Por favor, seleccione una fila de la tabla para crear el viaje.", 
-		                "Fila no seleccionada", 
-		                JOptionPane.WARNING_MESSAGE);
-		            return;
-		        }
+        tableModel.addRow(new Object[] { origen, destino, asientos });
+        comboCiudadesOrigen.setSelectedIndex(-1);
+        comboCiudadesDestino.setSelectedIndex(-1);
+        comboAsientos.setSelectedIndex(-1);
+    }
 
-		        try {
-		            gestorDB.connect();
+    private void crearViajeDesdeTabla() {
+        int filaSeleccionada = tablaViaje.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fila para crear el viaje.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-		            // Extraer datos de la fila seleccionada
-		            String origen = (String) tableModel.getValueAt(filaSeleccionada, 0);
-		            String destino = (String) tableModel.getValueAt(filaSeleccionada, 1);
-		            int asientosDisponibles = Integer.parseInt((String) tableModel.getValueAt(filaSeleccionada, 2));
+        try {
+            gestorDB.connect();
 
-		            // Obtener usuario logeado y su vehículo
-		            Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
-		            Vehiculo vehiculo = gestorDB.getVehiculoPorUsuario(usuarioLogeado.getDni());
-		            System.out.println("usuarioLogeado :" + usuarioLogeado);
-		            System.out.println("vahiiivulo : " + vehiculo);
-		            if (vehiculo == null) {
-		                JOptionPane.showMessageDialog(null, 
-		                    "No se encontró un vehículo asociado al usuario logeado.", 
-		                    "Error al crear viaje", 
-		                    JOptionPane.ERROR_MESSAGE);
-		                return;
-		            }
+            String origen = tableModel.getValueAt(filaSeleccionada, 0).toString();
+            String destino = tableModel.getValueAt(filaSeleccionada, 1).toString();
+            int asientos = Integer.parseInt(tableModel.getValueAt(filaSeleccionada, 2).toString());
 
-		            // Crear el viaje (sin ID, ya que se genera automáticamente)
-		            Viaje nuevoViaje = new Viaje(0, origen, destino, asientosDisponibles, usuarioLogeado, new ArrayList<>());
+            Usuario usuarioLogeado = gestorDB.getUsuarioLogeado();
+            Viaje nuevoViaje = new Viaje(0, origen, destino, asientos, usuarioLogeado, new ArrayList<>());
+            gestorDB.insertarViaje(nuevoViaje);
 
-		            // Insertar en la base de datos
-		            gestorDB.insertarViaje(nuevoViaje);
+            JOptionPane.showMessageDialog(this, "Viaje creado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al crear el viaje: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            gestorDB.close();
+        }
+    }
 
-		            JOptionPane.showMessageDialog(null, 
-		                "Viaje creado correctamente.", 
-		                "Éxito", 
-		                JOptionPane.INFORMATION_MESSAGE);
-		        } catch (Exception ex) {
-		            JOptionPane.showMessageDialog(null, 
-		                "Ocurrió un error al crear el viaje: " + ex.getMessage(), 
-		                "Error", 
-		                JOptionPane.ERROR_MESSAGE);
-		        } finally {
-		            gestorDB.close();
-		        }
-		    }
-		});
+    private void filtrarTabla() {
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        tablaViaje.setRowSorter(sorter);
+        String textoFiltro = txtFiltroTabla.getText().trim();
+        if (textoFiltro.isEmpty()) {
+            sorter.setRowFilter(null);
+        } else {
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + textoFiltro));
+        }
+    }
 
+    private void estilizarBoton(JButton boton) {
+        boton.setFont(FUENTE_NORMAL);
+        boton.setBackground(COLOR_BOTONES);
+        boton.setForeground(Color.WHITE);
+        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
 
-	}
+    private void estilizarComboBox(JComboBox<String> comboBox) {
+        comboBox.setFont(FUENTE_NORMAL);
+        comboBox.setBorder(BorderFactory.createLineBorder(COLOR_BOTONES));
+    }
 
-	TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {
-		JLabel result = new JLabel(value.toString());
+    private void estilizarLabel(JLabel label) {
+        label.setFont(FUENTE_NORMAL);
+        label.setForeground(COLOR_TEXTO);
+    }
 
-		// con rgb negro claro
-		result.setHorizontalAlignment(JLabel.CENTER);
-		result.setForeground(new Color(60, 60, 60));
-		result.setBackground(Color.white);
-		result.setBorder(new EmptyBorder(2, 5, 2, 5));
-
-		if (isSelected) {
-			result.setBackground(new Color(33, 150, 243, 50));
-			result.setForeground(Color.black);
-		} else {
-			result.setBackground(row % 2 == 0 ? Color.WHITE : new Color(245, 245, 245));
-			result.setForeground(Color.BLACK);
-		}
-		result.setOpaque(true);
-		return result;
-	};
-
-	private void stylePanel(JPanel panel) {
-		panel.setBackground(new Color(220, 240, 255));
-		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-	}
-
-	private void estilizarBoton(JButton boton) {
-		boton.setFont(FUENTE_NORMAL);
-		boton.setBackground(COLOR_BOTONES);
-		boton.setForeground(Color.white);
-		boton.setBorder(new EmptyBorder(10, 20, 10, 20));
-		boton.setFocusPainted(false);
-		boton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-	}
-
-	private void estilizarComboBox(JComboBox<String> comboBox) {
-		comboBox.setFont(FUENTE_NORMAL);
-		comboBox.setBackground(Color.white);
-		comboBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(33, 150, 243)),
-				BorderFactory.createEmptyBorder(5, 12, 5, 12)));
-	}
-
-	private void estilizarLabel(JLabel label) {
-		label.setFont(FUENTE_NORMAL);
-		label.setForeground(COLOR_TEXTO);
-		label.setBorder(new EmptyBorder(5, 5, 5, 5));
-	}
-
+    public static void main(String[] args) {
+        new VentanaCrearViaje();
+    }
 }

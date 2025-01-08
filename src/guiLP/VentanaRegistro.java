@@ -178,42 +178,114 @@ public class VentanaRegistro extends JDialog {
 		});
 		
 		btnRegistrar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String nombreUsuario = txtNombre.getText();
-				String apellido = txtApellido.getText();
-				String contraseña = new String(passwordField.getPassword());
-				String dni = txtDNI.getText();
-				boolean carnet = checkCarnet.isSelected();
-				
-				String matricula = txtMatricula.getText();
-				int asientos = Integer.parseInt(txtAsientos.getText());
-				
-				
-				boolean usuarioExistente = false;
-				gestorDB.connect();
-				for (Usuario usuario : gestorDB.getUsuarios()) {
-					if (usuario.getDni().equals(dni)) {
-						usuarioExistente = true;
-						break;
-					}
-				}
-				if (usuarioExistente) {
-					JOptionPane.showMessageDialog(null, "El DNI ya está registrado. Intenta con otro.");
-				} else if (nombreUsuario.isEmpty() || contraseña.isEmpty() || dni.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "El nombre de usuario y la contraseña no pueden estar vacíos.");
-				} else {
-					Usuario nuevoUsuario = new Usuario(dni, nombreUsuario, apellido, contraseña, carnet, 0);
-					gestorDB.insertarUsuarios(nuevoUsuario);
-					Vehiculo v = new Vehiculo(matricula, asientos, nuevoUsuario);
-					gestorDB.insertarVehiculo(v);
-					System.out.println(nuevoUsuario);
-					JOptionPane.showMessageDialog(null, "Registro exitoso. Bienvenido " + nombreUsuario);
-					dispose();
-				}
-				gestorDB.close();
-			}
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        try {
+		            registrarUsuario();
+		        } catch (Exception ex) {
+		            JOptionPane.showMessageDialog(null, "Error al registrar el usuario: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		            ex.printStackTrace();
+		        }
+		    }
+		});}
 
-		});
-	}
+		private void registrarUsuario() {
+		    String nombreUsuario = txtNombre.getText().trim();
+		    String apellido = txtApellido.getText().trim();
+		    String contraseña = new String(passwordField.getPassword()).trim();
+		    String dni = txtDNI.getText().trim();
+		    boolean carnet = checkCarnet.isSelected();
+
+		    if (nombreUsuario.isEmpty() || contraseña.isEmpty() || dni.isEmpty()) {
+		        JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben estar llenos.", "Validación", JOptionPane.WARNING_MESSAGE);
+		        return;
+		    }
+
+		    if (!validarDNI(dni)) {
+		        JOptionPane.showMessageDialog(
+		            null,
+		            "El DNI ingresado no tiene un formato válido.\n" +
+		            "Debe contener 8 números seguidos de una letra (por ejemplo, 12345678Z).",
+		            "Error de Validación",
+		            JOptionPane.WARNING_MESSAGE
+		        );
+		        return;
+		    }
+
+		    gestorDB.connect();
+		    try {
+		        boolean usuarioExistente = gestorDB.getUsuarios().stream().anyMatch(usuario -> usuario.getDni().equals(dni));
+		        if (usuarioExistente) {
+		            JOptionPane.showMessageDialog(null, "El DNI ya está registrado. Intenta con otro.");
+		            return;
+		        }
+
+		        Usuario nuevoUsuario = new Usuario(dni, nombreUsuario, apellido, contraseña, carnet, 0);
+		        gestorDB.insertarUsuarios(nuevoUsuario);
+
+		        if (carnet) {
+		            String matricula = txtMatricula.getText().trim();
+		            String asientosTexto = txtAsientos.getText().trim();
+
+		            if (matricula.isEmpty() || asientosTexto.isEmpty()) {
+		                JOptionPane.showMessageDialog(null, "Debes ingresar la matrícula y los asientos para registrar el vehículo.", "Validación", JOptionPane.WARNING_MESSAGE);
+		                return;
+		            }
+
+		            int asientos;
+		            try {
+		                asientos = Integer.parseInt(asientosTexto);
+		                if (asientos <= 0) throw new NumberFormatException();
+		            } catch (NumberFormatException ex) {
+		                JOptionPane.showMessageDialog(null, "El número de asientos debe ser un número entero positivo.", "Validación", JOptionPane.WARNING_MESSAGE);
+		                return;
+		            }
+
+		            Vehiculo vehiculo = new Vehiculo(matricula, asientos, nuevoUsuario);
+		            gestorDB.insertarVehiculo(vehiculo);
+		        }
+
+		        JOptionPane.showMessageDialog(null, "Registro exitoso. Bienvenido, " + nombreUsuario + "!");
+		        dispose();
+		    } finally {
+		        gestorDB.close();
+		    }
+		}
+
+		private boolean validarDNI(String dni) {
+		    if (dni == null || dni.length() != 9) {
+		        System.out.println("DNI inválido: longitud incorrecta");
+		        return false; // Debe tener 9 caracteres
+		    }
+
+		    dni = dni.trim(); // Eliminar espacios
+		    String numeros = dni.substring(0, 8); // Extraemos los primeros 8 caracteres
+		    char letra = Character.toUpperCase(dni.charAt(8)); // Extraemos y normalizamos la letra
+
+		    // Verificamos si los primeros 8 caracteres son números
+		    if (!numeros.matches("\\d{8}")) {
+		        System.out.println("DNI inválido: los primeros 8 caracteres no son números");
+		        return false;
+		    }
+
+		    // Calculamos la letra correcta según el algoritmo
+		    String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+		    int numeroDni = Integer.parseInt(numeros);
+		    char letraCorrecta = letras.charAt(numeroDni % 23);
+
+		    // Imprimir valores para depuración
+		    System.out.println("DNI ingresado: " + dni);
+		    System.out.println("Números: " + numeros);
+		    System.out.println("Letra ingresada: " + letra);
+		    System.out.println("Letra calculada: " + letraCorrecta);
+
+		    // Comparamos la letra ingresada con la letra calculada
+		    boolean resultado = letra == letraCorrecta;
+		    if (!resultado) {
+		        System.out.println("DNI inválido: la letra no coincide");
+		    }
+		    return resultado;
+		}
+
+
 }
