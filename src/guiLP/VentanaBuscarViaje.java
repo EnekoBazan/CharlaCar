@@ -196,7 +196,10 @@ public class VentanaBuscarViaje extends JFrame {
     }
 
     private static class CustomCellRenderer extends DefaultTableCellRenderer {
-        @Override
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                        boolean hasFocus, int row, int column) {
             JLabel cell = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -224,9 +227,5 @@ public class VentanaBuscarViaje extends JFrame {
 
             return cell;
         }
-    }
-
-    public static void main(String[] args) {
-        new VentanaBuscarViaje();
     }
 }
