@@ -119,8 +119,6 @@ public class CharlaCarImpl implements CharlaCarService {
             throw new IllegalStateException("No hay suficientes usuarios para inicializar los viajes.");
         }
 
-        Usuario conductorPredeterminado = listaUsuarios.get(0);
-
         listaViajes.add(new Viaje(1, "Valencia", "Barcelona", 4, logedUser, listaUsuarios));
         listaViajes.add(new Viaje(2, "Bilbao", "Sevilla", 3, listaUsuarios.get(0), listaUsuarios));
         listaViajes.add(new Viaje(3, "Vitoria", "Valencia", 2, listaUsuarios.get(1), listaUsuarios));

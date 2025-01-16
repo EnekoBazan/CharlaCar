@@ -1,7 +1,6 @@
 package guiLP;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -11,7 +10,6 @@ import javax.swing.table.*;
 
 import db.GestorBD;
 import domainLN.Usuario;
-import domainLN.Vehiculo;
 import domainLN.Viaje;
 import io.Propiedades;
 
@@ -110,7 +108,9 @@ public class VentanaCrearViaje extends JFrame {
         String[] columnas = { "Origen", "Destino", "Asientos" };
         tableModel = new DefaultTableModel(columnas, 0);
         tablaViaje = new JTable(tableModel) {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
                 if (column == 2) { // Condicional: colorear filas según asientos
