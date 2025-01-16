@@ -5,6 +5,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.*;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
@@ -38,6 +40,11 @@ public class VentanaBuscarViaje extends JFrame {
         inicializarComponentes();
         cargarViajes();
         configurarFiltro();
+        
+        this.setFocusable(true);
+        this.requestFocusInWindow();
+        configurarAtajoFiltro();
+        
         setVisible(true);
     }
 
@@ -46,7 +53,9 @@ public class VentanaBuscarViaje extends JFrame {
         String[] columnas = { "ID", "Origen", "Destino", "Plazas", "Conductor", "Matrícula" };
         tableModel = new DefaultTableModel(columnas, 0);
         tablaBusqueda = new JTable(tableModel) {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -74,10 +83,15 @@ public class VentanaBuscarViaje extends JFrame {
         JPanel panelNorth = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelNorth.setBackground(new Color(217, 239, 248));
         JLabel lblFiltro = new JLabel("Filtrar:");
-        txtFiltro = new JTextField(20);
+        txtFiltro = new JTextField( 20);
+        txtFiltro.setForeground(Color.GRAY);
         panelNorth.add(lblFiltro);
         panelNorth.add(txtFiltro);
-
+        JLabel lblAtajo = new JLabel("Ctrl + C");
+        lblAtajo.setForeground(Color.GRAY);
+        panelNorth.add(lblAtajo);
+        
+        
         // Panel inferior con el botón
         JPanel panelSouth = new JPanel(new BorderLayout());
         JPanel panelSouthDerecha = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -227,5 +241,23 @@ public class VentanaBuscarViaje extends JFrame {
 
             return cell;
         }
+    }
+    private void configurarAtajoFiltro() {
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C) {
+                    txtFiltro.requestFocus();
+                    txtFiltro.setBackground(new Color(200, 255, 200));
+                }
+            }
+        });
+
+        txtFiltro.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtFiltro.setBackground(Color.WHITE);
+            }
+        });
     }
 }
