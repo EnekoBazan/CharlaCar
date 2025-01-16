@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 //FUENTE-EXTERNA
-//URL: (url de la fuente externa)
+//URL: https://www.geeksforgeeks.org/merge-sort/?ref=gcse_outind
 //SIN-CAMBIOS ó ADAPTADO (las modificaciones hechas son para que la ordenacin se pudiera dar en arrais de Objetos)
 
 public class OrdenacionRecursiva<T extends Comparable<? super T>> {
