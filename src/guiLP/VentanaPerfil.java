@@ -230,15 +230,18 @@ public class VentanaPerfil extends JDialog{
      // Filtro dinámico para buscar en la tabla
         JTextField filtro = new JTextField(20);
         filtro.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate1(DocumentEvent e) {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
                 aplicarFiltro();
             }
 
-            public void removeUpdate1(DocumentEvent e) {
+            @Override
+            public void removeUpdate(DocumentEvent e) {
                 aplicarFiltro();
             }
 
-            public void changedUpdate1(DocumentEvent e) {
+            @Override
+            public void changedUpdate(DocumentEvent e) {
                 aplicarFiltro();
             }
 
@@ -252,24 +255,6 @@ public class VentanaPerfil extends JDialog{
                     sorter.setRowFilter(RowFilter.regexFilter("(?i)" + texto));
                 }
             }
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
         });
 		scrollPane = new JScrollPane(tablaMisViajes);
 //		tablaMisViajes.setDefaultRenderer(Object.class, cellRenderer);
@@ -564,7 +549,10 @@ public class VentanaPerfil extends JDialog{
 	}
 	// Renderizador para botones en las tablas
 	public class ButtonRenderer extends JButton implements TableCellRenderer {
-	    public ButtonRenderer(String label) {
+
+		private static final long serialVersionUID = 1L;
+
+		public ButtonRenderer(String label) {
 	        setText(label);
 	        setOpaque(true);
 	        setBackground(new Color(33, 150, 243));
