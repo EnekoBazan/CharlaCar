@@ -75,12 +75,13 @@ public class VentanaDeCarga extends JFrame {
                 lCargando.setText(textos[index]);
                 index = (index + 1) % textos.length;
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
+        btnCancelar.addActionListener(e-> hiloCarga.interrupt());
 
         hiloCarga.start();
         hiloTexto.start();
